@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="css/home.css" media="screen,projection" />
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+    <meta charset="UTF-8">
+    <title>Falcon Trucking Tracker</title>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="center-align stop">
+            <button class="btn waves-effect waves-light modal-trigger stop">
+                <span>Stop Logging</span>
+            </button>
+        </div>
+        <div class="consolediv center-align">
+
+        </div>
+        <div class="version">Version</div>
+    </div>
+
+    <script>
+        if (typeof module === 'object') {
+            window.module = module;
+            module = undefined;
+        }
+    </script>
+    <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="js/logging.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script>
+        if (window.module) module = window.module;
+    </script>
+</body>
+
+</html>
