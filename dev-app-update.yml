@@ -1,0 +1,3 @@
+provider: generic
+url: 'https://falconites.com/dashboard/cdn/releases'
+updaterCacheDirName: ft_job_logger-updater

@@ -77,4 +77,8 @@ button.addEventListener("click", async function() {
 
 $(document).ready(function() {
     console.log("I am loaded.");
+    ipcRenderer.on('updateMessages', function(event, text) {
+        console.log(text)
+        $(".updatediv").text(text);
+    })
 });
