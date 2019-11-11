@@ -49,6 +49,7 @@ function createWindow() {
     }
 
     win.loadFile("login.html")
+    sendStatusToWindow("No updates available");
     let ses = session.fromPartition("persist:userinfo")
 
     ses.cookies.get({}).then((cookies) => {
@@ -220,13 +221,15 @@ autoUpdater.on('checking-for-update', () => {
     sendStatusToWindow('Checking for update...');
 })
 autoUpdater.on('update-available', (info) => {
-    if (page != "home.html" && page != "login.html") {
-        win.loadFile("home.html");
+    if (page != "home.html") {
+        if (page != "login.html") {
+            win.loadFile("home.html");
+        }
     }
     let myNotification = new Notification({
         title: "FT Job Logger",
         subtitle: "New Update available",
-        body: "A new update is available, it will begin downloading shortly",
+        body: `A new version ${info.version} is available, it will begin downloading shortly`,
         icon: "./assets/falcon_logo.jpg",
         silent: false
     }).show();
