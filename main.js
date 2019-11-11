@@ -10,7 +10,6 @@ autoUpdater.logger.transports.file.level = "info"
 autoUpdater.autoDownload = true;
 var windowHidden,
     win = null,
-    page,
     isQuitting;
 
 const gotTheLock = app.requestSingleInstanceLock()
@@ -34,19 +33,7 @@ function createWindow() {
             //resizable: false,
             //frame: false
     })
-    let url = win.getURL(),
-        page = url.split('/').pop();
     windowHidden = false;
-
-    function sendNotif() {
-        let myNotification = new Notification({
-            title: "FT Job Logger",
-            subtitle: "Application is now hidden in tray",
-            body: "For your convenience, the FT Job Logger application is now hidden in tray.",
-            icon: "./assets/falcon_logo.jpg",
-            silent: true
-        }).show();
-    }
 
     win.loadFile("login.html")
     sendStatusToWindow("No updates available");
@@ -221,11 +208,6 @@ autoUpdater.on('checking-for-update', () => {
     sendStatusToWindow('Checking for update...');
 })
 autoUpdater.on('update-available', (info) => {
-    if (page != "home.html") {
-        if (page != "login.html") {
-            win.loadFile("home.html");
-        }
-    }
     let myNotification = new Notification({
         title: "FT Job Logger",
         subtitle: "New Update available",
@@ -258,3 +240,7 @@ app.on('ready', function() {
 app.on('window-all-closed', () => {
     app.quit();
 });
+
+process.on("uncaughtException", (err) => {
+    logger.error(err);
+})

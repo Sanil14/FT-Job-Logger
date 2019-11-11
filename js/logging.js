@@ -119,3 +119,8 @@ function log(msg, color) {
     $(".consolediv").append(`<p class="left-align ${color ? color : ""}">[${time}] ${msg}</p>`)
     logger.info(msg);
 }
+
+ipcRenderer.on('updateMessages', function(event, text) {
+    console.log(text)
+    $(".updatediv").text(text);
+})
