@@ -5,6 +5,7 @@ const { ipcMain } = require("electron");
 const logger = require("electron-log");
 const { autoUpdater } = require("electron-updater");
 const { app, Menu, Tray, Notification } = require('electron');
+const axios = require("axios");
 autoUpdater.logger = logger;
 autoUpdater.logger.transports.file.level = "info"
 autoUpdater.autoDownload = true;
@@ -41,15 +42,26 @@ function createWindow() {
 
     ses.cookies.get({}).then((cookies) => {
         if (cookies.length < 1) return;
-        parsed = JSON.parse(cookies[0].value);
-        if (parsed.verification && parsed.logged_in) {
-            console.log("SESSION DETECTED") // Add check to see if cookies are still updated
-            win.loadFile("home.html").then(() => {
-                updateTrackingMenu();
-            })
+        var parsed = JSON.parse(cookies[0].value);
+        if (parsed.verification && parsed.key != undefined) {
+            console.log("SESSION DETECTED")
+            axios.get('https://falconites.com/dashboard/api/v1/users?key=9xsyr1pr1miyp45&login=' + parsed.key).then(function(response) {
+                var data = response.data;
+                if (data.status != "202") {
+                    ses.cookies.remove("https://dashboard.falconites.com", "userinfo").then(() => {
+                        win.loadFile("login.html");
+                    }).catch((error) => {
+                        if (error) console.error(error);
+                    })
+                } else {
+                    win.loadFile("logging.html").then(() => {
+                        updateTrackingMenu(true);
+                    })
+                }
+            });
         } else {
             win.loadFile("login.html").then(() => {
-                updateTrackingMenu();
+                updateTrackingMenu(true);
             })
         }
     }).catch((error) => {
@@ -77,7 +89,7 @@ function createWindow() {
             label: 'Start Logging',
             id: 'start',
             click: function() {
-                updateTrackingMenu();
+                updateTrackingMenu(false);
             }
         },
         {
@@ -85,7 +97,7 @@ function createWindow() {
             id: 'stop',
             enabled: false,
             click: function() {
-                updateTrackingMenu();
+                updateTrackingMenu(false);
             }
         },
         {
@@ -108,19 +120,21 @@ function createWindow() {
     var contextMenu = Menu.buildFromTemplate(context);
     initTray(tray);
 
-    function updateTrackingMenu() {
+    function updateTrackingMenu(onStartup) {
         let url = win.webContents.getURL(),
             page = url.split('/').pop();
-        if (page == "logging.html") { // Stop tracking
+        if (page == "logging.html" && !onStartup) { // Stop tracking
             contextMenu.getMenuItemById("start").enabled = true;
             contextMenu.getMenuItemById("stop").enabled = false;
             initTray(tray);
             win.loadFile("home.html")
-        } else if (page == "home.html") { // Start Tracking
+        } else if (page == "home.html" || onStartup) { // Start Tracking
             contextMenu.getMenuItemById("start").enabled = false;
             contextMenu.getMenuItemById("stop").enabled = true;
             initTray(tray);
-            win.loadFile("logging.html")
+            if (!onStartup) {
+                win.loadFile("logging.html")
+            }
         } else if (page == "login.html") { // Not logged in
             contextMenu.getMenuItemById("start").enabled = false;
             contextMenu.getMenuItemById("stop").enabled = false;
@@ -173,12 +187,12 @@ function createWindow() {
     })
 
     ipcMain.on('login-success', () => {
-        updateTrackingMenu();
+        updateTrackingMenu(false);
         win.loadFile("home.html");
     })
 
     ipcMain.on('logout', () => {
-        //updateTrackingMenu();
+        //updateTrackingMenu(false);
         ses.cookies.remove("https://dashboard.falconites.com", "userinfo").then(() => {
             win.loadFile("login.html");
         }).catch((error) => {
@@ -187,13 +201,11 @@ function createWindow() {
     })
 
     ipcMain.on('startlogging', () => {
-        updateTrackingMenu();
-        win.loadFile("logging.html")
+        updateTrackingMenu(false);
     })
 
     ipcMain.on('stoplogging', () => {
-        updateTrackingMenu();
-        win.loadFile("home.html")
+        updateTrackingMenu(false);
     })
 }
 

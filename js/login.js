@@ -1,5 +1,4 @@
-var request = new XMLHttpRequest()
-
+const axios = require("axios");
 const { ipcRenderer } = require('electron');
 const { remote } = require('electron')
 const version = require("./package.json").version
@@ -16,63 +15,58 @@ button.addEventListener("click", async function() {
             classes: 'yellow darken-4 rounded'
         });
     }
-    request.onerror = function(e) {
-        return M.toast({
-            html: "404 Server Error",
-            displayLength: 4000,
-            classes: 'red darken-4 rounded'
-        });
-    }
-    request.open('GET', 'https://falconites.com/dashboard/api/v1/users?key=9xsyr1pr1miyp45&login=' + key.value, true) // change to axios
-    request.onload = async function() {
-        var data = JSON.parse(this.response)
-        if (data.status != "202") {
-            return M.toast({
-                html: "Invalid Key!",
-                displayLength: 4000,
-                classes: 'red rounded'
-            });
-        } else {
-            M.toast({
-                html: "Successful!",
-                displayLength: 2000,
-                classes: 'green rounded'
-            });
-            var info = {
-                verification: true,
-                userid: data.userid,
-                username: `${data.username}`,
-                logged_in: true
-            };
-            var ses = remote.session.fromPartition("persist:userinfo");
-            console.log(ses);
-            ses.cookies.set({
-                url: 'https://dashboard.falconites.com',
-                name: 'userinfo',
-                value: JSON.stringify(info),
-                expirationDate: 9999999999
-            }).then(() => {
-                ses.cookies.get({}).then((cookies) => {
-                    console.log(cookies);
-                }).catch((error) => {
-                    console.log(error);
-                })
-                if (key.value != "") {
-                    setTimeout(() => {
-                        ipcRenderer.send("login-success")
-                    }, 1000);
-                }
-            }, (error) => {
-                console.error(error);
+    axios.get('https://falconites.com/dashboard/api/v1/users?key=9xsyr1pr1miyp45&login=' + key.value)
+        .then(function(response) {
+            var data = response.data;
+            if (data.status != "202") {
                 return M.toast({
-                    html: "Error in storing data!",
+                    html: "Invalid Key!",
                     displayLength: 4000,
                     classes: 'red rounded'
                 });
+            } else {
+                M.toast({
+                    html: "Successful!",
+                    displayLength: 2000,
+                    classes: 'green rounded'
+                });
+                var info = {
+                    verification: true,
+                    userid: data.userid,
+                    username: `${data.username}`,
+                    key: key.value
+                };
+                var ses = remote.session.fromPartition("persist:userinfo");
+                //console.log(ses);
+                ses.cookies.set({
+                    url: 'https://dashboard.falconites.com',
+                    name: 'userinfo',
+                    value: JSON.stringify(info),
+                    expirationDate: 9999999999
+                }).then(() => {
+                    if (key.value != "") {
+                        setTimeout(() => {
+                            ipcRenderer.send("login-success")
+                        }, 1000);
+                    }
+                }, (error) => {
+                    console.error(error);
+                    return M.toast({
+                        html: "Error in storing data!",
+                        displayLength: 4000,
+                        classes: 'red rounded'
+                    });
+                });
+            }
+        })
+        .catch(function(error) {
+            console.log(JSON.stringify(error));
+            M.toast({
+                html: "404 Server Error",
+                displayLength: 4000,
+                classes: 'red darken-4 rounded'
             });
-        }
-    }
-    request.send();
+        })
 })
 
 $(document).ready(function() {
