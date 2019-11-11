@@ -23,7 +23,7 @@ button.addEventListener("click", async function() {
             classes: 'red darken-4 rounded'
         });
     }
-    request.open('GET', 'https://falconites.com/dashboard/api/v1/users?key=9xsyr1pr1miyp45&login=' + key.value, true)
+    request.open('GET', 'https://falconites.com/dashboard/api/v1/users?key=9xsyr1pr1miyp45&login=' + key.value, true) // change to axios
     request.onload = async function() {
         var data = JSON.parse(this.response)
         if (data.status != "202") {

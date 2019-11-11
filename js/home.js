@@ -1,6 +1,4 @@
 const { session } = require("electron").remote;
-const { BrowserWindow } = require("electron").remote;
-const brow = require("electron").remote;
 const version = require("./package.json").version
 const { ipcRenderer } = require('electron');
 
@@ -17,6 +15,7 @@ ses.cookies.get({}).then((cookies) => {
         ipcRenderer.send("logout");
     } else {
         $(".hello").text(`Hello ${userdata.username}`)
+        $(".updatediv").text("No updates to download")
     }
 
     $(".start").click(function() {
@@ -38,4 +37,9 @@ ses.cookies.get({}).then((cookies) => {
     })
 }).catch((error) => {
     console.log(error);
+})
+
+ipcRenderer.on('updateMessages', function(event, text) {
+    console.log(text)
+    $(".updatediv").text(text);
 })

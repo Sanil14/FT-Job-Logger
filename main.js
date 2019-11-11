@@ -3,9 +3,15 @@ const path = require("path");
 const { session } = require("electron");
 const { ipcMain } = require("electron");
 const logger = require("electron-log");
+const { autoUpdater } = require("electron-updater");
 const { app, Menu, Tray, Notification } = require('electron');
-var windowHidden;
-var win = null;
+autoUpdater.logger = logger;
+autoUpdater.logger.transports.file.level = "info"
+autoUpdater.autoDownload = true;
+var windowHidden,
+    win = null,
+    page,
+    isQuitting;
 
 const gotTheLock = app.requestSingleInstanceLock()
 
@@ -17,7 +23,6 @@ if (!gotTheLock) {
 
 function createWindow() {
     logger.info("Starting up Electron...")
-    logger.info(require("path").join(__dirname, 'js/etcars_service/etcars.js'))
     win = new electron.BrowserWindow({
         webPreferences: {
             nodeIntegration: true,
@@ -29,6 +34,8 @@ function createWindow() {
             //resizable: false,
             //frame: false
     })
+    let url = win.getURL(),
+        page = url.split('/').pop();
     windowHidden = false;
 
     function sendNotif() {
@@ -62,7 +69,6 @@ function createWindow() {
     })
 
     console.log("Booting up logger");
-    let isQuitting;
     iconPath = path.join(__dirname, "/assets/falcon_icon.png");
     let trayIcon = electron.nativeImage.createFromPath(iconPath);
     tray = new Tray(trayIcon);
@@ -71,7 +77,6 @@ function createWindow() {
             label: 'Show/Hide App',
             id: "showapp",
             click: function() {
-                console.log(windowHidden)
                 if (windowHidden) {
                     win.show();
                 } else {
@@ -103,6 +108,12 @@ function createWindow() {
             click: function() {
                 isQuitting = true;
                 app.quit();
+            }
+        },
+        {
+            label: "Check for Updates",
+            click: function() {
+                autoUpdater.checkForUpdates();
             }
         }
     ]
@@ -174,6 +185,7 @@ function createWindow() {
     })
 
     ipcMain.on('login-success', () => {
+        updateTrackingMenu();
         win.loadFile("home.html");
     })
 
@@ -196,3 +208,50 @@ function createWindow() {
         win.loadFile("home.html")
     })
 }
+
+/* AUTO UPDATER CODE FROM HERE */
+
+function sendStatusToWindow(msg) {
+    win.webContents.send("updateMessages", msg)
+}
+
+autoUpdater.on('checking-for-update', () => {
+    console.log("Checking for updates...")
+    sendStatusToWindow('Checking for update...');
+})
+autoUpdater.on('update-available', (info) => {
+    if (page != "home.html") {
+        win.loadFile("home.html");
+    }
+    let myNotification = new Notification({
+        title: "FT Job Logger",
+        subtitle: "New Update available",
+        body: "A new update is available, it will begin downloading shortly",
+        icon: "./assets/falcon_logo.jpg",
+        silent: false
+    }).show();
+    sendStatusToWindow('Update available.');
+})
+autoUpdater.on('update-not-available', (info) => {
+    sendStatusToWindow('Update not available.');
+})
+autoUpdater.on('error', (err) => {
+    sendStatusToWindow('Error in auto-updater. ' + err);
+})
+autoUpdater.on('download-progress', (progressObj) => {
+    let log_message = 'Downloaded ' + progressObj.percent + '%';
+    sendStatusToWindow(log_message);
+})
+autoUpdater.on('update-downloaded', (info) => {
+    //app.removeAllListeners("window-all-closed")
+    sendStatusToWindow('Update downloaded. Restart to install.');
+    //autoUpdater.quitAndInstall();
+});
+
+app.on('ready', function() {
+    autoUpdater.checkForUpdates();
+})
+
+app.on('window-all-closed', () => {
+    app.quit();
+});

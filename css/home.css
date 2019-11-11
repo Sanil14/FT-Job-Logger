@@ -37,6 +37,7 @@ div.inline2 {
 }
 
 .container {
+    height: 100% !important;
     width: 95% !important;
 }
 
@@ -48,6 +49,15 @@ div.inline2 {
     position: absolute;
     bottom: 5px;
     right: 5px;
+    color: #a7a7a7;
+    font-size: 15px;
+}
+
+.updatediv {
+    position: absolute;
+    right: 280px;
+    left: 280px;
+    bottom: 5px;
     color: #a7a7a7;
     font-size: 15px;
 }

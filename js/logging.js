@@ -60,14 +60,14 @@ etcars.on('data', function(data) {
                     info.push(calcDamage(data))
                     info.push(data.jobData.truckMake)
                     info.push(data.jobData.truckModel)
-                    log(JSON.stringify(info));
+                    log("Outputting Job Values for Alpha Testing:<br>" + JSON.stringify(info));
                     if (info.length > 1) {
-                        log("JOB SUBMITTED")
-                        log(`https://falconites.com/dashboard/api/v1/jobs?key=9xsyr1pr1miyp45&data=${encodeURIComponent(info.join(","))}`);
+                        log("Your job has been submitted!", "green-text")
+                            //log(`https://falconites.com/dashboard/api/v1/jobs?key=9xsyr1pr1miyp45&data=${encodeURIComponent(info.join(","))}`);
                         axios.get(`https://falconites.com/dashboard/api/v1/jobs?key=9xsyr1pr1miyp45&data=${encodeURIComponent(info.join(","))}`).then(function(response) {
-                            log(JSON.stringify(response))
+                            //log(JSON.stringify(response))
                         }).catch(function(err) {
-                            log(JSON.stringify(err));
+                            logger.info(JSON.stringify(err));
                         })
                     }
                 }
