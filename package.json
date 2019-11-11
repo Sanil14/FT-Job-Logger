@@ -1,7 +1,7 @@
 {
     "name": "ft_job_logger",
     "productName": "FT Job Logger",
-    "version": "2.1.7",
+    "version": "2.1.9",
     "description": "Desktop App for the Falcon Trucking Tracker",
     "main": "main.js",
     "scripts": {
@@ -13,6 +13,7 @@
     },
     "build": {
         "appId": "FtJobLogger",
+        "asar": true,
         "win": {
             "target": "NSIS",
             "icon": "./assets/falcon_icon.ico",
@@ -20,7 +21,7 @@
         },
         "publish": {
             "provider": "generic",
-            "url": "http://cdn.localhost"
+            "url": "https://falconites.com/dashboard/cdn/releases"
         },
         "nsis": {
             "artifactName": "${productName} Setup ${version}.${ext}"

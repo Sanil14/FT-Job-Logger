@@ -104,16 +104,16 @@ function createWindow() {
             type: "separator"
         },
         {
+            label: "Check for Updates",
+            click: function() {
+                autoUpdater.checkForUpdates();
+            }
+        },
+        {
             label: 'Exit',
             click: function() {
                 isQuitting = true;
                 app.quit();
-            }
-        },
-        {
-            label: "Check for Updates",
-            click: function() {
-                autoUpdater.checkForUpdates();
             }
         }
     ]
@@ -220,7 +220,7 @@ autoUpdater.on('checking-for-update', () => {
     sendStatusToWindow('Checking for update...');
 })
 autoUpdater.on('update-available', (info) => {
-    if (page != "home.html") {
+    if (page != "home.html" && page != "login.html") {
         win.loadFile("home.html");
     }
     let myNotification = new Notification({
@@ -239,7 +239,7 @@ autoUpdater.on('error', (err) => {
     sendStatusToWindow('Error in auto-updater. ' + err);
 })
 autoUpdater.on('download-progress', (progressObj) => {
-    let log_message = 'Downloaded ' + progressObj.percent + '%';
+    let log_message = 'Downloaded ' + Math.round(progressObj.percent) + '%';
     sendStatusToWindow(log_message);
 })
 autoUpdater.on('update-downloaded', (info) => {
