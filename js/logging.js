@@ -87,7 +87,6 @@ $(".stop button").click(function() {
             ipcRenderer.send("stoplogging");
         }, 2000);
     }, 2000);
-    ipcRenderer.send("unexpectederror");
 })
 
 etcars.on('connect', function(data) {
