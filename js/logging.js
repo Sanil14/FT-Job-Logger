@@ -30,12 +30,17 @@ ses.cookies.get({}).then((cookies) => {
 etcars.on('data', function(data) {
     try {
         if (data.status == "JOB STARTED") {
-            log("JOB STARTED");
+            log("Job start detected");
         }
         if (data.status == "JOB FINISHED") {
             if (typeof data.telemetry != 'undefined' && data.telemetry) {
                 if (typeof data.jobData != 'undefined' && data.jobData) {
                     var info = [];
+                    /*info.push(2)
+                    if(data.jobData.status == 3) { // FOR OUTLINING IF JOB WAS FINISHED OR CANCELLED
+                        info[0] = 3;
+                    }
+                    */
                     info.push(userdata.userid)
                     info.push(data.jobData.gameID)
                     info.push(data.jobData.sourceCity)
@@ -47,26 +52,36 @@ etcars.on('data', function(data) {
                     info.push(data.jobData.income)
                     info.push(data.telemetry.job.cargo)
                     info.push(data.telemetry.job.mass)
-                    let fee = data.telemetry.job.isLate ? true : false
-                    info.push(fee)
+                    info.push(data.jobData.late)
                     info.push(data.jobData.realTimeStarted)
-                    info.push(Date.now())
+                    info.push(data.jobData.realTimeEnded)
                     info.push(data.jobData.topSpeed)
                     info.push(data.jobData.speedingCount)
                     info.push(data.jobData.collisionCount)
                     info.push(calcDamage(data))
                     info.push(data.jobData.truckMake)
                     info.push(data.jobData.truckModel)
-                    console.log(info)
-                    log("Outputting Job Values for Alpha Testing:<br>" + JSON.stringify(info));
+                    console.log(info) // REMOVE BEFORE RELEASE
+                    log("<b>Outputting Job Values only for Alpha Testing</b>:<br>" + JSON.stringify(info)); // REMOVE BEFORE RELEASE
                     if (info.length > 1) {
-                        log("Your job has been submitted!", "green-text")
-                            //log(`https://falconites.com/dashboard/api/v1/jobs?key=9xsyr1pr1miyp45&data=${encodeURIComponent(info.join(","))}`);
-                        axios.get(`https://falconites.com/dashboard/api/v1/jobs?key=9xsyr1pr1miyp45&data=${encodeURIComponent(info.join(","))}`).then(function(response) {
-                            //log(JSON.stringify(response))
-                        }).catch(function(err) {
-                            logger.info("Error:" + JSON.stringify(err));
-                        })
+                        log("Attempting to submit job...")
+                        axios.get(`https://falconites.com/dashboard/api/v1/jobs?key=9xsyr1pr1miyp45&data=${encodeURIComponent(info.join(","))}`)
+                            .then(function(response) {
+                                var data = response.data;
+                                if (data.status != "202") {
+                                    if (data.status == "400") {
+                                        log("Error 400 submitting job: Contact Dev")
+                                        logger.info(data.error)
+                                    } else {
+                                        log("Error submitting job: " + data.error, "red-text");
+                                    }
+                                } else {
+                                    log("Job has been successfully submitted!", "green-text")
+                                }
+                            }).catch(function(err) {
+                                log("Unexpected error when submitting job: Contact Dev")
+                                logger.info("Error:" + JSON.stringify(err));
+                            })
                     }
                 }
             }
@@ -75,7 +90,6 @@ etcars.on('data', function(data) {
         log(JSON.stringify(err));
     }
 })
-
 
 $(".stop button").click(function() {
     log("Beware, Any logging after this will not be recorded!", "red-text")
@@ -106,7 +120,7 @@ etcars.on('error', function(data) {
 })
 
 etcars.on('unexpectedError', function(data) {
-    errorm = "Unexpected error with logger. Restart immediately.";
+    errorm = "Unexpected error with logger. Restart immediately";
     logger.error(data.errorMessage)
     log(`${errorm}`, "red-text")
     ipcRenderer.send("unexpectederror");

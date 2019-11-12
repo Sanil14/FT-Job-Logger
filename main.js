@@ -244,7 +244,7 @@ autoUpdater.on('update-not-available', (info) => {
     sendStatusToWindow('No new update');
 })
 autoUpdater.on('error', (err) => {
-    sendStatusToWindow('Error in auto-updater. Contact Dev.');
+    sendStatusToWindow('Error in update. Contact Dev.');
 })
 autoUpdater.on('download-progress', (progressObj) => {
     let log_message = 'Downloaded ' + Math.round(progressObj.percent) + '%';
