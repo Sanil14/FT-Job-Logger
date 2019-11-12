@@ -207,6 +207,17 @@ function createWindow() {
     ipcMain.on('stoplogging', () => {
         updateTrackingMenu(false);
     })
+
+    ipcMain.on('unexpectederror', () => {
+        let myNotif = new Notification({
+            title: "FT Job Logger",
+            subtitle: "Unexpected Error",
+            body: "FT Job Logger has had an unexpected error. Restart immediately.",
+            icon: "./assets/falcon_logo.jpg",
+            silent: false
+        }).show();
+        console.log("Displaying error notif")
+    })
 }
 
 /* AUTO UPDATER CODE FROM HERE */
@@ -230,10 +241,10 @@ autoUpdater.on('update-available', (info) => {
     sendStatusToWindow('Update available.');
 })
 autoUpdater.on('update-not-available', (info) => {
-    sendStatusToWindow('Update not available.');
+    sendStatusToWindow('No new update');
 })
 autoUpdater.on('error', (err) => {
-    sendStatusToWindow('Error in auto-updater. ' + err);
+    sendStatusToWindow('Error in auto-updater. Contact Dev.');
 })
 autoUpdater.on('download-progress', (progressObj) => {
     let log_message = 'Downloaded ' + Math.round(progressObj.percent) + '%';

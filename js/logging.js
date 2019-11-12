@@ -3,9 +3,10 @@ const version = require("./package.json").version
 const { session } = require("electron").remote;
 const brow = require("electron").remote;
 const { ipcRenderer } = require('electron');
-const EtCarsClient = require("etcars-node-client");
+const EtCarsClient = require("./js/etcars");
 const axios = require("axios");
 const etcars = new EtCarsClient();
+etcars.enableDebug = true;
 var userdata,
     errorcounter = 0;
 
@@ -19,10 +20,7 @@ ses.cookies.get({}).then((cookies) => {
     if (userdata === undefined) ipcRenderer.send("logout");
 
     log(`Welcome to your logger ${userdata.username}!`, "yellow-text text-accent-2")
-    log(`Keep this window open or minimized while trucking to make sure your jobs get logged.`, "yellow-text text-accent-2")
-    log(`If you do not keep this window open, we are not responsible for any jobs lost.`, "yellow-text text-accent-2")
-
-    var jobstartedtime;
+    log(`If you close this window, you will lose connection with game and server and your jobs will not be logged.`, "yellow-text text-accent-2")
 
 }).catch((error) => {
     console.log("Error retrieving cookies: " + error);
@@ -31,14 +29,13 @@ ses.cookies.get({}).then((cookies) => {
 
 etcars.on('data', function(data) {
     try {
-        var info = [];
         if (data.status == "JOB STARTED") {
             log("JOB STARTED");
-            jobstartedtime = Date.now();
         }
         if (data.status == "JOB FINISHED") {
             if (typeof data.telemetry != 'undefined' && data.telemetry) {
                 if (typeof data.jobData != 'undefined' && data.jobData) {
+                    var info = [];
                     info.push(userdata.userid)
                     info.push(data.jobData.gameID)
                     info.push(data.jobData.sourceCity)
@@ -52,7 +49,7 @@ etcars.on('data', function(data) {
                     info.push(data.telemetry.job.mass)
                     let fee = data.telemetry.job.isLate ? true : false
                     info.push(fee)
-                    info.push(jobstartedtime)
+                    info.push(data.jobData.realTimeStarted)
                     info.push(Date.now())
                     info.push(data.jobData.topSpeed)
                     info.push(data.jobData.speedingCount)
@@ -60,6 +57,7 @@ etcars.on('data', function(data) {
                     info.push(calcDamage(data))
                     info.push(data.jobData.truckMake)
                     info.push(data.jobData.truckModel)
+                    console.log(info)
                     log("Outputting Job Values for Alpha Testing:<br>" + JSON.stringify(info));
                     if (info.length > 1) {
                         log("Your job has been submitted!", "green-text")
@@ -67,7 +65,7 @@ etcars.on('data', function(data) {
                         axios.get(`https://falconites.com/dashboard/api/v1/jobs?key=9xsyr1pr1miyp45&data=${encodeURIComponent(info.join(","))}`).then(function(response) {
                             //log(JSON.stringify(response))
                         }).catch(function(err) {
-                            logger.info(JSON.stringify(err));
+                            logger.info("Error:" + JSON.stringify(err));
                         })
                     }
                 }
@@ -89,6 +87,7 @@ $(".stop button").click(function() {
             ipcRenderer.send("stoplogging");
         }, 2000);
     }, 2000);
+    ipcRenderer.send("unexpectederror");
 })
 
 etcars.on('connect', function(data) {
@@ -105,6 +104,13 @@ etcars.on('error', function(data) {
     }
     log(`${errormsg}`, "red-text");
     errorcounter += 1
+})
+
+etcars.on('unexpectedError', function(data) {
+    errorm = "Unexpected error with logger. Restart immediately.";
+    logger.error(data.errorMessage)
+    log(`${errorm}`, "red-text")
+    ipcRenderer.send("unexpectederror");
 })
 
 function calcDamage(data) {

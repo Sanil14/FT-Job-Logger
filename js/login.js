@@ -44,6 +44,11 @@ button.addEventListener("click", async function() {
                     value: JSON.stringify(info),
                     expirationDate: 9999999999
                 }).then(() => {
+                    ses.cookies.get({}).then((cookies) => { // DELETE FOR PROD VERSION
+                        console.log(cookies);
+                    }).catch((error) => {
+                        console.log(error);
+                    })
                     if (key.value != "") {
                         setTimeout(() => {
                             ipcRenderer.send("login-success")
