@@ -8,7 +8,8 @@ const axios = require("axios");
 const etcars = new EtCarsClient();
 etcars.enableDebug = true;
 var userdata,
-    errorcounter = 0;
+    errorcounter = 0,
+    unexerrorc = 0;
 
 var ses = session.fromPartition("persist:userinfo")
 
@@ -65,7 +66,7 @@ etcars.on('data', function(data) {
                     log("<b>Outputting Job Values only for Alpha Testing</b>:<br>" + JSON.stringify(info)); // REMOVE BEFORE RELEASE
                     if (info.length > 1) {
                         log("Attempting to submit job...")
-                        axios.get(`https://falconites.com/dashboard/api/v1/jobs?key=9xsyr1pr1miyp45&data=${encodeURIComponent(info.join(","))}`)
+                        axios.post(`https://falconites.com/dashboard/api/v1/jobs?key=9xsyr1pr1miyp45&data=${encodeURIComponent(info.join(","))}`)
                             .then(function(response) {
                                 var data = response.data;
                                 if (data.status != "202") {
@@ -120,10 +121,14 @@ etcars.on('error', function(data) {
 })
 
 etcars.on('unexpectedError', function(data) {
+    if (unexerrorc >= 1) {
+        return;
+    }
     errorm = "Unexpected error with logger. Restart immediately";
     logger.error(data.errorMessage)
     log(`${errorm}`, "red-text")
     ipcRenderer.send("unexpectederror");
+    unexerrorc += 1;
 })
 
 function calcDamage(data) {

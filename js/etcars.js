@@ -107,7 +107,7 @@ class ETCarsClient extends EventEmitter {
         if (this._enableDebug)
             console.log('socket closed');
 
-        setTimeout(() => this.connect(), 1000);
+        setTimeout(() => this.connect(), 10000);
     }
 
     /**
