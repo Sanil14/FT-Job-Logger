@@ -20,7 +20,7 @@ ses.cookies.get({}).then((cookies) => {
     userdata = JSON.parse(cookies[0].value)
     if (userdata === undefined) ipcRenderer.send("logout");
 
-    log(`Welcome to your logger ${userdata.username}!`, "yellow-text text-accent-2")
+    log(`Welcome to your logger ${userdata.username}! Keep this window open/minimized to tray`, "yellow-text text-accent-2")
     log(`If you close this window, you will lose connection with game and server and your jobs will not be logged.`, "yellow-text text-accent-2")
 
 }).catch((error) => {
@@ -106,6 +106,7 @@ $(".stop button").click(function() {
 
 etcars.on('connect', function(data) {
     log("Connected to ETCars. Ready to log jobs!", "green-text")
+    errorcounter = 0;
 })
 
 etcars.on('error', function(data) {
@@ -124,10 +125,10 @@ etcars.on('unexpectedError', function(data) {
     if (unexerrorc >= 1) {
         return;
     }
+    ipcRenderer.send("unexpectederror");
     errorm = "Unexpected error with logger. Restart immediately";
     logger.error(data.errorMessage)
     log(`${errorm}`, "red-text")
-    ipcRenderer.send("unexpectederror");
     unexerrorc += 1;
 })
 

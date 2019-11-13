@@ -6,7 +6,6 @@ let userdata;
 var ses = session.fromPartition("persist:userinfo")
 ses.cookies.get({}).then((cookies) => {
     $(".version").text(`Version ${version}`)
-    console.log(cookies)
     if (cookies.length < 1) {
         //ipcRenderer.send("logout");
     }

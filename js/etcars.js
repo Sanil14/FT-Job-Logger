@@ -1,5 +1,6 @@
 const net = require('net');
 const EventEmitter = require('events');
+const logger = require("electron-log");
 /**
  * 
  * 
@@ -66,9 +67,9 @@ class ETCarsClient extends EventEmitter {
          */
     connect() {
         if (this._enableDebug)
-            console.log('trying to connect');
+        //console.log('trying to connect');
 
-        var instance = this;
+            var instance = this;
 
         try {
             this.etcarsSocket = net.createConnection(30001, 'localhost', function() {});
@@ -105,9 +106,9 @@ class ETCarsClient extends EventEmitter {
     receiveClose() {
 
         if (this._enableDebug)
-            console.log('socket closed');
+        //console.log('socket closed');
 
-        setTimeout(() => this.connect(), 10000);
+            setTimeout(() => this.connect(), 10000);
     }
 
     /**
@@ -156,12 +157,13 @@ class ETCarsClient extends EventEmitter {
         var tryReconnect = false;
 
         if (errorCode && typeof(errorCode) != 'undefined' && errorCode != null) {
+            //logger.info(errorCode)
             if (errorCode == 'ECONNREFUSED') {
-                if (this._enableDebug)
-                    console.log('etcars not installed or game not running');
+                //if (this._enableDebug)
+                //console.log('etcars not installed or game not running');
             } else if (errorCode == 'ECONNRESET') {
-                if (this._enableDebug)
-                    console.log('etcars closed connection or game closed');
+                //if (this._enableDebug)
+                //console.log('etcars closed connection or game closed');
             } else {
                 if (this._enableDebug)
                     console.error(errorCode);

@@ -3,6 +3,7 @@ const path = require("path");
 const { session } = require("electron");
 const { ipcMain } = require("electron");
 const logger = require("electron-log");
+const notifier = require("node-notifier");
 const { autoUpdater } = require("electron-updater");
 const { app, Menu, Tray, Notification } = require('electron');
 const axios = require("axios");
@@ -209,13 +210,16 @@ function createWindow() {
     })
 
     ipcMain.on('unexpectederror', () => {
-        let myNotif = new Notification({
+        notifier.notify({
             title: "FT Job Logger",
-            subtitle: "Unexpected Error",
-            body: "FT Job Logger has had an unexpected error. Restart immediately.",
-            icon: "./assets/falcon_logo.jpg",
-            silent: false
-        }).show();
+            message: "FT Job Logger has had an unexpected error. Click here to restart immediately.",
+            icon: path.join(__dirname, '/assets/falcon_logo.jpg'),
+            sound: true
+        }, function(err, resp) {
+            isQuitting = true;
+            app.relaunch();
+            app.quit();
+        })
         console.log("Displaying error notif")
     })
 }
@@ -231,13 +235,14 @@ autoUpdater.on('checking-for-update', () => {
     sendStatusToWindow('Checking for update...');
 })
 autoUpdater.on('update-available', (info) => {
-    let myNotification = new Notification({
+    notifier.notify({
         title: "FT Job Logger",
-        subtitle: "New Update available",
-        body: `A new version ${info.version} is available, it will begin downloading shortly`,
-        icon: "./assets/falcon_logo.jpg",
-        silent: false
-    }).show();
+        message: `A new version ${info.version} is available, it will begin downloading shortly`,
+        icon: path.join(__dirname, '/assets/falcon_logo.jpg'),
+        sound: true
+    }, function(err, resp) {
+        logger.info("Download Available")
+    })
     sendStatusToWindow('Update available.');
 })
 autoUpdater.on('update-not-available', (info) => {
