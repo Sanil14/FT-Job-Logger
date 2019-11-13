@@ -142,6 +142,8 @@ function log(msg, color) {
     var d = new Date();
     var time = `${d.getDate()}/${d.getMonth()}/${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
     $(".consolediv").append(`<p class="left-align ${color ? color : ""}">[${time}] ${msg}</p>`)
+    var d = $('.consolediv');
+    d.scrollTop(d.prop("scrollHeight"));
     logger.info(msg);
 }
 
