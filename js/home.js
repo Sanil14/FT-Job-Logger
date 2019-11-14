@@ -34,6 +34,14 @@ ses.cookies.get({}).then((cookies) => {
             ipcRenderer.send("logout");
         }, 1000);
     })
+
+    $(".etcarsdownload").click(function() {
+        require("electron").shell.openExternal("https://etcars.menzelstudios.com/downloads/ETCARSx64.exe")
+        $(".instructions").show()
+        setTimeout(() => {
+            $(".instructions").hide();
+        }, 20000);
+    })
 }).catch((error) => {
     console.log(error);
 })

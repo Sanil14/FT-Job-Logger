@@ -32,7 +32,7 @@ function createWindow() {
         height: 500,
         icon: "./assets/falcon_logo.jpg",
         autoHideMenuBar: true
-            //resizable: false,
+            //devTools: false,
             //frame: false
     })
     windowHidden = false;
