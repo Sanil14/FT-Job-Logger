@@ -28,7 +28,7 @@
       <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
       <meta name="author" content="Coderthemes">
       <link rel="shortcut icon" href="assets/images/favicon.ico">
-      <title>Adminto - Responsive Admin Dashboard Template</title>
+      <title>Falcon Trucking Dashboard - VTC Jobs</title>
       <!-- DataTables -->
       <link href="assets/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
       <link href="assets/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
@@ -48,7 +48,9 @@
          <!-- Top Bar Start -->
          <div class="topbar">
             <!-- LOGO -->
-            <div class="topbar-left"> <a href="index" class="logo"><span>Admin<span>to</span></span><i class="mdi mdi-layers"></i></a> </div>
+                <div class="topbar-left">
+          <a href="index" class="logo"><span><img src="assets/images/logo.png" alt="Falcon Logo" title="Goto Main Dashboard"></img></span><i class="mdi mdi-layers"></i></a>
+                </div>
             <!-- Button mobile view to collapse sidebar menu -->
             <div class="navbar navbar-default" role="navigation">
                <div class="container-fluid">
@@ -58,7 +60,7 @@
                         <button class="button-menu-mobile open-left"> <i class="mdi mdi-menu"></i> </button>
                      </li>
                      <li class="list-inline-item">
-                        <h4 class="page-title">Datatables</h4>
+                        <h4 class="page-title">VTC Jobs</h4>
                      </li>
                   </ul>
                   <nav class="navbar-custom">

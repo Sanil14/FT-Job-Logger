@@ -27,7 +27,7 @@
       <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
       <meta name="author" content="Coderthemes">
       <link rel="shortcut icon" href="assets/images/favicon.ico">
-      <title>Falcon Trucking Dashboard</title>
+      <title>Falcon Trucking Dashboard - User Profile</title>
       <!-- X-editable css -->
       <link type="text/css" href="assets/plugins/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet">
       <link href="assets/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" rel="stylesheet" />
@@ -65,7 +65,7 @@
                         </button>
                      </li>
                      <li class="list-inline-item">
-                        <h4 class="page-title">Profile</h4>
+                        <h4 class="page-title">Your Profile</h4>
                      </li>
                   </ul>
                   <nav class="navbar-custom">
@@ -121,8 +121,8 @@
                                        <div class="form-group row">
                                           <label class="col-2 col-form-label">Your Picture</label>
                                           <div class="col-10">
-                                             <div class="user-img">
-                                                <img src="<?php echo $profilepic?>" id="img" alt="user-img" title="Upload a picture to replace it" class="rounded-circle user-thum img-responsive">
+                                             <div class="user-img upload-img">
+                                                <img src="<?php echo $profilepic?>" id="img" alt="user-img" title="Upload a picture to replace it" class="rounded-circle user-thum img-responsive upload-img">
                                              </div>
                                           </div>
                                        </div>

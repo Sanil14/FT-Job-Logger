@@ -40,7 +40,7 @@
 
         <link rel="shortcut icon" href="assets/images/favicon.ico">
 
-        <title>Adminto - Responsive Admin Dashboard Template</title>
+        <title>Welcome to Falcon Trucking Dashboard</title>
 
         <!--Morris Chart CSS -->
 		<link rel="stylesheet" href="assets/plugins/morris/morris.css">
@@ -80,7 +80,7 @@
                                 </button>
                             </li>
                             <li class="list-inline-item">
-                                <h4 class="page-title">Dashboard</h4>
+                                <h4 class="page-title">User Dashboard</h4>
                             </li>
                         </ul>
 

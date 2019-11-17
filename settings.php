@@ -31,7 +31,7 @@
       <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
       <meta name="author" content="Coderthemes">
       <link rel="shortcut icon" href="assets/images/favicon.ico">
-      <title>Falcon Trucking Dashboard</title>
+      <title>Falcon Trucking Dashboard - Settings</title>
       <!-- X-editable css -->
       <link type="text/css" href="assets/plugins/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet">
       <link href="assets/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" rel="stylesheet" />
@@ -69,7 +69,7 @@
                         </button>
                      </li>
                      <li class="list-inline-item">
-                        <h4 class="page-title">Profile</h4>
+                        <h4 class="page-title">User Settings</h4>
                      </li>
                   </ul>
                   <nav class="navbar-custom">

@@ -175,6 +175,10 @@ hr {
   font-family: "Karla", sans-serif;
 }
 
+.user-pic {
+  max-width: 200px;
+}
+
 /* =============
    Helper clasess
 ============= */
@@ -396,6 +400,12 @@ hr {
 .table-box .table-detail {
   display: table-cell;
   vertical-align: middle;
+}
+
+.members {
+	
+  max-height: 450px;
+  min-height: 450px;
 }
 
 /* Card Box */
@@ -5711,6 +5721,10 @@ File: Menu
 
 .user-box h5 a {
   color: #98a6ad;
+}
+
+.upload-img {
+  max-width: 200px;
 }
 
 .user-box .user-status {

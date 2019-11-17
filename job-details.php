@@ -48,7 +48,7 @@
       <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
       <meta name="author" content="Coderthemes">
       <link rel="shortcut icon" href="assets/images/favicon.ico">
-      <title>Adminto - Responsive Admin Dashboard Template</title>
+      <title>Falcon Trucking Dashboard - Job Details</title>
       <!-- DataTables -->
       <link href="assets/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
       <link href="assets/plugins/datatables/butDefault Exampletons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
@@ -221,6 +221,11 @@
                                               ->setTimezone(new DateTimeZone($to))->format("d/m/Y H:i:s");
                                   }
                                 ?>
+                                <tr>
+                                    <td><i class="fa fa-truck fa-2x "></i></td>
+                                    <td>Game Mode</td>
+                                    <td><?php echo $jobdetails["JobID"]; ?></td>
+                                 </tr>
                                  <tr>
                                     <td><i class="fa fa-id-card fa-2x "></i></td>
                                     <td>Job ID</td>
