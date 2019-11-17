@@ -15,7 +15,7 @@ $(document).ready(function() {
         if (!navigator.onLine) {
             setOffline();
             isoffline = true;
-            $(".container div:nth-last-child(1)").addClass("clientside");
+            $(".container div:last:last-child").addClass("clientside");
             $(".clientside").prop("title", "You have no internet connection")
         }
         userdata = JSON.parse(cookies[0].value)

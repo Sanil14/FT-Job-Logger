@@ -23,7 +23,7 @@ ses.cookies.get({}).then((cookies) => {
     if (!navigator.onLine) {
         isoffline = true;
         setOffline();
-        $(".container div:nth-last-child(1)").addClass("clientside");
+        $(".container div:last:last-child").addClass("clientside");
         $(".clientside").prop("title", "You have no internet connection")
     }
 

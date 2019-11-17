@@ -7,7 +7,7 @@ const version = require("./package.json").version
 $(".version").text(`Version ${version}`)
 if (!navigator.onLine) {
     setOffline();
-    $(".container div:nth-last-child(1)").addClass("clientside");
+    $(".container div:last:last-child").addClass("clientside");
     $(".clientside").prop("title", "You have no internet connection")
 }
 
