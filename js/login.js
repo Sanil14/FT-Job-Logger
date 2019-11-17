@@ -1,9 +1,15 @@
 const axios = require("axios");
 const { ipcRenderer } = require('electron');
 const { remote } = require('electron')
+const logger = require("electron-log");
 const version = require("./package.json").version
 
 $(".version").text(`Version ${version}`)
+if (!navigator.onLine) {
+    setOffline();
+    $(".container div:nth-last-child(1)").addClass("clientside");
+    $(".clientside").prop("title", "You have no internet connection")
+}
 
 var button = document.getElementById("submitButton");
 button.addEventListener("click", async function() {
@@ -64,14 +70,33 @@ button.addEventListener("click", async function() {
                 });
             }
         })
-        .catch(function(error) {
-            console.log(JSON.stringify(error));
+        .catch(function(err) {
+            if (err.errno == "ENOTFOUND" || err.code == "ENOTFOUND" || err.code == "ECONNREFUSED" || err.errno == "ECONNREFUSED") {
+                setOffline();
+                $(".container div:nth-last-child(1)").addClass("serverside");
+                $(".serverside").prop("title", "The server is down. Try again later")
+            }
+            logger.info(JSON.stringify(error));
             M.toast({
-                html: "404 Server Error",
+                html: "404 Error",
                 displayLength: 4000,
                 classes: 'red darken-4 rounded'
             });
         })
+})
+
+function setOffline() {
+    $(".offline-ui").show();
+    $(".offline-ui-content").show();
+    $(".offline-ui-down").show();
+}
+
+ipcRenderer.on('isOfflineLogin', function(event, text) {
+    if (navigator.onLine) {
+        event.sender.send("isOfflineReply", false);
+    } else {
+        event.sender.send("isOfflineReply", true);
+    }
 })
 
 $(document).ready(function() {

@@ -12,7 +12,8 @@ autoUpdater.logger.transports.file.level = "info"
 autoUpdater.autoDownload = true;
 var windowHidden,
     win = null,
-    isQuitting;
+    isQuitting,
+    isoffline;
 
 const gotTheLock = app.requestSingleInstanceLock()
 
@@ -41,28 +42,49 @@ function createWindow() {
     sendStatusToWindow("No updates available");
     let ses = session.fromPartition("persist:userinfo")
 
-    ses.cookies.get({}).then((cookies) => {
+    ses.cookies.get({}).then(async(cookies) => {
         if (cookies.length < 1) return;
         var parsed = JSON.parse(cookies[0].value);
         if (parsed.verification && parsed.key != undefined) {
             console.log("SESSION DETECTED")
-            axios.get('https://falconites.com/dashboard/api/v1/users?key=9xsyr1pr1miyp45&login=' + parsed.key).then(function(response) {
-                var data = response.data;
-                if (data.status != "202") {
-                    ses.cookies.remove("https://dashboard.falconites.com", "userinfo").then(() => {
-                        win.loadFile("login.html");
-                    }).catch((error) => {
-                        if (error) console.error(error);
-                    })
-                } else {
-                    win.loadFile("logging.html").then(() => {
-                        updateTrackingMenu(true);
-                    })
-                }
-            });
+            win.webContents.once('dom-ready', () => {
+                win.webContents.send("isOfflineLogin")
+                ipcMain.once("isOfflineReply", (event, offline) => {
+                    isoffline = offline;
+                    console.log(isoffline);
+                    if (isoffline) {
+                        win.loadFile("logging.html").then(() => {
+                            updateTrackingMenu(true, isoffline);
+                        });
+                    } else {
+                        axios.get('https://falconites.com/dashboard/api/v1/users?key=9xsyr1pr1miyp45&login=' + parsed.key).then(function(response) {
+                            var data = response.data;
+                            if (data.status != "202") {
+                                ses.cookies.remove("https://dashboard.falconites.com", "userinfo").then(() => {
+                                    win.loadFile("login.html");
+                                }).catch((error) => {
+                                    if (error) console.error(error);
+                                })
+                            } else {
+                                win.loadFile("logging.html").then(() => {
+                                    updateTrackingMenu(true, false);
+                                })
+                            }
+                        }).catch(function(err) {
+                            console.log(err);
+                            if (err.errno == "ENOTFOUND" || err.code == "ENOTFOUND" || err.code == "ECONNREFUSED" || err.errno == "ECONNREFUSED") {
+                                win.loadFile("logging.html").then(() => {
+                                    isoffline = true;
+                                    updateTrackingMenu(true, isoffline);
+                                });
+                            }
+                        })
+                    }
+                })
+            })
         } else {
             win.loadFile("login.html").then(() => {
-                updateTrackingMenu(true);
+                updateTrackingMenu(true, false);
             })
         }
     }).catch((error) => {
@@ -90,7 +112,7 @@ function createWindow() {
             label: 'Start Logging',
             id: 'start',
             click: function() {
-                updateTrackingMenu(false);
+                updateTrackingMenu(false, isoffline);
             }
         },
         {
@@ -98,7 +120,7 @@ function createWindow() {
             id: 'stop',
             enabled: false,
             click: function() {
-                updateTrackingMenu(false);
+                updateTrackingMenu(false, isoffline);
             }
         },
         {
@@ -121,20 +143,26 @@ function createWindow() {
     var contextMenu = Menu.buildFromTemplate(context);
     initTray(tray);
 
-    function updateTrackingMenu(onStartup) {
+    function updateTrackingMenu(onStartup, isOffline) {
         let url = win.webContents.getURL(),
             page = url.split('/').pop();
         if (page == "logging.html" && !onStartup) { // Stop tracking
             contextMenu.getMenuItemById("start").enabled = true;
             contextMenu.getMenuItemById("stop").enabled = false;
             initTray(tray);
-            win.loadFile("home.html")
+            win.loadFile("home.html").then(() => {
+                win.webContents.send("loadHome", isOffline);
+            })
         } else if (page == "home.html" || onStartup) { // Start Tracking
             contextMenu.getMenuItemById("start").enabled = false;
             contextMenu.getMenuItemById("stop").enabled = true;
             initTray(tray);
             if (!onStartup) {
-                win.loadFile("logging.html")
+                win.loadFile("logging.html").then(() => {
+                    win.webContents.send("loadLogging", isOffline);
+                })
+            } else {
+                win.webContents.send("loadLogging", isOffline);
             }
         } else if (page == "login.html") { // Not logged in
             contextMenu.getMenuItemById("start").enabled = false;
@@ -188,11 +216,11 @@ function createWindow() {
     })
 
     ipcMain.on('login-success', () => {
-        updateTrackingMenu(false);
+        updateTrackingMenu(false, isoffline);
         win.loadFile("home.html");
     })
 
-    ipcMain.on('logout', () => {
+    ipcMain.on('logout', (event, isOffline) => {
         //updateTrackingMenu(false);
         ses.cookies.remove("https://dashboard.falconites.com", "userinfo").then(() => {
             win.loadFile("login.html");
@@ -202,25 +230,18 @@ function createWindow() {
     })
 
     ipcMain.on('startlogging', () => {
-        updateTrackingMenu(false);
+        updateTrackingMenu(false, isoffline);
     })
 
-    ipcMain.on('stoplogging', () => {
-        updateTrackingMenu(false);
+    ipcMain.on('stoplogging', (event, isOffline) => {
+        updateTrackingMenu(false, isOffline);
     })
 
     ipcMain.on('unexpectederror', () => {
-        notifier.notify({
-            title: "FT Job Logger",
-            message: "FT Job Logger has had an unexpected error. Click here to restart immediately.",
-            icon: path.join(__dirname, '/assets/falcon_logo.jpg'),
-            sound: true
-        }, function(err, resp) {
-            isQuitting = true;
-            app.relaunch();
-            app.quit();
-        })
-        console.log("Displaying error notif")
+        console.log("Restarting application...")
+        isQuitting = true;
+        app.relaunch();
+        app.quit();
     })
 }
 

@@ -203,7 +203,7 @@ class ETCarsClient extends EventEmitter {
                 this.bufferReady = false;
                 this.buffer = this.buffer.substring(this.buffer.indexOf('{', 0), this.buffer.indexOf('\r'));
                 var json = JSON.parse(this.buffer);
-                if (json.data.status == "JOB FINISHED") {
+                if (json.data.status == "JOB FINISHED") { // REMOVE BEFORE RELEASE
                     console.log(json.data);
                 }
                 this.buffer = '';
