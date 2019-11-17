@@ -12,7 +12,7 @@
         "postinstall": "electron-builder install-app-deps"
     },
     "config": {
-        "pass": "ftjobloggerprasadh"
+        "pass": "ftjobloggerprasadhdesktop"
     },
     "build": {
         "appId": "FtJobLogger",
