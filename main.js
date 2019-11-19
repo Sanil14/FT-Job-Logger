@@ -238,10 +238,11 @@ function createWindow() {
     })
 
     ipcMain.on('unexpectederror', () => {
-        console.log("Restarting application...")
-        isQuitting = true;
-        app.relaunch();
-        app.quit();
+        win.loadFile("home.html").then(() => {
+            setTimeout(() => {
+                win.loadFile("logging.html")
+            }, 3000);
+        })
     })
 }
 

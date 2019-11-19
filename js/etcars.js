@@ -108,7 +108,7 @@ class ETCarsClient extends EventEmitter {
         if (this._enableDebug)
         //console.log('socket closed');
 
-            setTimeout(() => this.connect(), 10000);
+            setTimeout(() => this.connect(), 5000);
     }
 
     /**
@@ -202,7 +202,17 @@ class ETCarsClient extends EventEmitter {
             if (this.bufferReady) {
                 this.bufferReady = false;
                 this.buffer = this.buffer.substring(this.buffer.indexOf('{', 0), this.buffer.indexOf('\r'));
-                var json = JSON.parse(this.buffer);
+                try {
+                    var json = JSON.parse(this.buffer);
+                } catch (err) {
+                    this.buffer = this.buffer.replace(/�/g, "Missing Information");
+                    var json = JSON.parse(this.buffer);
+                    if (json.data.status == "JOB FINISHED") { // REMOVE BEFORE RELEASE
+                        console.log(json.data);
+                    }
+                    this.buffer = '';
+                    this.emit('data', json.data);
+                }
                 if (json.data.status == "JOB FINISHED") { // REMOVE BEFORE RELEASE
                     console.log(json.data);
                 }
@@ -217,6 +227,8 @@ class ETCarsClient extends EventEmitter {
                 socketConnected: true,
                 errorMessage: error.message
             });
+            logger.info(error);
+            logger.info(this.buffer);
             if (this._enableDebug)
                 console.log(error.message);
         }

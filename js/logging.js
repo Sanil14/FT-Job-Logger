@@ -44,6 +44,13 @@ etcars.on('data', function(data) {
     try {
         if (data.status == "JOB STARTED") {
             log("Job start detected");
+            if (!navigator.onLine) {
+                log(`Internet Connection: <span class="red-text">Disconnected</span>`, "yellow-text text-accent-2")
+                isoffline = true;
+                setOffline();
+                $(".container div:last:last-child").addClass("clientside");
+                $(".clientside").prop("title", "You have no internet connection")
+            }
         }
         if (data.status == "JOB FINISHED") {
             if (typeof data.telemetry != 'undefined' && data.telemetry) {
@@ -97,9 +104,10 @@ etcars.on('data', function(data) {
                                 if (err.errno == "ENOTFOUND" || err.code == "ENOTFOUND" || err.code == "ECONNREFUSED" || err.errno == "ECONNREFUSED") {
                                     log("Unable to submit job. Server might be offline.", "red-text");
                                     log("All jobs will be locally stored.", "orange-text text-lighten-2")
+                                    isoffline = true;
                                     setOffline();
-                                    $(".container div:nth-last-child(1)").addClass("serverside");
-                                    $(".serverside").prop("title", "The server is down")
+                                    $(".container div:last:last-child").addClass("clientside");
+                                    $(".clientside").prop("title", "You have no internet connection")
                                     log("Attempting to locally store job...")
                                     setOfflineJobs(info);
                                 } else {
@@ -111,7 +119,7 @@ etcars.on('data', function(data) {
                         if (!isoffline) {
                             isoffline = true;
                             setOffline();
-                            $(".container div:nth-last-child(1)").addClass("clientside");
+                            $(".container div:last:last-child").addClass("clientside");
                             $(".clientside").prop("title", "You have no internet connection")
                         }
                         log("Attempting to locally store job...")
@@ -164,7 +172,7 @@ etcars.on('unexpectedError', function(data) {
         return;
     }
     ipcRenderer.send("unexpectederror");
-    errorm = "Unexpected error with logger. Restarting...";
+    errorm = "Unexpected error with logger. Refreshing...";
     logger.error(data.errorMessage)
     log(`${errorm}`, "red-text")
     unexerrorc += 1;
