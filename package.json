@@ -29,7 +29,8 @@
             "url": "https://falconites.com/dashboard/cdn/releases"
         },
         "nsis": {
-            "artifactName": "${productName} Setup ${version}.${ext}"
+            "artifactName": "${productName} Setup ${version}.${ext}",
+            "include": "build/installer.nsh"
         }
     },
     "author": "Falcon_Trucking",
