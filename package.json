@@ -44,7 +44,7 @@
         "npm-check-updates": "^3.2.1"
     },
     "devDependencies": {
-        "electron": "^7.1.1",
+        "electron": "^7.1.2",
         "electron-builder": "^22.1.0",
         "electron-prebuilt": "^1.4.13",
         "electron-updater": "^4.2.0",
