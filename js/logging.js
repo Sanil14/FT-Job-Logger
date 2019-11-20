@@ -214,7 +214,7 @@ ipcRenderer.on("loadLogging", function(event, isOffline) {
     if (isOffline && navigator.onLine) {
         isoffline = true;
         setOffline();
-        $(".container div:nth-last-child(1)").addClass("serverside");
+        $(".container div:last:last-child").addClass("serverside");
         $(".serverside").prop("title", "The server is down")
     }
     log(`Server Connection: <span class="${!isoffline ? "green-text" : "red-text"}">${!isoffline ? "Connected" : "Disconnected"}</span>`, "yellow-text text-accent-2")
@@ -223,6 +223,15 @@ ipcRenderer.on("loadLogging", function(event, isOffline) {
 function getOfflineJobs() {
     path = remote.app.getPath("userData") + "\\Local Jobs";
     try {
+        if (!navigator.onLine) {
+            isoffline = true;
+            setOffline();
+            $(".container div:last:last-child").addClass("clientside");
+            $(".clientside").prop("title", "You have no internet connection")
+            return log("You do not have an active internet connection!", "red-text")
+        }
+        hideOffline();
+        isoffline = false;
         if (!fs.existsSync(path) || !fs.existsSync(path + "\\localjobs.dat")) {
             return log("There are no offline jobs to upload to the server!")
         }
