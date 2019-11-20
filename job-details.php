@@ -162,7 +162,7 @@
 
                                   $startTime = $jobdetails["realTimeStarted"];
                                   $endTime = $jobdetails["realTimeEnded"];
-                                  if($jobdetails["LateFine"]) {
+                                  if($jobdetails["LateFine"] == true) {
                                     $late = "Late";
                                   } else {
                                     $late = "On Time";
@@ -224,7 +224,7 @@
                                 <tr>
                                     <td><i class="fa fa-truck fa-2x "></i></td>
                                     <td>Game Mode</td>
-                                    <td><?php echo $jobdetails["JobID"]; ?></td>
+                                    <td><?php echo $jobdetails["isMultiplayer"] == true ? "Multiplayer" : "Singleplayer"; ?></td>
                                  </tr>
                                  <tr>
                                     <td><i class="fa fa-id-card fa-2x "></i></td>

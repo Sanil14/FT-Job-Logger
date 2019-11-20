@@ -18,7 +18,7 @@
 
   $dataset = urldecode($_GET["data"]);
   $arrayed = explode(",",$dataset);
-  if (!$arrayed[0] || !is_numeric($arrayed[0])) {
+  if (!$arrayed[1] || !is_numeric($arrayed[1])) {
     $error = array(
       "status"=>"400",
       "error"=>"User is invalid"
@@ -27,7 +27,7 @@
     exit();
   }
   //echo json_encode($arrayed);
-  if (sizeof($arrayed) != 20) {
+  if (sizeof($arrayed) != 21) {
     $error = array(
       "status"=>"400",
       "error"=>"Values missing"
@@ -35,26 +35,27 @@
     echo json_encode($error);
     exit();
   }
-  $UID = UIDisValid($conn,$arrayed[0]) ? $arrayed[0] : outputError();
-  $gameid = ($arrayed[1] == "ets2" || $arrayed[1] == "ats") ? $arrayed[1] : $arrayed[1];
-  $sourcecity = gettype($arrayed[2]) == "string" ? $arrayed[2] : outputError();
-  $sourcecom = gettype($arrayed[3]) == "string" ? $arrayed[3] : outputError();
-  $destcity = gettype($arrayed[4]) == "string" ? $arrayed[4] : outputError();
-  $destcom = gettype($arrayed[5]) == "string" ? $arrayed[5] : outputError();
-  $odometer = is_numeric($arrayed[6]) ? $arrayed[6] : outputError();
-  $fueld =  is_numeric($arrayed[7]) ? $arrayed[7] : outputError();
-  $money =  is_numeric($arrayed[8]) ? $arrayed[8] : outputError();
-  $cargoname = gettype($arrayed[9]) == "string" ? $arrayed[9] : outputError();
-  $cargomass =  is_numeric($arrayed[10]) ? $arrayed[10] : outputError();
-  $fee = $arrayed[11];
-  $timestarted = is_numeric($arrayed[12]) ? ($arrayed[12]/1000) : outputError();
-  $timeended = is_numeric($arrayed[13]) ? ($arrayed[13]/1000) : outputError();
-  $topspeedms = is_numeric($arrayed[14]) ? $arrayed[14] : outputError();
-  $speedingcount = is_numeric($arrayed[15]) ? $arrayed[15] : outputError();
-  $collisioncount = is_numeric($arrayed[16]) ? $arrayed[16] : outputError();
-  $damage = is_numeric($arrayed[17]) ? $arrayed[17] : outputError();
-  $truckmake = gettype($arrayed[18]) == "string" ? $arrayed[18] : outputError();
-  $truckmodel = gettype($arrayed[19]) == "string" ? $arrayed[19] : outputError();
+  $mp = $arrayed[0];
+  $UID = UIDisValid($conn,$arrayed[1]) ? $arrayed[1] : outputError();
+  $gameid = ($arrayed[2] == "ets2" || $arrayed[2] == "ats") ? $arrayed[2] : $arrayed[2];
+  $sourcecity = gettype($arrayed[3]) == "string" ? $arrayed[3] : outputError();
+  $sourcecom = gettype($arrayed[4]) == "string" ? $arrayed[4] : outputError();
+  $destcity = gettype($arrayed[5]) == "string" ? $arrayed[5] : outputError();
+  $destcom = gettype($arrayed[6]) == "string" ? $arrayed[6] : outputError();
+  $odometer = is_numeric($arrayed[7]) ? $arrayed[7] : outputError();
+  $fueld =  is_numeric($arrayed[8]) ? $arrayed[8] : outputError();
+  $money =  is_numeric($arrayed[9]) ? $arrayed[9] : outputError();
+  $cargoname = gettype($arrayed[10]) == "string" ? $arrayed[10] : outputError();
+  $cargomass =  is_numeric($arrayed[11]) ? $arrayed[11] : outputError();
+  $fee = $arrayed[12];
+  $timestarted = is_numeric($arrayed[13]) ? ($arrayed[13]/1000) : outputError();
+  $timeended = is_numeric($arrayed[14]) ? ($arrayed[14]/1000) : outputError();
+  $topspeedms = is_numeric($arrayed[15]) ? $arrayed[15] : outputError();
+  $speedingcount = is_numeric($arrayed[16]) ? $arrayed[16] : outputError();
+  $collisioncount = is_numeric($arrayed[17]) ? $arrayed[17] : outputError();
+  $damage = is_numeric($arrayed[18]) ? $arrayed[18] : outputError();
+  $truckmake = gettype($arrayed[19]) == "string" ? $arrayed[19] : outputError();
+  $truckmodel = gettype($arrayed[20]) == "string" ? $arrayed[20] : outputError();
   $date = time();
 
   $topspeedkmh = round($topspeedms*3.6);
@@ -68,7 +69,7 @@
     $distance = $odometer;
   }
 
-  $q = "INSERT INTO `user_jobs` VALUES ('0', '$UID', '$sourcecity','$sourcecom','$destcity','$destcom','$distance','$fuel','$income','$cargomass','$cargoname','$fee','$timestarted','$timeended','$topspeedkmh','$speedingcount','$collisioncount','$damage','$gameid','$truckmake','$truckmodel','$date')";
+  $q = "INSERT INTO `user_jobs` VALUES ('0', '$UID', '$sourcecity','$sourcecom','$destcity','$destcom','$distance','$fuel','$income','$cargomass','$cargoname','$fee','$mp','$timestarted','$timeended','$topspeedkmh','$speedingcount','$collisioncount','$damage','$gameid','$truckmake','$truckmodel','$date')";
   //echo "$jobID, $UID, $sourcecity,$sourcecom,$destcity,$destcom,$distance,$fuel,$income,$cargomass,$cargoname,$fee,$timestarted,$timeended,$topspeedkmh,$speedingcount,$collisioncount,$damage,$gameid,$truckmake,$truckmodel,$date";
   if (mysqli_query($conn,$q)) {
     if($gameid == "ats") {
