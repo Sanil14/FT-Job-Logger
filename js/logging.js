@@ -61,6 +61,7 @@ etcars.on('data', function(data) {
                         info[0] = 3;
                     }
                     */
+                    info.push(data.jobData.isMultiplayer)
                     info.push(userdata.userid)
                     info.push(data.jobData.gameID)
                     info.push(data.jobData.sourceCity)
