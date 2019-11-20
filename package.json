@@ -1,7 +1,7 @@
 {
     "name": "ft_job_logger",
     "productName": "FT Job Logger",
-    "version": "2.2.5",
+    "version": "2.2.6",
     "description": "Desktop App for the Falcon Trucking Tracker",
     "main": "main.js",
     "scripts": {
