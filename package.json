@@ -1,7 +1,7 @@
 {
     "name": "ft_job_logger",
     "productName": "FT Job Logger",
-    "version": "2.2.6",
+    "version": "2.2.7",
     "description": "Desktop App for the Falcon Trucking Tracker",
     "main": "main.js",
     "scripts": {
@@ -44,10 +44,12 @@
         "npm-check-updates": "^3.2.1"
     },
     "devDependencies": {
+        "discord-rpc": "^3.1.0",
         "electron": "^7.1.2",
         "electron-builder": "^22.1.0",
         "electron-prebuilt": "^1.4.13",
         "electron-updater": "^4.2.0",
-        "nexe": "^3.3.2"
+        "nexe": "^3.3.2",
+        "node-fetch": "^2.6.0"
     }
 }

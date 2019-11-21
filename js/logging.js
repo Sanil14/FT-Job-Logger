@@ -9,6 +9,9 @@ const axios = require("axios");
 const etcars = new EtCarsClient();
 const CryptoJS = require("crypto-js");
 const fs = require('fs');
+const RichPresenceManager = require('./js/rpcmanager.js');
+var presenceManager = new RichPresenceManager();
+
 etcars.enableDebug = true;
 var userdata,
     errorcounter = 0,
@@ -42,6 +45,9 @@ ses.cookies.get({}).then((cookies) => {
 
 etcars.on('data', function(data) {
     try {
+        if (navigator.onLine) {
+            presenceManager.onData(data);
+        }
         if (data.status == "JOB STARTED") {
             log("Job start detected");
             if (!navigator.onLine) {
@@ -163,6 +169,7 @@ etcars.on('error', function(data) {
     errormsg = data.errorMessage;
     if (errormsg == "ETCars is not running") {
         errormsg = "Game is not running or ETCars is not installed!"
+        presenceManager.disableRPC();
     }
     log(`${errormsg}`, "red-text");
     errorcounter += 1
