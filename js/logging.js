@@ -74,7 +74,7 @@ etcars.on('data', function(data) {
                     info.push(data.jobData.sourceCompany == "" ? "Special Transport Job" : data.jobData.sourceCompany)
                     info.push(data.jobData.destinationCity)
                     info.push(data.jobData.destinationCompany == "" ? "Special Transport Job" : data.jobData.destinationCompany)
-                    info.push(data.jobData.distanceDriven)
+                    info.push(Math.round(data.jobData.distanceDriven))
                     info.push(data.jobData.fuelBurned)
                     info.push(data.jobData.income)
                     info.push(data.telemetry.job.cargo)
