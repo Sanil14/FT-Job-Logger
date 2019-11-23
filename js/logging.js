@@ -206,7 +206,7 @@ function hideOffline() {
 
 function log(msg, color) {
     var d = new Date();
-    var time = `${d.getDate()}/${d.getMonth()}/${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
+    var time = `${d.getDate()}/${d.getMonth()}/${d.getFullYear()} ${(d.getHours()<10?'0':'') + d.getHours()}:${(d.getMinutes()<10?'0':'') + d.getMinutes()}:${(d.getSeconds()<10?'0':'') + d.getSeconds()}`;
     $(".consolediv").append(`<p class="left-align ${color ? color : ""}">[${time}] ${msg}</p>`)
     var d = $('.consolediv');
     d.scrollTop(d.prop("scrollHeight"));
