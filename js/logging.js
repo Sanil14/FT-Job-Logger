@@ -148,6 +148,7 @@ $(".stop button").click(function() {
         setTimeout(() => {
             //let window = brow.getCurrentWindow();
             //window.loadFile("./home.html");
+            presenceManager.disableRPC();
             ipcRenderer.send("stoplogging", isoffline);
         }, 2000);
     }, 2000);
@@ -179,6 +180,7 @@ etcars.on('unexpectedError', function(data) {
     if (unexerrorc >= 1) {
         return;
     }
+    presenceManager.disableRPC();
     ipcRenderer.send("unexpectederror");
     errorm = "Unexpected error with logger. Refreshing...";
     logger.error(data.errorMessage)
