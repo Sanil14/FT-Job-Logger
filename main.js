@@ -34,61 +34,63 @@ function createWindow() {
         icon: "./assets/falcon_logo.jpg",
         autoHideMenuBar: true
             //devTools: false,
-            //frame: false
     })
     windowHidden = false;
+    var ses = session.fromPartition("persist:userinfo");
 
-    win.loadFile("login.html")
-    sendStatusToWindow("No updates available");
-    let ses = session.fromPartition("persist:userinfo")
-
-    ses.cookies.get({}).then(async(cookies) => {
-        if (cookies.length < 1) return;
-        var parsed = JSON.parse(cookies[0].value);
-        if (parsed.verification && parsed.key != undefined) {
-            console.log("SESSION DETECTED")
-            win.webContents.once('dom-ready', () => {
-                win.webContents.send("isOfflineLogin")
-                ipcMain.once("isOfflineReply", (event, offline) => {
-                    isoffline = offline;
-                    console.log(isoffline);
-                    if (isoffline) {
-                        win.loadFile("logging.html").then(() => {
-                            updateTrackingMenu(true, isoffline);
-                        });
-                    } else {
-                        axios.get('https://falconites.com/dashboard/api/v1/users?key=9xsyr1pr1miyp45&login=' + parsed.key).then(function(response) {
-                            var data = response.data;
-                            if (data.status != "202") {
-                                ses.cookies.remove("https://dashboard.falconites.com", "userinfo").then(() => {
-                                    win.loadFile("login.html");
-                                }).catch((error) => {
-                                    if (error) console.error(error);
-                                })
-                            } else {
-                                win.loadFile("logging.html").then(() => {
-                                    updateTrackingMenu(true, false);
-                                })
-                            }
-                        }).catch(function(err) {
-                            console.log(err);
-                            if (err.errno == "ENOTFOUND" || err.code == "ENOTFOUND" || err.code == "ECONNREFUSED" || err.errno == "ECONNREFUSED") {
-                                win.loadFile("logging.html").then(() => {
-                                    isoffline = true;
-                                    updateTrackingMenu(true, isoffline);
-                                });
-                            }
-                        })
-                    }
+    win.loadFile("loading.html").then(() => {
+        ses.cookies.get({}).then((cookies) => {
+            console.log(cookies);
+            if (cookies.length < 1) {
+                win.loadFile("login.html").then(() => {
+                    updateTrackingMenu(false, false);
                 })
-            })
-        } else {
-            win.loadFile("login.html").then(() => {
-                updateTrackingMenu(true, false);
-            })
-        }
-    }).catch((error) => {
-        console.log(error);
+            } else {
+                var parsed = JSON.parse(cookies[0].value);
+                if (parsed.verification && parsed.key != undefined) {
+                    console.log("SESSION DETECTED")
+                    win.webContents.send("isOfflineLogin")
+                    ipcMain.once("isOfflineReply", (event, offline) => {
+                        isoffline = offline;
+                        console.log(isoffline);
+                        if (isoffline) {
+                            win.loadFile("logging.html").then(() => {
+                                updateTrackingMenu(true, isoffline);
+                            });
+                        } else {
+                            axios.get('https://falconites.com/dashboard/api/v1/users?key=9xsyr1pr1miyp45&login=' + parsed.key).then(function(response) {
+                                var data = response.data;
+                                if (data.status != "202") {
+                                    ses.cookies.remove("https://dashboard.falconites.com", "userinfo").then(() => {
+                                        win.loadFile("login.html");
+                                    }).catch((error) => {
+                                        if (error) console.error(error);
+                                    })
+                                } else {
+                                    win.loadFile("logging.html").then(() => {
+                                        updateTrackingMenu(true, false);
+                                    })
+                                }
+                            }).catch(function(err) {
+                                console.log(err);
+                                if (err.errno == "ENOTFOUND" || err.code == "ENOTFOUND" || err.code == "ECONNREFUSED" || err.errno == "ECONNREFUSED") {
+                                    win.loadFile("logging.html").then(() => {
+                                        isoffline = true;
+                                        updateTrackingMenu(true, isoffline);
+                                    });
+                                }
+                            })
+                        }
+                    })
+                } else {
+                    win.loadFile("login.html").then(() => {
+                        updateTrackingMenu(true, false);
+                    })
+                }
+            }
+        }).catch((error) => {
+            console.log(error);
+        })
     })
 
     console.log("Booting up logger");

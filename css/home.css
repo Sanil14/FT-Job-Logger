@@ -179,3 +179,15 @@ div.inline2 {
     background: #ec8787;
     color: #551313;
 }
+
+
+/* Loading Screen Start */
+
+.loading img {
+    width: 60px;
+}
+
+.loading p {
+    font-weight: bold;
+    font-size: 20px;
+}
