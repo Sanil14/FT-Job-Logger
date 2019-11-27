@@ -2,11 +2,11 @@
 include("./api/v1/database.php");
 session_start();
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] == false) {
-   header("Location: page-login?redirect=vtc-jobs");
+   header("Location: page-login?redirect=user-jobs");
 }
 $id = $_SESSION['userid'];
 $invalid_err = "";
-$s = "SELECT Username,Email,DOB,Country,About,Preferences,Permission FROM `user_profile` WHERE UserID='$id'";
+$s = "SELECT user_profile.Username, user_profile.Preferences, user_profile.Permission,user_stats.AtsKM, user_stats.AtsIncome, user_stats.AtsJobs,user_stats.AtsFuel,user_stats.Ets2KM,user_stats.Ets2Income,user_stats.Ets2Jobs,user_stats.Ets2Fuel FROM `user_stats` INNER JOIN `user_profile` ON user_stats.UserID = user_profile.UserID WHERE user_stats.UserID='$id'";
 $q = mysqli_query($conn, $s);
 $userstats = mysqli_fetch_array($q);
 
@@ -15,7 +15,14 @@ if (!file_exists($profilepic)) {
    $profilepic = "avatars/default.png";
 }
 $username = $userstats["Username"];
-
+$AtsKM = $userstats["AtsKM"];
+$AtsJobs = $userstats["AtsJobs"];
+$AtsIncome = $userstats["AtsIncome"];
+$AtsFuel = $userstats["AtsFuel"];
+$Ets2KM = $userstats["Ets2KM"];
+$Ets2Jobs = $userstats["Ets2Jobs"];
+$Ets2Income = $userstats["Ets2Income"];
+$Ets2Fuel = $userstats["Ets2Fuel"];
 $pref = json_decode($userstats["Preferences"]);
 $timezone = $pref->Timezone;
 
@@ -29,7 +36,7 @@ $timezone = $pref->Timezone;
    <meta name="description" content="Falcon Trucking Dashboard with fully automated Jobs and user statistics">
    <meta name="author" content="Falcon Trucking">
    <link rel="shortcut icon" href="assets/images/favicon.ico">
-   <title>Falcon Trucking Dashboard - VTC Jobs</title>
+   <title>Falcon Trucking Dashboard - User Jobs</title>
    <!-- DataTables -->
    <link href="assets/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
    <link href="assets/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
@@ -37,7 +44,6 @@ $timezone = $pref->Timezone;
    <link href="assets/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
    <!-- Multi Item Selection examples -->
    <link href="assets/plugins/datatables/select.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
    <!-- App css -->
    <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
    <link href="assets/css/icons.css" rel="stylesheet" type="text/css" />
@@ -57,13 +63,14 @@ $timezone = $pref->Timezone;
          <!-- Button mobile view to collapse sidebar menu -->
          <div class="navbar navbar-default" role="navigation">
             <div class="container-fluid">
+
                <!-- Page title -->
                <ul class="nav navbar-nav list-inline navbar-left">
                   <li class="list-inline-item">
                      <button class="button-menu-mobile open-left"> <i class="mdi mdi-menu"></i> </button>
                   </li>
                   <li class="list-inline-item">
-                     <h4 class="page-title">VTC Jobs</h4>
+                     <h4 class="page-title">Your Jobs</h4>
                   </li>
                </ul>
                <nav class="navbar-custom">
@@ -102,11 +109,112 @@ $timezone = $pref->Timezone;
          <!-- Start content -->
          <div class="content">
             <div class="container-fluid">
+
+               <div class="row">
+                  <div class="col-md-12">
+                     <div class="card-box widget-user alert alert-info">
+                        <div class="text-center">
+                           <h2 class="text-custom">YOUR ETS2 STATS</h2>
+                           <h5>YOUR OVERALL PERFORMANCE IN ETS2</h5>
+                        </div>
+                     </div>
+                  </div>
+
+
+                  <div class="col-xl-3 col-md-6">
+                     <div class="card-box widget-user">
+                        <div class="text-center">
+                           <h2 class="text-custom" data-plugin="counterup"><?php echo $Ets2KM ?></h2>
+                           <h5><span>KM</span>&nbsp;Travelled</h5>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="col-xl-3 col-md-6">
+                     <div class="card-box widget-user">
+                        <div class="text-center">
+                           <h2 class="text-pink" data-plugin="counterup"><?php echo $Ets2Jobs ?></h2>
+                           <h5>Total Jobs</h5>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="col-xl-3 col-md-6">
+                     <div class="card-box widget-user">
+                        <div class="text-center">
+                           <h2 class="text-warning" data-plugin="counterup"><?php echo $Ets2Income ?></h2>
+                           <h5>Income&nbsp;<span>(Euros)</span></h5>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="col-xl-3 col-md-6">
+                     <div class="card-box widget-user">
+                        <div class="text-center">
+                           <h2 class="text-info" data-plugin="counterup"><?php echo $Ets2Fuel ?></h2>
+                           <h5>Fuel Consumed&nbsp;<span>(Ltrs)</span></h5>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <!-- end row -->
+
+               <div class="row">
+                  <div class="col-md-12">
+                     <div class="card-box widget-user alert alert-info">
+                        <div class="text-center">
+                           <h2 class="text-custom">YOUR ATS STATS</h2>
+                           <h5>YOUR OVERALL PERFORMANCE IN ATS</h5>
+                        </div>
+                     </div>
+                  </div>
+
+
+                  <div class="col-xl-3 col-md-6">
+                     <div class="card-box widget-user">
+                        <div class="text-center">
+                           <h2 class="text-custom" data-plugin="counterup"><?php echo $AtsKM ?></h2>
+                           <h5><span>KM</span>&nbsp;Travelled</h5>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="col-xl-3 col-md-6">
+                     <div class="card-box widget-user">
+                        <div class="text-center">
+                           <h2 class="text-custom" data-plugin="counterup"><?php echo $AtsJobs ?></h2>
+                           <h5>Total Jobs</h5>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="col-xl-3 col-md-6">
+                     <div class="card-box widget-user">
+                        <div class="text-center">
+                           <h2 class="text-custom" data-plugin="counterup"><?php echo $AtsIncome ?></h2>
+                           <h5>Income&nbsp;<span>(Euros)</span></h5>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="col-xl-3 col-md-6">
+                     <div class="card-box widget-user">
+                        <div class="text-center">
+                           <h2 class="text-custom" data-plugin="counterup"><?php echo $AtsFuel ?></h2>
+                           <h5>Fuel Consumed&nbsp;<span>(Ltrs)</span></h5>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <!-- end row -->
+
                <div class="row">
                   <div class="col-12">
                      <div class="card-box table-responsive">
                         <h4 class="m-t-0 header-title">Overall Jobs</h4>
-                        <p class="text-muted font-14 m-b-30"> Shows all Jobs of all Members of the VTC </p>
+                        <p class="text-muted font-14 m-b-30"> Shows all Jobs of you from ETS2 and ATS </p>
                         <div class="form-group row col-md-4">
                            <label class="col-md-4 col-form-label">Jobs Filter</label>
                            <div class="col-md-8">
@@ -180,49 +288,7 @@ $timezone = $pref->Timezone;
                   </div>
                </div>
                <!-- end row -->
-               <div class="row">
-                  <div class="col-12">
-                     <div class="card-box table-responsive">
-                        <h4 class="m-t-0 header-title">Current Month Leader Boards </h4>
-                        <p class="text-muted font-14 m-b-30"> Shows Current Month Performance of every Driver<br />
-                           Current month is: <strong><?php echo date("F") ?></strong>
-                        </p>
-                        <table id="DOM-datatable" class="table table-bordered table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
-                           <thead class="thead-light">
-                              <tr>
-                                 <th>Position</th>
-                                 <th>Name</th>
-                                 <th>Total Jobs</th>
-                                 <th>Total Distance (KM)</th>
-                              </tr>
-                           </thead>
-                           <tbody>
-                              <?php
-                              $firstday = date("m/01/Y");
-                              $lastday = date("m/t/Y");
-                              $epochfirst = strtotime($firstday);
-                              $epochlast = strtotime($lastday);
-                              $s = "SELECT user_profile.Username,user_jobs.UserID, SUM(user_jobs.Odometer) AS Odometer, COUNT(user_jobs.JobID) AS Jobs FROM `user_jobs` LEFT JOIN user_profile ON user_profile.UserID=user_jobs.UserID WHERE Dated BETWEEN '$epochfirst' AND '$epochlast' GROUP BY user_jobs.UserID ORDER BY Odometer DESC";
-                              $q = mysqli_query($conn, $s);
-                              while ($dom = mysqli_fetch_array($q)) {
-                                 if ($dom["Jobs"] < 1) {
-                                    continue;
-                                 }
-                                 ?>
-                                 <tr>
-                                    <td><span class="positionNum">0</span></td>
-                                    <td><?php echo $dom["Username"] ?></td>
-                                    <td><?php echo $dom["Jobs"] ?></td>
-                                    <td><?php echo round($dom["Odometer"]) ?></td>
-                                 </tr>
-                              <?php
-                              }
-                              ?>
-                           </tbody>
-                        </table>
-                     </div>
-                  </div>
-               </div>
+
             </div>
             <!-- container -->
          </div>
@@ -330,11 +396,12 @@ $timezone = $pref->Timezone;
             "serverSide": true,
             "responsive": true,
             "ajax": {
-               "url": "./serverside/response-vtc.php",
+               "url": "./serverside/response-user.php",
                "type": "post",
                "data": function(d) {
                   d.timezone = "<?php echo $timezone ?>";
                   d.jobfilter = $('.gametype').val();
+                  d.userid = "<?php echo $id ?>";
                }
             },
             "columnDefs": [{
@@ -370,9 +437,8 @@ $timezone = $pref->Timezone;
                orderable: false
             }],
             "createdRow": function(row, data, dataIndex) {
+               console.log(dataIndex)
                if (dataIndex == 0) {
-                  name = data[1];
-                  $(row).children()[1].innerHTML = name + ' <sup><i class="fas fa-crown fa-xs"></i></sup>'
                   $(row).addClass("text-warning");
                } else if (dataIndex == 1) {
                   $(row).addClass("text-info");

@@ -2,21 +2,39 @@
 include("./api/v1/database.php");
 session_start();
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] == false) {
-   header("Location: page-login?redirect=profile");
+   header("Location: page-login?redirect=user-edit");
 }
-$id = $_SESSION['userid'];
-$invalid_err = "";
-$s = "SELECT Username,Email,DOB,Country,About,Permission FROM `user_profile` WHERE UserID='$id'";
-$q = mysqli_query($conn, $s);
-$userstats = mysqli_fetch_array($q);
 
-$profilepic = "avatars/" . $id . ".png";
+$userid = $_SESSION['userid'];
+$p = "SELECT Username,Permission FROM `user_profile` WHERE UserID='$userid'";
+$r = mysqli_query($conn, $p);
+$userstats = mysqli_fetch_array($r);
+
+$profilepic = "avatars/" . $userid . ".png";
 if (!file_exists($profilepic)) {
    $profilepic = "avatars/default.png";
 }
 $username = $userstats["Username"];
 
-$old_date = date('d/m/Y', strtotime($userstats["DOB"]));
+if ($userstats["Permission"] != "Admin") {
+   header("Location: index");
+}
+
+$id = $_GET['id'];
+$invalid_err = "";
+$s = "SELECT Username,Email,DOB,Country,About,Permission,JoinDate,Roles FROM `user_profile` WHERE UserID='$id'";
+$q = mysqli_query($conn, $s);
+$stats = mysqli_fetch_array($q);
+
+$usern = $stats["Username"];
+if ($stats["Permission"] == "Admin") {
+   header("Location: user-manager");
+}
+
+$roles = explode(", ", $stats["Roles"]);
+
+$old_date = $stats["DOB"] != "0000-00-00" ? date('d/m/Y', strtotime($stats["DOB"])) : "00/00/0000";
+$joindate = date('d/m/Y', strtotime($stats["JoinDate"]));
 
 ?>
 <!DOCTYPE html>
@@ -28,7 +46,7 @@ $old_date = date('d/m/Y', strtotime($userstats["DOB"]));
    <meta name="description" content="Falcon Trucking Dashboard with fully automated Jobs and user statistics">
    <meta name="author" content="Falcon Trucking">
    <link rel="shortcut icon" href="assets/images/favicon.ico">
-   <title>Falcon Trucking Dashboard - User Profile</title>
+   <title>Falcon Trucking Dashboard - User Details Editor</title>
    <!-- X-editable css -->
    <link type="text/css" href="assets/plugins/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet">
    <link href="assets/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" rel="stylesheet" />
@@ -54,7 +72,7 @@ $old_date = date('d/m/Y', strtotime($userstats["DOB"]));
       <div class="topbar">
          <!-- LOGO -->
          <div class="topbar-left">
-            <a href="index" class="logo"><span><img src="assets/images/logo.png" alt="Falcon Logo" title="Goto Main Dashboard"></img></span><i class="mdi mdi-layers"></i></a>
+            <a href="index.html" class="logo"><span><img src="assets/images/logo.png" alt="Falcon Logo" title="Goto Main Dashboard"></span><i class="mdi mdi-layers"></i></a>
          </div>
          <!-- Button mobile view to collapse sidebar menu -->
          <div class="navbar navbar-default" role="navigation">
@@ -67,7 +85,7 @@ $old_date = date('d/m/Y', strtotime($userstats["DOB"]));
                      </button>
                   </li>
                   <li class="list-inline-item">
-                     <h4 class="page-title">Your Profile</h4>
+                     <h4 class="page-title">Edit Exsiting User Details</h4>
                   </li>
                </ul>
                <nav class="navbar-custom">
@@ -114,36 +132,49 @@ $old_date = date('d/m/Y', strtotime($userstats["DOB"]));
                <div class="row">
                   <div class="col-12">
                      <div class="card-box">
-                        <h4 class="m-t-0 header-title">Your Profile</h4>
+                        <h4 class="m-t-0 header-title">Update details of Current User</h4>
+                        <p class="text-muted font-14 m-b-30"> Some of the fields can be edited by user. Please dont edit those fields unless user not able do it</p>
                         <div class="row">
                            <div class="col-12">
                               <div class="p-20">
-                                 <form class="form-horizontal" method="post" action="profile.php" enctype="multipart/form-data">
+                                 <form class="form-horizontal" role="form">
                                     <div class="form-group row">
-                                       <label class="col-2 col-form-label">Your Picture</label>
+                                       <label class="col-2 col-form-label">Email</label>
                                        <div class="col-10">
-                                          <div class="user-img upload-img">
-                                             <img src="<?php echo $profilepic ?>" id="img" alt="user-img" title="Upload a picture to replace it" class="rounded-circle user-thum img-responsive upload-img">
-                                          </div>
+                                          <input type="email" class="form-control email" value="<?php echo $stats["Email"]; ?>">
                                        </div>
                                     </div>
                                     <div class="form-group row">
                                        <label class="col-2 col-form-label">Username</label>
                                        <div class="col-10">
-                                          <p class="form-control-static" title="This cannot be changed"><?php echo $username; ?></p>
+                                          <input type="text" class="form-control uname" disabled value="<?php echo $usern; ?>">
+                                          <p class="text-muted">This field can only be created and cannot be edited by anyone.</p>
                                        </div>
                                     </div>
                                     <div class="form-group row">
-                                       <label class="col-2 col-form-label">Email</label>
+                                       <label class="col-2 col-form-label">Password</label>
+                                       <div class="col-8">
+                                          <input type="text" disabled class="form-control password" placeholder="Reset to default if user forgets password">
+                                       </div>
+                                       <div class="col-2">
+                                          <div class="user-img">
+                                             <button type="button" class="form-control btn btn-primary mb-2 resetpass">Reset</button>
+                                          </div>
+                                       </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                       <label class="col-2 col-form-label">Joined</label>
                                        <div class="col-10">
-                                          <p class="form-control-static" title="This cannot be changed"><?php echo $userstats["Email"]; ?></p>
+                                          <input type="text" class="form-control joindate" disabled value="<?php echo $joindate ?>">
                                        </div>
                                     </div>
+
                                     <div class="form-group row">
-                                       <label class="col-2 col-form-label">Birthday</label>
+                                       <label class="col-2 col-form-label">Date of Birth</label>
                                        <div class="col-10">
                                           <div class="input-group">
-                                             <input type="text" class="form-control birthday" name="date" placeholder="dd/mm/yyyy" id="datepicker-autoclose" value="<?php echo $old_date; ?>">
+                                             <input type="text" class="form-control birthday" Value="<?php echo $old_date ?>" id="datepicker-autoclose">
                                              <div class="input-group-append">
                                                 <span class="input-group-text"><i class="ti-calendar"></i></span>
                                              </div>
@@ -151,31 +182,50 @@ $old_date = date('d/m/Y', strtotime($userstats["DOB"]));
                                           <!-- input-group -->
                                        </div>
                                     </div>
-                                    <div class="form-group row">
-                                       <label class="col-2 col-form-label">Country</label>
-                                       <div class="col-10">
-                                          <input type="text" class="form-control country" name="country" placeholder="Enter your Country" value="<?php echo $userstats["Country"] ?>">
-                                       </div>
-                                    </div>
-                                    <div class="form-group row">
-                                       <label class="col-2 col-form-label">Change Picture</label>
-                                       <div class="col-8">
-                                          <input type="file" name="fileToUpload" id="fileToUpload" class="form-control input" accept=".jpg, .png, .jpeg, .webp">
-                                       </div>
-                                       <div class="col-2">
-                                          <div class="user-img">
-                                             <button type="button" id="butUpload" class="form-control btn btn-primary mb-2">Upload</button>
-                                          </div>
-                                       </div>
-                                    </div>
+
                                     <div class="form-group row">
                                        <label class="col-2 col-form-label">About You</label>
                                        <div class="col-10">
-                                          <textarea class="form-control about" name="about" maxlength="150" rows="1" placeholder="Max 150 charecters"><?php echo $userstats["About"]; ?></textarea>
-                                          <p class="text-muted">This section will be seen by everyone, so be creative and refrain from using swear words or abusing the feature.</p>
+                                          <textarea class="form-control about" name="about" maxlength="150" rows="1" placeholder="Max 150 charecters" spellcheck="false"><?php echo $stats["About"]; ?></textarea>
+                                          <p class="text-muted">Only update this field. if user has unacceptable words in it.</p>
                                        </div>
                                     </div>
-                                    <button type="button" name="saveProfile" id="submitBut" class="btn btn-info waves-effect waves-light w-lg m-b-5">Update Details</button>
+
+                                    <div class="form-group row">
+                                       <label class="col-2 col-form-label">Updates Roles</label>
+                                       <div class="col-10">
+                                          <select class="select2 select2-multiple" multiple="multiple" multiple">
+                                             <optgroup label="Upper Management Roles">
+                                                <option value="Admin">Admin</option>
+                                                <option value="Manager">Manager</option>
+                                                <option value="HR Manager">HR Manager</option>
+                                                <option value="Support Manager">Support Manager</option>
+                                                <option value="Events Manager">Events Manager</option>
+                                             </optgroup>
+                                             <optgroup label="Extra Roles">
+                                                <option value="Driver of the Month">Driver of the Month</option>
+                                                <option value="Public Relations">Public Relations</option>
+                                             </optgroup>
+                                             <optgroup label="HR Department Roles">
+                                                <option value="HR">HR</option>
+                                                <option value="Trainee HR">Trainee HR</option>
+                                             </optgroup>
+                                             <optgroup label="Support Department Roles">
+                                                <option value="Support">Support</option>
+                                                <option value="Trainee Support">Trainee Support</option>
+                                             </optgroup>
+                                             <optgroup label="Events Department Roles">
+                                                <option value="Events">Events</option>
+                                                <option value="Trainee Events">Trainee Events</option>
+                                             </optgroup>
+                                             <optgroup label="Regualar Roles">
+                                                <option value="Driver">Driver</option>
+                                             </optgroup>
+                                          </select>
+                                       </div>
+                                    </div>
+
+                                    <button type="button" class="btn btn-info waves-effect waves-light w-lg m-b-5 submitbtn">Update User Details</button>
                                  </form>
                               </div>
                            </div>
@@ -221,31 +271,26 @@ $old_date = date('d/m/Y', strtotime($userstats["DOB"]));
    <script src="assets/js/jquery.slimscroll.js"></script>
    <script src="assets/js/jquery.scrollTo.min.js"></script>
    <!-- Plugins Js -->
-   <script src="assets/plugins/switchery/switchery.min.js"></script>
    <script src="assets/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
    <script type="text/javascript" src="assets/plugins/multiselect/js/jquery.multi-select.js"></script>
-   <script type="text/javascript" src="assets/plugins/jquery-quicksearch/jquery.quicksearch.js"></script>
    <script src="assets/plugins/select2/js/select2.min.js" type="text/javascript"></script>
-   <script src="assets/plugins/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js" type="text/javascript"></script>
    <script src="assets/plugins/bootstrap-inputmask/bootstrap-inputmask.min.js" type="text/javascript"></script>
    <script src="assets/plugins/moment/moment.js"></script>
-   <script src="assets/plugins/timepicker/bootstrap-timepicker.min.js"></script>
-   <script src="assets/plugins/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
    <script src="assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-   <script src="assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
-   <script src="assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js" type="text/javascript"></script>
    <!-- App js -->
    <script src="assets/js/jquery.core.js"></script>
    <script src="assets/js/jquery.app.js"></script>
-   <!-- XEditable Plugin -->
-   <script src="assets/plugins/moment/moment.js"></script>
-   <script type="text/javascript" src="assets/plugins/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
-   <script type="text/javascript" src="assets/pages/jquery.xeditable.js"></script>
    <script>
       if (window.module) module = window.module;
    </script>
    <script>
       $(document).ready(function() {
+
+         presetroles = <?php echo json_encode($roles); ?>;
+         console.log(presetroles);
+
+         $(".select2").val(presetroles);
+         $(".select2").trigger('change');
 
          function removeDiv() {
             setTimeout(function() {
@@ -256,52 +301,34 @@ $old_date = date('d/m/Y', strtotime($userstats["DOB"]));
             }, 5000)
          }
 
-         $("#butUpload").click(function() {
-            var fd = new FormData();
-            var files = $("#fileToUpload")[0].files[0];
-            fd.append('fileToUpload', files);
-
-            $.ajax({
-               url: 'upload.php',
-               type: 'post',
-               data: fd,
-               contentType: false,
-               processData: false,
-               success: function(response) {
-                  if (response != 0) {
-                     console.log(response)
-                     $("#img").attr("src", response);
-                     $("#sidebar_img").attr("src", response);
-                     $("#fileToUpload").val(null);
-                  } else {
-                     alert("File was not uploaded")
-                  }
-               }
-            })
+         $(".resetpass").click(function() {
+            $(".password").val("123456");
          })
 
-         $("#submitBut").click(function() {
+         $(".submitbtn").click(function() {
             var bday = $(".birthday").val();
-            var country = $(".country").val();
             var aboutme = $(".about").val();
+            var email = $(".email").val();
+            var id = JSON.parse("<?php echo $id ?>")
+            var pass = $(".password").val();
 
-            if (!bday) {
-               $("#notifyDiv").attr("class", "alert alert-danger")
-               $("#notifyDiv").html(`<strong>Oh snap!</strong> Date is not added`);
-               return removeDiv();
-            }
-            if (!country) {
-               $("#notifyDiv").attr("class", "alert alert-danger")
-               $("#notifyDiv").html(`<strong>Oh snap!</strong> Country is not added`);
-               return removeDiv();
-            }
-            if (!aboutme) {
-               $("#notifyDiv").attr("class", "alert alert-danger")
-               $("#notifyDiv").html(`<strong>Oh snap!</strong> About me is not added`);
-               return removeDiv();
-            }
+            var roles = $(".select2 option:selected").toArray().map(item => item.text);
+            console.log(roles);
 
-            var datatosend = "dob=" + bday + "&country=" + country + "&about=" + aboutme;
+            if (!email) {
+               $("#notifyDiv").attr("class", "alert alert-danger")
+               $("#notifyDiv").html(`<strong>Oh snap!</strong> Email is missing`);
+               return removeDiv();
+            }
+            let datatosend = {};
+            if (email) datatosend.email = email;
+            if (aboutme) datatosend.about = aboutme;
+            if (bday) datatosend.dob = bday;
+            if (pass) datatosend.password = pass;
+            if (roles.length > 0) datatosend.roles = roles.join(", ")
+            datatosend.id = id;
+
+            //var datatosend = "dob="+bday+"&country="+country+"&about="+aboutme;
 
             $.ajax({
                url: 'updateProfile.php',
@@ -327,14 +354,30 @@ $old_date = date('d/m/Y', strtotime($userstats["DOB"]));
             })
          })
 
+
          // Date Picker
          jQuery('#datepicker-autoclose').datepicker({
-            format: 'dd/mm/yyyy',
+            format: "dd/mm/yyyy",
             autoclose: true,
             todayHighlight: true
          });
+
       });
    </script>
+
+   <script>
+      $(document).ready(function() {
+
+         // Select2
+         $(".select2").select2({
+            placeholder: {
+               id: '-1',
+               text: "Add roles to user..."
+            }
+         });
+      });
+   </script>
+
 </body>
 
 </html>

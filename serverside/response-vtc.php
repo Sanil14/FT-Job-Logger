@@ -27,8 +27,6 @@
     $where .=" OR Username LIKE '".$params['search']['value']."%' "; 
     $where .=" OR SourceCity LIKE '".$params['search']['value']."%' ";
     $where .=" OR DestinationCity LIKE '".$params['search']['value']."%' ";
-		$where .=" OR Dated LIKE '".$params['search']['value']."%' ";
-		//$where .=" OR GameType LIKE '".$params['search']['value']."%' )";
   }
 
   if ($params['jobfilter'] != "All" && !empty($params['search']['value']) ) {
@@ -65,7 +63,7 @@
 
   $totalRecords = mysqli_num_rows($queryTot);
 
-	$queryRecords = mysqli_query($conn, $sqlRec) or die("error to fetch employees data");
+	$queryRecords = mysqli_query($conn, $sqlRec) or die("error to fetch data");
 
 	//iterate on results row and create new index array of data
 	while( $row = mysqli_fetch_row($queryRecords) ) {
