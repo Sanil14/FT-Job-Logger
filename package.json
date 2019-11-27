@@ -41,7 +41,6 @@
         "electron-log": "^3.0.9",
         "electron-updater": "^4.2.0",
         "node-notifier": "^6.0.0",
-        "npm-check-updates": "^3.2.1",
         "discord-rpc": "^3.1.0",
         "node-fetch": "^2.6.0"
     },
@@ -52,6 +51,7 @@
         "electron-prebuilt": "^1.4.13",
         "electron-updater": "^4.2.0",
         "nexe": "^3.3.2",
+        "npm-check-updates": "^3.2.1",
         "node-fetch": "^2.6.0"
     }
 }
