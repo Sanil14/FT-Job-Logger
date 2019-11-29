@@ -40,7 +40,6 @@ function createWindow() {
 
     win.loadFile("loading.html").then(() => {
         ses.cookies.get({}).then((cookies) => {
-            console.log(cookies);
             if (cookies.length < 1) {
                 win.loadFile("login.html").then(() => {
                     updateTrackingMenu(false, false);
@@ -52,7 +51,6 @@ function createWindow() {
                     win.webContents.send("isOfflineLogin")
                     ipcMain.once("isOfflineReply", (event, offline) => {
                         isoffline = offline;
-                        console.log(isoffline);
                         if (isoffline) {
                             win.loadFile("logging.html").then(() => {
                                 updateTrackingMenu(true, isoffline);
