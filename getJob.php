@@ -157,7 +157,7 @@ if ($full == 0) {
     
     echo "<div class='col-12'>
 
-    <div class='card-box table-responsive'>
+    <div class='card-box table-responsive' data-jobid='$jobid' data-userid='$uid'>
         <div class='clearfix'>
             <h4 class='m-t-0 col-md-3 header-title float-left'>Full Job details</h4>
 
@@ -275,7 +275,7 @@ if ($full == 0) {
             </tbody>
         </table>
 
-        <div class='btn-group m-b-10 col-md-2 float-right' data-jobid='$jobid' data-userid='$uid'>
+        <div class='btn-group m-b-10 col-md-2 float-right'>
             <button type='button' class='btn btn-danger waves-effect deletejob'>Delete Job</button>
         </div>
 

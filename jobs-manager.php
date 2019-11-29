@@ -104,7 +104,7 @@ $maxjobid = mysqli_fetch_array(mysqli_query($conn, $r));
                             <li class="hide-phone">
                                 <form class="app-search">
                                     <input type="text" placeholder="Search..." class="form-control">
-                                    <button type="submit"><i class="fa fa-search"></i></button>
+                                    <button ><i class="fa fa-search"></i></button>
                                 </form>
                             </li>
                         </ul>
@@ -126,7 +126,7 @@ $maxjobid = mysqli_fetch_array(mysqli_query($conn, $r));
                     <div class="row">
                         <div class="col-12 card-box">
                             <div class="p-20">
-                                <form class="form-horizontal" role="form">
+                                <form class="form-horizontal" role="form" onkeypress="return event.keyCode != 13">
 
                                     <div class="row">
                                         <label class="col-xl-1 col-form-label">Job Search</label>
@@ -215,6 +215,12 @@ $maxjobid = mysqli_fetch_array(mysqli_query($conn, $r));
 
     <script>
         $(document).ready(function() {
+
+            $(".jobid").keypress(function(event) {
+                if(event.keyCode === 13) {
+                    $(".searchbutton").click();
+                }
+            })
 
             function removeDiv() {
                 setTimeout(function() {

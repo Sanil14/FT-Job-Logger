@@ -202,26 +202,26 @@ if (isset($_SESSION['logged_in'])) {
                     $("#notifyMessage").attr("class", "alert alert-danger");
                     $("#notifyMessage").html('<strong>Oh snap!</strong> Passwords dont match!')
                     removeDiv("#notifyMessage");
-                }
-                $.ajax({
-                    type: "get",
-                    url: "setPassword.php",
-                    data: {
-                        password: pass,
-                        userid: uid
-                    },
-                    success: function(resp) {
-                        if (resp == 0) {
-                            $("#notifyMessage").show();
-                            $("#notifyMessage").attr("class", "alert alert-danger");
-                            $("#notifyMessage").html('<strong>Oh snap!</strong> Unknown Error')
-                            removeDiv("#notifyMessage");
-                        } else if (resp == 1) {
-                            window.location.replace("<?php echo $url ?>");
+                } else {
+                    $.ajax({
+                        type: "get",
+                        url: "setPassword.php",
+                        data: {
+                            password: pass,
+                            userid: uid
+                        },
+                        success: function(resp) {
+                            if (resp == 0) {
+                                $("#notifyMessage").show();
+                                $("#notifyMessage").attr("class", "alert alert-danger");
+                                $("#notifyMessage").html('<strong>Oh snap!</strong> Unknown Error')
+                                removeDiv("#notifyMessage");
+                            } else if (resp == 1) {
+                                window.location.replace("<?php echo $url ?>");
+                            }
                         }
-                    }
-                })
-
+                    })
+                }
             })
         })
     </script>

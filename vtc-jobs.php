@@ -372,7 +372,7 @@ $timezone = $pref->Timezone;
             "createdRow": function(row, data, dataIndex) {
                if (dataIndex == 0) {
                   name = data[1];
-                  $(row).children()[1].innerHTML = name + ' <sup><i class="fas fa-crown fa-xs"></i></sup>'
+                  $(row).children()[1].innerHTML = name + ' <sup title="Current Driver of the Month"><i class="fas fa-crown fa-xs"></i></sup>'
                   $(row).addClass("text-warning");
                } else if (dataIndex == 1) {
                   $(row).addClass("text-info");

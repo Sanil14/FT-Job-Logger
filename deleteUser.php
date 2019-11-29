@@ -6,5 +6,5 @@ $q = mysqli_query($conn, $s);
 if ($q) {
    echo 1;
 } else {
-   echo 0;
+   echo mysqli_error($conn);
 }

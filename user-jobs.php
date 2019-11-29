@@ -240,9 +240,9 @@ $timezone = $pref->Timezone;
                            <thead>
                               <tr>
                                  <th>Job ID</th>
-                                 <th>User Name</th>
                                  <th>Source</th>
                                  <th>Destination</th>
+                                 <th>Cargo Name</th>
                                  <th aria-sort="descending">Date &amp; Time (<?php echo $timezone ?>)</th>
                                  <th>More Details</th>
                               </tr>
@@ -250,7 +250,7 @@ $timezone = $pref->Timezone;
                            <tbody id="filterJobs">
                               <!--
                                  <?php
-                                 $s = "SELECT user_jobs.JobID,user_jobs.SourceCity,user_jobs.DestinationCity,user_jobs.Dated,user_jobs.GameType,user_profile.Username FROM `user_jobs` INNER JOIN `user_profile` ON user_jobs.UserID = user_profile.UserID";
+                                 $s = "SELECT JobID,SourceCity,DestinationCity,Dated,GameType,CargoName FROM `user_jobs`";
                                  $q = mysqli_query($conn, $s);
                                  while ($jobdata = mysqli_fetch_array($q)) {
                                     $time = $jobdata["Dated"];
@@ -410,6 +410,7 @@ $timezone = $pref->Timezone;
                "defaultContent": "<a class='btn btn-custom w-lg'>Details</a>"
             }],
             "fnCreatedRow": function(nRow, aData, iDataIndex) {
+               console.log(aData);
                $(nRow).attr("gametype", aData[5]);
             }
          });
@@ -423,38 +424,6 @@ $timezone = $pref->Timezone;
             var jobids = datatable.column(0).data().toArray();
             window.location.href = "job-details?id=" + data[0] + "&jobs=" + jobids;
          })
-
-         var DOM = $('#DOM-datatable').DataTable({
-            "lengthMenu": [
-               [10, 25, 50, 100, -1],
-               [10, 25, 50, 100, "All"]
-            ],
-            "order": [
-               [3, "desc"]
-            ],
-            "columnDefs": [{
-               targets: "_all",
-               orderable: false
-            }],
-            "createdRow": function(row, data, dataIndex) {
-               console.log(dataIndex)
-               if (dataIndex == 0) {
-                  $(row).addClass("text-warning");
-               } else if (dataIndex == 1) {
-                  $(row).addClass("text-info");
-                  $(row).css("opacity", 0.8);
-               } else if (dataIndex == 2) {
-                  $(row).addClass("text-info");
-                  $(row).css("opacity", 0.5);
-               }
-            }
-         });
-
-         DOM.on('search.dt', function() {
-            DOM.column(0).nodes().each(function(cell, i) {
-               cell.innerHTML = i + 1;
-            });
-         }).draw();
 
       });
    </script>

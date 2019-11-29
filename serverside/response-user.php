@@ -11,9 +11,9 @@ $params = $_REQUEST;
 //define index of column
 $columns = array(
     0 => 'JobID',
-    1 => 'Username',
-    2 => 'SourceCity',
-    3 => 'DestinationCity',
+    1 => 'SourceCity',
+    2 => 'DestinationCity',
+    3 => 'Cargo Name',
     4 => 'Dated',
     5 => 'GameType'
 );
@@ -41,7 +41,7 @@ if ($params['jobfilter'] != "All" && !empty($params['search']['value'])) {
 $uid = $params['userid'];
 
 // getting total number records without any search
-$sql = "SELECT user_jobs.JobID,user_jobs.SourceCity,user_jobs.DestinationCity,user_jobs.Dated,user_jobs.GameType,user_profile.Username
+$sql = "SELECT user_jobs.JobID,user_jobs.SourceCity,user_jobs.DestinationCity,user_jobs.CargoName,user_jobs.Dated,user_jobs.GameType
   FROM `user_jobs` INNER JOIN `user_profile` ON user_jobs.UserID = user_profile.UserID";
 $sqlTot .= $sql;
 $sqlRec .= $sql;
@@ -75,7 +75,8 @@ $queryRecords = mysqli_query($conn, $sqlRec) or die("error to fetch employees da
 while ($row = mysqli_fetch_row($queryRecords)) {
     $row[1] = utf8_encode($row[1]);
     $row[2] = utf8_encode($row[2]);
-    moveElement($row, 5, 1);
+    //moveElement($row, 5, 1);
+    //echo json_encode($row);
     if ($params["timezone"] == "GMT") {
         $g = gmdate('r', $row[4]);
         $from = "UTC";

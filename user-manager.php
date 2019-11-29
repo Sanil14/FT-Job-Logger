@@ -264,6 +264,8 @@ function rankColor($option)
                         setTimeout(() => {
                            window.location.reload();
                         }, 1000);
+                     } else {
+                        console.log(resp);
                      }
                   }
                })
