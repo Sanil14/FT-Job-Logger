@@ -17,6 +17,9 @@ while ($userstats = mysqli_fetch_array($q)) {
    $joined = date('d/m/Y', strtotime($userstats["JoinDate"]));
    $about = ($userstats["About"] != null) ? $userstats["About"] : "I am too lazy to add my bio";
    $page = $userstats["UserID"];
+   $roles = explode(", ", $userstats["Roles"]);
+   $default = $userstats["Roles"] == null ? "Driver" : $userstats["Roles"];
+   $primary = $roles[0] == null ? "Driver" : $roles[0];
 
    echo "<div class='col-xl-3 col-md-6 sortDriver' data-date=" . $userstats["JoinDate"] . " data-userid='$page' >
    <div class='text-center card-box members'>
@@ -30,7 +33,7 @@ while ($userstats = mysqli_fetch_array($q)) {
             <p class='text-muted font-13'><strong>DOB:</strong> <span class='m-l-15'>$date</span></p>
             <p class='text-muted font-13'><strong>Joined on:</strong> <span class='m-l-15'>$joined</span></p>
             <p class='text-muted font-13'><strong>Country :</strong> <span class='m-l-15'>" . $userstats["Country"] . "</span></p>
-            <p class='font-13'><strong>Role :</strong><span class='m-l-15  ". rankColor($userstats["Roles"]) . "'>" . $userstats["Roles"] . "</span></p>
+            <p class='font-13'><strong>Role :</strong><span class='m-l-15  ". rankColor($primary) . "'>$default</span></p>
          </div>
          <button type='button' class='btn btn-info btn-rounded w-md waves-effect waves-light m-b-5 editbtn'>Edit</button>
          <button type='button' class='btn btn-danger btn-rounded w-md waves-effect waves-light m-b-5 deletebtn'> Delete
@@ -42,6 +45,76 @@ while ($userstats = mysqli_fetch_array($q)) {
 
 function rankColor($option)
 {
-   $output = ($option == "Owner") ? "text-danger" : (($option == "HR Manager" || $option == "HR" || $option == "HR Trainee") ? "text-primary" : (($option == "Events Manager" || $option == "Manager") ? "text-success" : (($option == "Public Relations") ? "text-third" : (($option == "Support" || $option == "Support Trainee") ? "text-success" : (($option == "French Lead") ? "text-third" : (($option == "DOM") ? "text-warning" : (($option == "Driver") ? "text-info" : "text-muted")))))));
-   return $output;
+   switch ($option) {
+      case "Admin":
+         return "text-danger";
+      break;
+      case "Manager":
+         return "text-success";
+      break;
+      case "HR Manager":
+         return "text-purple";
+      break;
+      case "HR":
+         return "text-purple";
+      break;
+      case "Trainee HR":
+         return "text-purple";
+      break;
+      case "Events Manager":
+         return "text-success";
+      break;
+      case "Events":
+         return "text-success";
+      break;
+      case "Trainee Events":
+         return "text-success";
+      break;
+      case "PR Manager":
+         return "text-warning";
+      break;
+      case "Public Relations":
+         return "text-warning";
+      break;
+      case "Trainee PR":
+         return "text-warning";
+      break;
+      case "Support Manager":
+         return "text-warning";
+      break;
+      case "Support":
+         return "text-warning";
+      break;
+      case "Trainee Support":
+         return "text-warning";
+      break;
+      case "Driver of the Month":
+         return "text-warning";
+      break;
+      case "Driver":
+         return "text-primary";
+      break;
+      case "Trainee":
+         return "text-primary";
+      break;
+      case "Skilled Driver":
+         return "text-info";
+      break;
+      case "Professional Driver":
+         return "text-info";
+      break;
+      case "Legendary Driver":
+         return "text-success";
+      break;
+      case "Mouse Magician":
+         return "text-pink";
+      break;
+      case "Vasco da Gama":
+         return "text-pink";
+      break;
+      case "Wheel on Wheels":
+         return "text-pink";
+      break;
+   break;
+   }
 }

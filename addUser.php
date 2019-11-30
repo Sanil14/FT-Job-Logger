@@ -12,7 +12,7 @@
   if(mysqli_fetch_array($q)) {
     echo "401";
   } else {
-    $p = "INSERT INTO `user_profile` VALUES ('0', '$username', '$email', '123456', '', '', '','Driver','None','$joindate','$key', DEFAULT)";
+    $p = "INSERT INTO `user_profile` VALUES ('0', '$username', '$email', '123456', '', '', '','Trainee','None','$joindate','$key', DEFAULT)";
 
     if (mysqli_query($conn,$p)) {
       echo "200";

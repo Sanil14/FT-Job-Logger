@@ -19,9 +19,83 @@ $username = $userstats["Username"];
 
 function rankColor($option)
 {
-   $output = ($option == "Owner") ? "text-danger" : (($option == "HR Manager" || $option == "HR" || $option == "Trainee HR") ? "text-primary" : (($option == "Events Manager" || $option == "Events" || $option == "Trainee Events") ? "text-success" : (($option == "Public Relations") ? "text-third" : (($option == "Support" || $option == "Trainee Support" || $option == "Support Manager") ? "text-success" : (($option == "Admin") ? "text-third" : (($option == "Driver of the Month") ? "text-warning" : (($option == "Driver") ? "text-info" : "text-muted")))))));
-   return $output;
+   switch ($option) {
+      case "Admin":
+         return "text-danger";
+      break;
+      case "Manager":
+         return "text-success";
+      break;
+      case "HR Manager":
+         return "text-purple";
+      break;
+      case "HR":
+         return "text-purple";
+      break;
+      case "Trainee HR":
+         return "text-purple";
+      break;
+      case "Events Manager":
+         return "text-success";
+      break;
+      case "Events":
+         return "text-success";
+      break;
+      case "Trainee Events":
+         return "text-success";
+      break;
+      case "PR Manager":
+         return "text-warning";
+      break;
+      case "Public Relations":
+         return "text-warning";
+      break;
+      case "Trainee PR":
+         return "text-warning";
+      break;
+      case "Support Manager":
+         return "text-warning";
+      break;
+      case "Support":
+         return "text-warning";
+      break;
+      case "Trainee Support":
+         return "text-warning";
+      break;
+      case "Driver of the Month":
+         return "text-warning";
+      break;
+      case "Driver":
+         return "text-primary";
+      break;
+      case "Trainee":
+         return "text-primary";
+      break;
+      case "Skilled Driver":
+         return "text-info";
+      break;
+      case "Professional Driver":
+         return "text-info";
+      break;
+      case "Legendary Driver":
+         return "text-success";
+      break;
+      case "Mouse Magician":
+         return "text-pink";
+      break;
+      case "Vasco da Gama":
+         return "text-pink";
+      break;
+      case "Wheel on Wheels":
+         return "text-pink";
+      break;
+      default:
+      return "text-muted";
+   break;
+   }
 }
+$staff = array("Public Relations","HR", "HR Manager", "Admin", "Manager", "Support Manager", "Events Manager", "Trainee HR", "Support", "Trainee Support", "Events", "Trainee Events", "Trainee PR", "PR Manager");
+
 
 ?>
 <!DOCTYPE html>
@@ -118,7 +192,6 @@ function rankColor($option)
                   <?php
                   $s = "SELECT UserID,Username,About,DOB,Roles,JoinDate,Country,Permission FROM `user_profile`";
                   $q = mysqli_query($conn, $s);
-                  $staff = array("HR", "HR Manager", "Owner", "Admin", "Manager", "Support Manager", "Events Manager", "Trainee HR", "Support", "Trainee Support", "Events", "Trainee Events");
                   while ($userstats = mysqli_fetch_array($q)) {
                      $arrayed = explode(",", $userstats["Roles"]);
                      if (empty(array_intersect($arrayed, $staff))) {
@@ -171,7 +244,6 @@ function rankColor($option)
                   <?php
                   $s = "SELECT UserID,Username,About,DOB,Roles,JoinDate,Country,Permission FROM `user_profile`";
                   $q = mysqli_query($conn, $s);
-                  $staff = array("HR", "HR Manager", "Owner", "Admin", "Manager", "Support Manager", "Events Manager", "Trainee HR", "Support", "Trainee Support", "Events", "Trainee Events");
                   while ($userstats = mysqli_fetch_array($q)) {
                      $arrayed = explode(",", $userstats["Roles"]);
                      if (!empty(array_intersect($arrayed, $staff))) {
@@ -182,7 +254,7 @@ function rankColor($option)
                         $pfp = "avatars/default.png";
                      }
                      $roles = explode(", ", $userstats["Roles"]);
-                     $primary = $roles[0];
+                     $primary = $roles[0] == null ? "Driver" : $roles[0];
                      $secondary = array_slice($roles, 1) == null ? ["None"] : array_slice($roles, 1);
                      $date = $userstats["DOB"] != "0000-00-00" ? date('d/m/Y', strtotime($userstats["DOB"])) : "Not Provided";
                      $joined = date('d/m/Y', strtotime($userstats["JoinDate"]));

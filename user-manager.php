@@ -23,8 +23,78 @@ if ($userstats["Permission"] != "Admin") {
 
 function rankColor($option)
 {
-   $output = ($option == "Owner") ? "text-danger" : (($option == "HR Manager" || $option == "HR" || $option == "HR Trainee") ? "text-primary" : (($option == "Events Manager" || $option == "Manager") ? "text-success" : (($option == "Public Relations") ? "text-third" : (($option == "Support" || $option == "Support Trainee") ? "text-success" : (($option == "French Lead") ? "text-third" : (($option == "DOM") ? "text-warning" : (($option == "Driver") ? "text-info" : "text-muted")))))));
-   return $output;
+   switch ($option) {
+      case "Admin":
+         return "text-danger";
+      break;
+      case "Manager":
+         return "text-success";
+      break;
+      case "HR Manager":
+         return "text-purple";
+      break;
+      case "HR":
+         return "text-purple";
+      break;
+      case "Trainee HR":
+         return "text-purple";
+      break;
+      case "Events Manager":
+         return "text-success";
+      break;
+      case "Events":
+         return "text-success";
+      break;
+      case "Trainee Events":
+         return "text-success";
+      break;
+      case "PR Manager":
+         return "text-warning";
+      break;
+      case "Public Relations":
+         return "text-warning";
+      break;
+      case "Trainee PR":
+         return "text-warning";
+      break;
+      case "Support Manager":
+         return "text-warning";
+      break;
+      case "Support":
+         return "text-warning";
+      break;
+      case "Trainee Support":
+         return "text-warning";
+      break;
+      case "Driver of the Month":
+         return "text-warning";
+      break;
+      case "Driver":
+         return "text-primary";
+      break;
+      case "Trainee":
+         return "text-primary";
+      break;
+      case "Skilled Driver":
+         return "text-info";
+      break;
+      case "Professional Driver":
+         return "text-info";
+      break;
+      case "Legendary Driver":
+         return "text-success";
+      break;
+      case "Mouse Magician":
+         return "text-pink";
+      break;
+      case "Vasco da Gama":
+         return "text-pink";
+      break;
+      case "Wheel on Wheels":
+         return "text-pink";
+      break;
+   break;
+   }
 }
 
 ?>

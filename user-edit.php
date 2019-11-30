@@ -201,25 +201,37 @@ $joindate = date('d/m/Y', strtotime($stats["JoinDate"]));
                                                 <option value="HR Manager">HR Manager</option>
                                                 <option value="Support Manager">Support Manager</option>
                                                 <option value="Events Manager">Events Manager</option>
+                                                <option value="PR Manager">PR Manager</option>
                                              </optgroup>
-                                             <optgroup label="Extra Roles">
+                                             <optgroup label="DOM Roles">
                                                 <option value="Driver of the Month">Driver of the Month</option>
-                                                <option value="Public Relations">Public Relations</option>
                                              </optgroup>
-                                             <optgroup label="HR Department Roles">
+                                             <optgroup label="HR Roles">
                                                 <option value="HR">HR</option>
                                                 <option value="Trainee HR">Trainee HR</option>
                                              </optgroup>
-                                             <optgroup label="Support Department Roles">
+                                             <optgroup label="Support Roles">
                                                 <option value="Support">Support</option>
                                                 <option value="Trainee Support">Trainee Support</option>
                                              </optgroup>
-                                             <optgroup label="Events Department Roles">
+                                             <optgroup label="Public Relations">
+                                                <option value="Public Relations">Public Relations</option>
+                                                <option value="Trainee PR">Trainee PR</option>
+                                             </optgroup>
+                                             <optgroup label="Events Roles">
                                                 <option value="Events">Events</option>
                                                 <option value="Trainee Events">Trainee Events</option>
                                              </optgroup>
-                                             <optgroup label="Regualar Roles">
-                                                <option value="Driver">Driver</option>
+                                             <optgroup label="Driver Roles">
+                                                <option value="Trainee">Trainee</option>
+                                                <option value="Legendary Driver">Legendary Driver</option>
+                                                <option value="Professional Driver">Professional Driver</option>
+                                                <option value="Skilled Driver">Skilled Driver</option>
+                                             </optgroup>
+                                             <optgroup label="Additional Roles">
+                                                <option value="Mouse Magician">Mouse Magician</option>
+                                                <option value="Vasco da Gama">Vasco da Gama</option>
+                                                <option value="Wheel on Wheels">Wheel on Wheels</option>
                                              </optgroup>
                                           </select>
                                        </div>
@@ -325,7 +337,11 @@ $joindate = date('d/m/Y', strtotime($stats["JoinDate"]));
             if (aboutme) datatosend.about = aboutme;
             if (bday) datatosend.dob = bday;
             if (pass) datatosend.password = pass;
-            if (roles.length > 0) datatosend.roles = roles.join(", ")
+            if (roles.length > 0) {
+               datatosend.roles = roles.join(", ")
+            } else {
+               datatosend.roles = "";
+            }
             datatosend.id = id;
 
             //var datatosend = "dob="+bday+"&country="+country+"&about="+aboutme;
