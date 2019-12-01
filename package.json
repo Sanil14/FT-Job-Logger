@@ -1,7 +1,7 @@
 {
     "name": "ft_job_logger",
     "productName": "FT Job Logger",
-    "version": "2.2.8",
+    "version": "2.2.6",
     "description": "Desktop App for the Falcon Trucking Tracker",
     "main": "main.js",
     "scripts": {
@@ -19,10 +19,7 @@
         "win": {
             "target": "NSIS",
             "icon": "./assets/falcon_icon.ico",
-            "asar": true,
-            "asarUnpack": [
-                "./node_modules/node-notifier/vendor/**"
-            ]
+            "asar": true
         },
         "publish": {
             "provider": "generic",
@@ -38,10 +35,9 @@
     "dependencies": {
         "axios": "^0.19.0",
         "crypto-js": "^3.1.9-1",
+        "discord-rpc": "^3.1.0",
         "electron-log": "^3.0.9",
         "electron-updater": "^4.2.0",
-        "node-notifier": "^6.0.0",
-        "discord-rpc": "^3.1.0",
         "node-fetch": "^2.6.0"
     },
     "devDependencies": {
