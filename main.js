@@ -12,7 +12,8 @@ autoUpdater.autoDownload = true;
 var windowHidden,
     win = null,
     isQuitting,
-    isoffline;
+    isoffline,
+    serverisoffline = false;
 
 const gotTheLock = app.requestSingleInstanceLock()
 
@@ -41,7 +42,7 @@ function createWindow() {
         ses.cookies.get({}).then((cookies) => {
             if (cookies.length < 1) {
                 win.loadFile("login.html").then(() => {
-                    updateTrackingMenu(false, false);
+                    updateTrackingMenu(false, isoffline, serverisoffline);
                 })
             } else {
                 var parsed = JSON.parse(cookies[0].value);
@@ -52,7 +53,7 @@ function createWindow() {
                         isoffline = offline;
                         if (isoffline) {
                             win.loadFile("logging.html").then(() => {
-                                updateTrackingMenu(true, isoffline);
+                                updateTrackingMenu(true, isoffline, serverisoffline);
                             });
                         } else {
                             axios.get('https://falconites.com/dashboard/api/v1/users?key=9xsyr1pr1miyp45&login=' + parsed.key).then(function(response) {
@@ -65,15 +66,15 @@ function createWindow() {
                                     })
                                 } else {
                                     win.loadFile("logging.html").then(() => {
-                                        updateTrackingMenu(true, false);
+                                        updateTrackingMenu(true, false, serverisoffline);
                                     })
                                 }
                             }).catch(function(err) {
                                 console.log(err);
                                 if (err.errno == "ENOTFOUND" || err.code == "ENOTFOUND" || err.code == "ECONNREFUSED" || err.errno == "ECONNREFUSED" || err.response.status == 404) {
                                     win.loadFile("logging.html").then(() => {
-                                        isoffline = true;
-                                        updateTrackingMenu(true, isoffline);
+                                        serverisoffline = true;
+                                        updateTrackingMenu(true, isoffline, serverisoffline);
                                     });
                                 }
                             })
@@ -81,7 +82,7 @@ function createWindow() {
                     })
                 } else {
                     win.loadFile("login.html").then(() => {
-                        updateTrackingMenu(true, false);
+                        updateTrackingMenu(true, false, serverisoffline);
                     })
                 }
             }
@@ -111,7 +112,7 @@ function createWindow() {
             label: 'Start Logging',
             id: 'start',
             click: function() {
-                updateTrackingMenu(false, isoffline);
+                updateTrackingMenu(false, isoffline, serverisoffline);
             }
         },
         {
@@ -119,7 +120,7 @@ function createWindow() {
             id: 'stop',
             enabled: false,
             click: function() {
-                updateTrackingMenu(false, isoffline);
+                updateTrackingMenu(false, isoffline, serverisoffline);
             }
         },
         {
@@ -142,7 +143,7 @@ function createWindow() {
     var contextMenu = Menu.buildFromTemplate(context);
     initTray(tray);
 
-    function updateTrackingMenu(onStartup, isOffline) {
+    function updateTrackingMenu(onStartup, isOffline, serverisOffline) {
         let url = win.webContents.getURL(),
             page = url.split('/').pop();
         if (page == "logging.html" && !onStartup) { // Stop tracking
@@ -150,7 +151,7 @@ function createWindow() {
             contextMenu.getMenuItemById("stop").enabled = false;
             initTray(tray);
             win.loadFile("home.html").then(() => {
-                win.webContents.send("loadHome", isOffline);
+                win.webContents.send("loadHome", isOffline, serverisOffline);
             })
         } else if (page == "home.html" || onStartup) { // Start Tracking
             contextMenu.getMenuItemById("start").enabled = false;
@@ -158,10 +159,10 @@ function createWindow() {
             initTray(tray);
             if (!onStartup) {
                 win.loadFile("logging.html").then(() => {
-                    win.webContents.send("loadLogging", isOffline);
+                    win.webContents.send("loadLogging", isOffline, serverisOffline);
                 })
             } else {
-                win.webContents.send("loadLogging", isOffline);
+                win.webContents.send("loadLogging", isOffline, serverisoffline);
             }
         } else if (page == "login.html") { // Not logged in
             contextMenu.getMenuItemById("start").enabled = false;
@@ -215,7 +216,7 @@ function createWindow() {
     })
 
     ipcMain.on('login-success', () => {
-        updateTrackingMenu(false, isoffline);
+        updateTrackingMenu(false, isoffline, serverisoffline);
         win.loadFile("home.html");
     })
 
@@ -228,12 +229,12 @@ function createWindow() {
         })
     })
 
-    ipcMain.on('startlogging', () => {
-        updateTrackingMenu(false, isoffline);
+    ipcMain.on('startlogging', (event, isoffline, serverisdown) => {
+        updateTrackingMenu(false, isoffline, serverisdown);
     })
 
-    ipcMain.on('stoplogging', (event, isOffline) => {
-        updateTrackingMenu(false, isOffline);
+    ipcMain.on('stoplogging', (event, isOffline, serverisdown) => {
+        updateTrackingMenu(false, isOffline, serverisdown);
     })
 
     ipcMain.on('unexpectederror', () => {

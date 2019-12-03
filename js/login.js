@@ -1,14 +1,15 @@
 const axios = require("axios");
 const { ipcRenderer } = require('electron');
 const { remote } = require('electron')
+const isOnline = require("is-online");
 const logger = require("electron-log");
 const version = require("./package.json").version
 
-$(document).ready(function() {
+$(document).ready(async function() {
     console.log("I am loaded.");
 
     $(".version").text(`Version ${version}`)
-    if (!navigator.onLine) {
+    if (!(await isOnline())) {
         setOffline();
         $(".container div:last:last-child").addClass("clientside");
         $(".clientside").prop("title", "You have no internet connection")
@@ -73,7 +74,7 @@ $(document).ready(function() {
                 }
             })
             .catch(function(err) {
-                if (err.errno == "ENOTFOUND" || err.code == "ENOTFOUND" || err.code == "ECONNREFUSED" || err.errno == "ECONNREFUSED") {
+                if (err.errno == "ENOTFOUND" || err.code == "ENOTFOUND" || err.code == "ECONNREFUSED" || err.errno == "ECONNREFUSED" || err.response.status == 404) {
                     setOffline();
                     $(".container div:nth-last-child(1)").addClass("serverside");
                     $(".serverside").prop("title", "The server is down. Try again later")

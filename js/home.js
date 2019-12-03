@@ -1,22 +1,18 @@
 const { session } = require("electron").remote;
 const version = require("./package.json").version
+const isOnline = require("is-online");
 const { ipcRenderer } = require('electron');
-var isoffline = false;
+var isoffline = false,
+    serverisoffline = false;
 
 $(document).ready(function() {
 
     let userdata;
     var ses = session.fromPartition("persist:userinfo")
-    ses.cookies.get({}).then((cookies) => {
+    ses.cookies.get({}).then(async(cookies) => {
         $(".version").text(`Version ${version}`)
         if (cookies.length < 1) {
             //ipcRenderer.send("logout");
-        }
-        if (!navigator.onLine) {
-            setOffline();
-            isoffline = true;
-            $(".container div:last:last-child").addClass("clientside");
-            $(".clientside").prop("title", "You have no internet connection")
         }
         userdata = JSON.parse(cookies[0].value)
         if (userdata == undefined) {
@@ -30,7 +26,7 @@ $(document).ready(function() {
             console.log("Logging should begin")
                 //let window = brow.getCurrentWindow();
                 //window.loadFile("./logging.html")
-            ipcRenderer.send("startlogging");
+            ipcRenderer.send("startlogging", isoffline, serverisoffline);
         })
 
         $(".logout").click(function() {
@@ -66,12 +62,17 @@ $(document).ready(function() {
         $(".updatediv").text(text);
     })
 
-    ipcRenderer.on("loadHome", function(event, isOffline) {
-        if (isOffline && navigator.onLine) {
+    ipcRenderer.on("loadHome", async function(event, isOffline, serverIsOffline) {
+        if (!isOffline && serverIsOffline) {
+            serverisoffline = true;
             setOffline();
-            isoffline = true;
             $(".container div:nth-last-child(1)").addClass("serverside");
             $(".serverside").prop("title", "The server is down")
+        } else if (isOffline) {
+            isoffline = true;
+            setOffline();
+            $(".container div:last:last-child").addClass("clientside");
+            $(".clientside").prop("title", "You have no internet connection")
         }
     })
 })

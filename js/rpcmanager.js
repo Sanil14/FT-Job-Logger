@@ -26,8 +26,7 @@ class RichPresenceManager {
 
     onData(data) {
         var instance = this;
-        console.log("data recieve something idk")
-            //use a try / catch as sometimes the data isn't there when first connecting...plus it's json parsing...
+        //use a try / catch as sometimes the data isn't there when first connecting...plus it's json parsing...
 
         // putting apart last data received
         instance.lastData = data;
