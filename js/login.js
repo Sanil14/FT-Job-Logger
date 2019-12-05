@@ -74,7 +74,7 @@ $(document).ready(async function() {
                 }
             })
             .catch(function(err) {
-                if (err.errno == "ENOTFOUND" || err.code == "ENOTFOUND" || err.code == "ECONNREFUSED" || err.errno == "ECONNREFUSED" || err.response.status == 404) {
+                if (err.errno == "ENOTFOUND" || err.code == "ENOTFOUND" || err.code == "ECONNREFUSED" || err.errno == "ECONNREFUSED" || err.errno == "EAI_AGAIN") {
                     setOffline();
                     $(".container div:nth-last-child(1)").addClass("serverside");
                     $(".serverside").prop("title", "The server is down. Try again later")

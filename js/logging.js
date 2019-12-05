@@ -114,7 +114,7 @@ $(document).ready(function() {
                                 }).catch(function(err) {
                                     console.log("Could not connect to server:" + err.errno);
                                     logger.error("Could not connect to server:" + err.errno);
-                                    if (err.errno == "ENOTFOUND" || err.code == "ENOTFOUND" || err.code == "ECONNREFUSED" || err.errno == "ECONNREFUSED" || err.response.status == 404) {
+                                    if (err.errno == "ENOTFOUND" || err.code == "ENOTFOUND" || err.code == "ECONNREFUSED" || err.errno == "ECONNREFUSED" || err.errno == "EAI_AGAIN") {
                                         log("Unable to submit job. Server might be offline.", "red-text");
                                         log("All jobs will be locally stored.", "orange-text text-lighten-2")
                                         serverisoffline = true;
@@ -257,9 +257,10 @@ $(document).ready(function() {
                 $(".container div:last:last-child").addClass("clientside");
                 $(".clientside").prop("title", "You have no internet connection")
                 return log("You do not have an active internet connection!", "red-text")
+            } else if (!serverisoffline) {
+                hideOffline();
+                isoffline = false;
             }
-            hideOffline();
-            isoffline = false;
             if (!fs.existsSync(path) || !fs.existsSync(path + "\\localjobs.dat")) {
                 return log("There are no offline jobs to upload to the server!")
             }
@@ -303,7 +304,7 @@ $(document).ready(function() {
                                             })
                                         }
                                     }).catch(function(err) {
-                                        if (err.errno == "ENOTFOUND" || err.code == "ENOTFOUND" || err.code == "ECONNREFUSED" || err.errno == "ECONNREFUSED" || err.response.status == 404) {
+                                        if (err.errno == "ENOTFOUND" || err.code == "ENOTFOUND" || err.code == "ECONNREFUSED" || err.errno == "ECONNREFUSED" || err.errno == "EAI_AGAIN") {
                                             serverisoffline = true;
                                             log("Unable to submit job. Server might still be offline. Try again later.", "red-text");
                                         } else {

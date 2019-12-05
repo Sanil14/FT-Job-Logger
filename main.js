@@ -71,7 +71,7 @@ function createWindow() {
                                 }
                             }).catch(function(err) {
                                 console.log(err);
-                                if (err.errno == "ENOTFOUND" || err.code == "ENOTFOUND" || err.code == "ECONNREFUSED" || err.errno == "ECONNREFUSED" || err.response.status == 404) {
+                                if (err.errno == "ENOTFOUND" || err.code == "ENOTFOUND" || err.code == "ECONNREFUSED" || err.errno == "ECONNREFUSED" || err.errno == "EAI_AGAIN") {
                                     win.loadFile("logging.html").then(() => {
                                         serverisoffline = true;
                                         updateTrackingMenu(true, isoffline, serverisoffline);
