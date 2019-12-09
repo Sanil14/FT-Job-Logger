@@ -249,7 +249,9 @@ function createWindow() {
 /* AUTO UPDATER CODE FROM HERE */
 
 function sendStatusToWindow(msg) {
-    win.webContents.send("updateMessages", msg)
+    if (win != null) {
+        win.webContents.send("updateMessages", msg)
+    }
 }
 
 autoUpdater.on('checking-for-update', () => {
