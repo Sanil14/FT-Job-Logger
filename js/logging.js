@@ -18,7 +18,8 @@ var userdata,
     errorcounter = 0,
     unexerrorc = 0,
     isoffline = false,
-    serverisoffline = false;
+    serverisoffline = false,
+    comparejob;
 
 $(document).ready(function() {
 
@@ -94,7 +95,14 @@ $(document).ready(function() {
                         info.push(calcDamage(data))
                         info.push(data.jobData.truckMake)
                         info.push(data.jobData.truckModel)
-                        console.log(info) // REMOVE BEFORE RELEASE
+                        newjob = CryptoJS.SHA256(JSON.stringify(info));
+                        console.log(comparejob);
+                        if (JSON.stringify(comparejob) == JSON.stringify(newjob)) {
+                            console.log("multiple same jobs being posted... preventing that.");
+                            return;
+                        }
+                        comparejob = CryptoJS.SHA256(JSON.stringify(info));
+                        console.log(comparejob) // REMOVE BEFORE RELEASE
                         log("<b>Outputting Job Values only for Alpha Testing</b>:<br>" + JSON.stringify(info)); // REMOVE BEFORE RELEASE
                         if (info.length > 1 && await isOnline()) {
                             log("Attempting to submit job...")
