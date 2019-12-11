@@ -237,13 +237,13 @@ function createWindow() {
         updateTrackingMenu(false, isOffline, serverisdown);
     })
 
-    ipcMain.on('unexpectederror', () => {
+    /*ipcMain.on('unexpectederror', () => {
         win.loadFile("home.html").then(() => {
             setTimeout(() => {
                 win.loadFile("logging.html")
             }, 3000);
         })
-    })
+    })*/
 }
 
 /* AUTO UPDATER CODE FROM HERE */

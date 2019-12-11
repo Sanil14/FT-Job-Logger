@@ -198,9 +198,7 @@ $(document).ready(function() {
         if (unexerrorc >= 1) {
             return;
         }
-        presenceManager.disableRPC();
-        ipcRenderer.send("unexpectederror");
-        errorm = "Unexpected error with logger. Refreshing...";
+        errorm = "Unexpected error with logger. It should fix itself.";
         logger.error(data.errorMessage)
         log(`${errorm}`, "red-text")
         unexerrorc += 1;
