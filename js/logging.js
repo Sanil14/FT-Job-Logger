@@ -77,14 +77,14 @@ $(document).ready(function() {
                         info.push(data.jobData.isMultiplayer)
                         info.push(userdata.userid)
                         info.push(data.jobData.gameID)
-                        info.push(data.jobData.sourceCity)
-                        info.push(data.jobData.sourceCompany == "" ? "Special Transport Job" : data.jobData.sourceCompany)
-                        info.push(data.jobData.destinationCity)
-                        info.push(data.jobData.destinationCompany == "" ? "Special Transport Job" : data.jobData.destinationCompany)
+                        info.push(clearquote(data.jobData.sourceCity))
+                        info.push(data.jobData.sourceCompany == "" ? "Special Transport Job" : clearquote(data.jobData.sourceCompany))
+                        info.push(clearquote(data.jobData.destinationCity))
+                        info.push(data.jobData.destinationCompany == "" ? "Special Transport Job" : clearquote(data.jobData.destinationCompany))
                         info.push(Math.round(data.jobData.distanceDriven))
                         info.push(data.jobData.fuelBurned)
                         info.push(data.jobData.income)
-                        info.push(data.telemetry.job.cargo)
+                        info.push(clearquote(data.telemetry.job.cargo))
                         info.push(data.telemetry.job.mass)
                         info.push(data.jobData.late)
                         info.push(data.jobData.realTimeStarted)
@@ -208,6 +208,10 @@ $(document).ready(function() {
         let totalDamageFinish = data.jobData.finishTrailerDamage;
         let totalDamageStart = data.jobData.startTrailerDamage;
         return totalDamageFinish - totalDamageStart;
+    }
+
+    function clearquote(data) {
+        return data.replace("'", "''");
     }
 
     function setOffline() {
