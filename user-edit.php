@@ -298,7 +298,7 @@ $joindate = date('d/m/Y', strtotime($stats["JoinDate"]));
    <script>
       $(document).ready(function() {
 
-         presetroles = <?php echo json_encode($roles); ?>;
+         presetroles = <?php echo json_encode($roles); ?>
          console.log(presetroles);
 
          $(".select2").val(presetroles);
