@@ -56,7 +56,7 @@ if ($userstats["Permission"] != "Admin") {
       <div class="topbar">
          <!-- LOGO -->
          <div class="topbar-left">
-            <a href="index.html" class="logo"><span><img src="assets/images/logo.png" alt="Falcon Logo" title="Goto Main Dashboard"></span><i class="mdi mdi-layers"></i></a>
+            <a href="index" class="logo"><span><img src="assets/images/logo.png" alt="Falcon Logo" title="Goto Main Dashboard"></span><i class="mdi mdi-layers"></i></a>
          </div>
          <!-- Button mobile view to collapse sidebar menu -->
          <div class="navbar navbar-default" role="navigation">
