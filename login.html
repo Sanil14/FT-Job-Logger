@@ -11,23 +11,29 @@
 
 <body>
 
-    <div class="center-align">
-        <img src="assets/falcon_logo.png" alt="Falcon Logo" id="logo" />
-        <div class="form row">
-            <div class="input-field center-align">
-                <input id="key" type="text">
-                <label for="key">Enter Key here</label>
-                <span class="helper-text left-align">Dont have a key? Contact the Staff for one!</span>
-            </div>
+    <div class="container">
+        <div class="inline3">
+            <canvas id="alphaText" width="50" height="25"></canvas>
         </div>
-        <button class="btn waves-effect waves-light modal-trigger" type="submit" name="action" id="submitButton" href="#modal1">
-            Submit
-          </button>
-        <div class="updatediv"></div>
-    </div>
-    <div class="version">Version</div>
-    <div class="offline-ui offline-ui-down">
-        <div class="offline-ui-content">Offline</div>
+
+        <div class="center-align">
+            <img src="assets/falcon_logo.png" alt="Falcon Logo" id="logo" />
+            <div class="form row">
+                <div class="input-field center-align">
+                    <input id="key" type="text">
+                    <label for="key">Enter Key here</label>
+                    <span class="helper-text left-align">Dont have a key? Contact the Staff for one!</span>
+                </div>
+            </div>
+            <button class="btn waves-effect waves-light modal-trigger" type="submit" name="action" id="submitButton" href="#modal1">
+                Submit
+              </button>
+            <div class="updatediv"></div>
+        </div>
+        <div class="version">Version</div>
+        <div class="offline-ui offline-ui-down">
+            <div class="offline-ui-content">Offline</div>
+        </div>
     </div>
 
     <script>

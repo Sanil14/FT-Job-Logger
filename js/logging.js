@@ -23,6 +23,11 @@ var userdata,
 
 $(document).ready(function() {
 
+    var canvas = $("#alphaText");
+    var ctx = canvas[0].getContext("2d");
+    ctx.font = "14px Arial";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("Alpha", 7, 18);
 
     var ses = session.fromPartition("persist:userinfo")
 

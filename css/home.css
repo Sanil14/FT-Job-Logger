@@ -36,6 +36,15 @@ div.inline2 {
     right: 5px;
 }
 
+div.inline3 {
+    position: absolute;
+    top: 10px;
+}
+
+#alphaText {
+    background-color: #ad2a2a;
+}
+
 .container {
     height: 100% !important;
     width: 95% !important;

@@ -6,6 +6,13 @@ const logger = require("electron-log");
 const version = require("./package.json").version
 
 $(document).ready(async function() {
+
+    var canvas = $("#alphaText");
+    var ctx = canvas[0].getContext("2d");
+    ctx.font = "14px Arial";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("Alpha", 7, 18);
+
     console.log("I am loaded.");
 
     $(".version").text(`Version ${version}`)
