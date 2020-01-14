@@ -209,10 +209,9 @@ class ETCarsClient extends EventEmitter {
             let start = this.buffer.indexOf(":", (this.buffer.indexOf("status")));
             let end = this.buffer.indexOf(",", (this.buffer.indexOf("status")));
             let status = this.buffer.substring(start+2,end);
-            let jobData = this.selectGroup(this.buffer, "jobData"); // MAKE THIS MORE MEMORY FRIENDLY
+            let jobData = this.selectGroup(this.buffer, "jobData");
 
             var simplified = `{"data":{"status":${status},"jobData":{${jobData}}}}`;
-            //console.log(simplified);
             var json;
             try {
                 json = JSON.parse(simplified);
