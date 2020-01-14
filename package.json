@@ -9,7 +9,11 @@
         "dist": "electron-builder",
         "release": "electron-builder -p always",
         "checkupdates": "ncu -u",
-        "postinstall": "electron-builder install-app-deps"
+        "postinstall": "electron-builder install-app-deps",
+        "discordpush": "dispatch build push 662711287700127774 config.json .",
+        "discordlist": "dispatch build list 662711287700127774 662711287700127774",
+        "discordpublish": "dispatch build publish 662711287700127774 662711287700127774",
+        "discorddrm": "dispatch build drm-wrap 662711287700127774 'D:\\Desktop\\DiscordBots\\ETS2 Discord RPC\\FT Desktop App V2\\dist\\win-unpacked\\FT Job Logger.exe'"
     },
     "config": {
         "pass": "ftjobloggerprasadhdesktop"

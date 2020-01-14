@@ -1,0 +1,25 @@
+{
+    "application": {
+        "id": 662711287700127774,
+        "manifests": [{
+            "label": "FT-jobLogger/windows",
+            "platforms": ["win64"],
+            "locales": [],
+            "local_root": "./dist/win-unpacked",
+            "install_scripts": [{
+                "name": "FT Job Logger",
+                "executable": "dist\\win-unpacked\\FT Job Logger Setup 2.2.9.exe",
+                "platforms": ["win64"],
+                "completion_registry_key": {
+                    "key": "Software\\FT Job Logger\\InstallScripts\\SDB-win32",
+                    "value": "1"
+                }
+            }],
+            "launch_options": [{
+                "name": "FT Job Logger",
+                "executable": "dist/win-unpacked/FT Job Logger.exe",
+                "platforms": ["win64"]
+            }]
+        }]
+    }
+}
