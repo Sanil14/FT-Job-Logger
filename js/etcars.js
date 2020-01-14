@@ -1,6 +1,7 @@
 const net = require('net');
 const EventEmitter = require('events');
 const logger = require("electron-log");
+var errorc = 0;
 /**
  * 
  * 
@@ -136,6 +137,7 @@ class ETCarsClient extends EventEmitter {
             console.log('connected');
 
         clearInterval(this.checker);
+        errorc = 0;
 
         this.emit('connect', {
             error: false,
@@ -191,47 +193,62 @@ class ETCarsClient extends EventEmitter {
          * The data is often split in multiple buffers. Those buffers need to be stored until the final buffer is received.
          * When the last buffer is received, it can be merged with the previous buffers - the result is the complete JSON.
          */
-        try {
-            for (var i = 0; i < data.length; i++) {
-                if (data[i] == 13) {
-                    this.bufferReady = true;
-                }
+        for (var i = 0; i < data.length; i++) {
+            if (data[i] == 13) {
+                this.bufferReady = true;
             }
-            this.buffer += data;
+        }
+        this.buffer += data;
 
-            if (this.bufferReady) {
-                this.bufferReady = false;
-                this.buffer = this.buffer.substring(this.buffer.indexOf('{', 0), this.buffer.indexOf('\r'));
-                try {
-                    var json = JSON.parse(this.buffer);
-                } catch (err) {
-                    this.buffer = this.buffer.replace(/�/g, "Missing Information");
-                    var json = JSON.parse(this.buffer);
-                    if (json.data.status == "JOB FINISHED") { // REMOVE BEFORE RELEASE
-                        console.log(json.data);
-                    }
-                    this.buffer = '';
-                    this.emit('data', json.data);
-                }
+        if (this.bufferReady) {
+            this.bufferReady = false;
+            this.buffer = this.buffer.substring(this.buffer.indexOf('{', 0), this.buffer.indexOf('\r'));
+
+            if (this.buffer.indexOf("SPEEDING") > -1 && this.buffer.indexOf("COLLISION") > -1 && this.buffer.indexOf("POSSIBLE COLLISION") > -1 && this.buffer.indexOf("LATE") > -1) return;
+
+            let start = this.buffer.indexOf(":", (this.buffer.indexOf("status")));
+            let end = this.buffer.indexOf(",", (this.buffer.indexOf("status")));
+            let status = this.buffer.substring(start+2,end);
+            let jobData = this.selectGroup(this.buffer, "jobData"); // MAKE THIS MORE MEMORY FRIENDLY
+
+            var simplified = `{"data":{"status":${status},"jobData":{${jobData}}}}`;
+            //console.log(simplified);
+            var json;
+            try {
+                json = JSON.parse(simplified);
                 if (json.data.status == "JOB FINISHED") { // REMOVE BEFORE RELEASE
                     console.log(json.data);
                 }
                 this.buffer = '';
+                simplified = '';
                 this.emit('data', json.data);
+            } catch (err) {
+                this.emit('unexpectedError', {
+                    error: true,
+                    socketConnected: true,
+                    errorMessage: err.message
+                });
+                logger.info(err);
+                logger.info(this.buffer);
+                if (errorc >= 1) return;
+                this.etcarsSocket.destroy()
+                setTimeout(() => {
+                    this.connect(); 
+                    errorc+=1;
+                }, 5000);
+                if (this._enableDebug)
+                    console.log(err.message);
             }
-
-
-        } catch (error) {
-            this.emit('unexpectedError', {
-                error: true,
-                socketConnected: true,
-                errorMessage: error.message
-            });
-            logger.info(error);
-            logger.info(this.buffer);
-            if (this._enableDebug)
-                console.log(error.message);
         }
+    }
+
+    selectGroup(data, group) {
+        if (data.indexOf(group) <= -1) {
+            return `"Other Event": "Ignoring"`;
+        }
+        let start = data.indexOf("{", (data.indexOf(group)));
+        let end = data.indexOf("}", (data.indexOf(group)));
+        return data.slice(start+1,end);
     }
 }
 

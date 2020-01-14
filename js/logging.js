@@ -17,11 +17,12 @@ etcars.enableDebug = true;
 var userdata,
     errorcounter = 0,
     unexerrorc = 0,
+    connec = 0,
     isoffline = false,
     serverisoffline = false,
     comparejob;
 
-$(document).ready(function() {
+$(document).ready(function () {
 
     var canvas = $("#alphaText");
     var ctx = canvas[0].getContext("2d");
@@ -31,7 +32,7 @@ $(document).ready(function() {
 
     var ses = session.fromPartition("persist:userinfo")
 
-    ses.cookies.get({}).then(async(cookies) => {
+    ses.cookies.get({}).then(async (cookies) => {
         etcars.connect();
         $(".version").text(`Version ${version}`)
         if (isoffline) {
@@ -54,7 +55,7 @@ $(document).ready(function() {
         log(JSON.stringify(error));
     })
 
-    etcars.on('data', async function(data) {
+    etcars.on('data', async function (data) {
         try {
             if (navigator.onLine) {
                 presenceManager.onData(data);
@@ -71,87 +72,84 @@ $(document).ready(function() {
                 }
             }
             if (data.status == "JOB FINISHED") {
-                if (typeof data.telemetry != 'undefined' && data.telemetry) {
-                    if (typeof data.jobData != 'undefined' && data.jobData) {
-                        var info = [];
-                        /*info.push(2)
-                        if(data.jobData.status == 3) { // FOR OUTLINING IF JOB WAS FINISHED OR CANCELLED
-                            info[0] = 3;
-                        }
-                        */
-                        info.push(data.jobData.isMultiplayer)
-                        info.push(userdata.userid)
-                        info.push(data.jobData.gameID)
-                        info.push(clearquote(data.jobData.sourceCity))
-                        info.push(data.jobData.sourceCompany == "" ? "Special Transport Job" : clearquote(data.jobData.sourceCompany))
-                        info.push(clearquote(data.jobData.destinationCity))
-                        info.push(data.jobData.destinationCompany == "" ? "Special Transport Job" : clearquote(data.jobData.destinationCompany))
-                        info.push(Math.round(data.jobData.distanceDriven))
-                        info.push(data.jobData.fuelBurned)
-                        info.push(data.jobData.income)
-                        info.push(clearquote(data.telemetry.job.cargo))
-                        info.push(data.telemetry.job.mass)
-                        info.push(data.jobData.late)
-                        info.push(data.jobData.realTimeStarted)
-                        info.push(data.jobData.realTimeEnded)
-                        info.push(data.jobData.topSpeed)
-                        info.push(data.jobData.speedingCount)
-                        info.push(data.jobData.collisionCount)
-                        info.push(calcDamage(data))
-                        info.push(data.jobData.truckMake)
-                        info.push(data.jobData.truckModel)
-                        newjob = CryptoJS.SHA256(JSON.stringify(info));
-                        console.log(comparejob);
-                        if (JSON.stringify(comparejob) == JSON.stringify(newjob)) {
-                            console.log("multiple same jobs being posted... preventing that.");
-                            return;
-                        }
-                        comparejob = CryptoJS.SHA256(JSON.stringify(info));
-                        console.log(comparejob) // REMOVE BEFORE RELEASE
-                        log("<b>Outputting Job Values only for Alpha Testing</b>:<br>" + JSON.stringify(info)); // REMOVE BEFORE RELEASE
-                        if (info.length > 1 && await isOnline()) {
-                            log("Attempting to submit job...")
-                            axios.post(`https://falconites.com/dashboard/api/v1/jobs?key=9xsyr1pr1miyp45&data=${encodeURIComponent(info.join(","))}`)
-                                .then(function(response) {
-                                    var data = response.data;
-                                    if (data.status != "202") {
-                                        if (data.status == "400") {
-                                            log("Error 400 submitting job: Contact Dev")
-                                            logger.info(data.error)
-                                        } else {
-                                            log("Error submitting job: " + data.error, "red-text");
-                                        }
+                if (typeof data.jobData != 'undefined' && data.jobData) {
+                    var info = [];
+                    /*info.push(2)
+                    if(data.jobData.status == 3) { // FOR OUTLINING IF JOB WAS FINISHED OR CANCELLED
+                        info[0] = 3;
+                    }
+                    */
+                    info.push(data.jobData.isMultiplayer)
+                    info.push(userdata.userid)
+                    info.push(data.jobData.gameID)
+                    info.push(clearquote(data.jobData.sourceCity))
+                    info.push(data.jobData.sourceCompany == "" ? "Special Transport Job" : clearquote(data.jobData.sourceCompany))
+                    info.push(clearquote(data.jobData.destinationCity))
+                    info.push(data.jobData.destinationCompany == "" ? "Special Transport Job" : clearquote(data.jobData.destinationCompany))
+                    info.push(Math.round(data.jobData.distanceDriven))
+                    info.push(data.jobData.fuelBurned)
+                    info.push(data.jobData.income)
+                    info.push(clearquote(data.jobData.cargo))
+                    info.push(data.jobData.trailerMass)
+                    info.push(data.jobData.late)
+                    info.push(data.jobData.realTimeStarted)
+                    info.push(data.jobData.realTimeEnded)
+                    info.push(data.jobData.topSpeed)
+                    info.push(data.jobData.speedingCount)
+                    info.push(data.jobData.collisionCount)
+                    info.push(calcDamage(data))
+                    info.push(data.jobData.truckMake)
+                    info.push(data.jobData.truckModel)
+                    newjob = CryptoJS.SHA256(JSON.stringify(info));
+                    if (JSON.stringify(comparejob) == JSON.stringify(newjob)) {
+                        console.log("multiple same jobs being posted... preventing that.");
+                        return;
+                    }
+                    comparejob = CryptoJS.SHA256(JSON.stringify(info));
+                    console.log(comparejob) // REMOVE BEFORE RELEASE
+                    log("<b>Outputting Job Values only for Alpha Testing</b>:<br>" + JSON.stringify(info)); // REMOVE BEFORE RELEASE
+                    if (info.length > 1 && await isOnline()) {
+                        log("Attempting to submit job...")
+                        axios.post(`https://falconites.com/dashboard/api/v1/jobs?key=9xsyr1pr1miyp45&data=${encodeURIComponent(info.join(","))}`)
+                            .then(function (response) {
+                                var data = response.data;
+                                if (data.status != "202") {
+                                    if (data.status == "400") {
+                                        log("Error 400 submitting job: Contact Dev")
+                                        logger.info(data.error)
                                     } else {
-                                        log("Job has been successfully submitted!", "green-text")
+                                        log("Error submitting job: " + data.error, "red-text");
                                     }
-                                }).catch(function(err) {
-                                    console.log("Could not connect to server:" + err.errno);
-                                    logger.error("Could not connect to server:" + err.errno);
-                                    if (err.errno == "ENOTFOUND" || err.code == "ENOTFOUND" || err.code == "ECONNREFUSED" || err.errno == "ECONNREFUSED" || err.errno == "EAI_AGAIN") {
-                                        log("Unable to submit job. Server might be offline.", "red-text");
-                                        log("All jobs will be locally stored.", "orange-text text-lighten-2")
-                                        serverisoffline = true;
-                                        setOffline();
-                                        $(".container div:last:last-child").addClass("clientside");
-                                        $(".clientside").prop("title", "You have no internet connection")
-                                        log("Attempting to locally store job...")
-                                        setOfflineJobs(info);
-                                    } else {
-                                        log("Unexpected error when submitting job: Contact Dev", "red-text")
-                                        logger.info("Error:" + JSON.stringify(err));
-                                    }
-                                })
-                        } else {
-                            if (!isoffline) {
-                                isoffline = true;
-                                serverisoffline = true;
-                                setOffline();
-                                $(".container div:last:last-child").addClass("clientside");
-                                $(".clientside").prop("title", "You have no internet connection")
-                            }
-                            log("Attempting to locally store job...")
-                            setOfflineJobs(info);
+                                } else {
+                                    log("Job has been successfully submitted!", "green-text")
+                                }
+                            }).catch(function (err) {
+                                console.log("Could not connect to server:" + err.errno);
+                                logger.error("Could not connect to server:" + err.errno);
+                                if (err.errno == "ENOTFOUND" || err.code == "ENOTFOUND" || err.code == "ECONNREFUSED" || err.errno == "ECONNREFUSED" || err.errno == "EAI_AGAIN") {
+                                    log("Unable to submit job. Server might be offline.", "red-text");
+                                    log("All jobs will be locally stored.", "orange-text text-lighten-2")
+                                    serverisoffline = true;
+                                    setOffline();
+                                    $(".container div:last:last-child").addClass("clientside");
+                                    $(".clientside").prop("title", "You have no internet connection")
+                                    log("Attempting to locally store job...")
+                                    setOfflineJobs(info);
+                                } else {
+                                    log("Unexpected error when submitting job: Contact Dev", "red-text")
+                                    logger.info("Error:" + JSON.stringify(err));
+                                }
+                            })
+                    } else {
+                        if (!isoffline) {
+                            isoffline = true;
+                            serverisoffline = true;
+                            setOffline();
+                            $(".container div:last:last-child").addClass("clientside");
+                            $(".clientside").prop("title", "You have no internet connection")
                         }
+                        log("Attempting to locally store job...")
+                        setOfflineJobs(info);
                     }
                 }
             }
@@ -161,9 +159,9 @@ $(document).ready(function() {
         }
     })
 
-    $(".stop button").click(function() {
+    $(".stop button").click(function () {
         log("Beware, Any logging after this will not be recorded!", "red-text")
-        setTimeout(async() => {
+        setTimeout(async () => {
             if (await isOnline()) {
                 isoffline = false;
                 //serverisoffline = false;
@@ -177,16 +175,20 @@ $(document).ready(function() {
         }, 2000);
     })
 
-    $(".uploadbutton").click(async function() {
+    $(".uploadbutton").click(async function () {
         await getOfflineJobs();
     })
 
-    etcars.on('connect', function(data) {
+    etcars.on('connect', function (data) {
+        if (connec >= 1) {
+            return;
+        }
         log("Connected to ETCars. Ready to log jobs!", "green-text")
         errorcounter = 0;
+        connec += 1
     })
 
-    etcars.on('error', function(data) {
+    etcars.on('error', function (data) {
         if (errorcounter >= 1) {
             return;
         }
@@ -197,16 +199,18 @@ $(document).ready(function() {
         }
         log(`${errormsg}`, "red-text");
         errorcounter += 1
+        connec = 0;
     })
 
-    etcars.on('unexpectedError', function(data) {
+    etcars.on('unexpectedError', function (data) {
         if (unexerrorc >= 1) {
             return;
         }
-        errorm = "Unexpected error with logger. It should fix itself.";
+        errorm = "Unexpected error with logger. Attempting to reconnnect...";
         logger.error(data.errorMessage)
         log(`${errorm}`, "red-text")
         unexerrorc += 1;
+        connec = 0;
     })
 
     function calcDamage(data) {
@@ -240,12 +244,12 @@ $(document).ready(function() {
         logger.info(msg);
     }
 
-    ipcRenderer.on('updateMessages', function(event, text) {
+    ipcRenderer.on('updateMessages', function (event, text) {
         console.log(text)
         $(".updatediv").text(text);
     })
 
-    ipcRenderer.on("loadLogging", async function(event, isOffline, serverIsOffline) {
+    ipcRenderer.on("loadLogging", async function (event, isOffline, serverIsOffline) {
         if (!isOffline && serverIsOffline) {
             serverisoffline = true;
             setOffline();
@@ -280,16 +284,16 @@ $(document).ready(function() {
                 return log("There are no offline jobs to upload to the server!")
             }
             let fpath = path + "\\localjobs.dat";
-            fs.readFile(fpath, function(err, data) {
+            fs.readFile(fpath, function (err, data) {
                 if (err) {
                     logger.error(err);
                     console.log(err);
                 }
-                if (typeof(data.toString()) == "undefined" || data.toString() == null || !data.toString()) {
+                if (typeof (data.toString()) == "undefined" || data.toString() == null || !data.toString()) {
                     return log("There are no offline jobs to upload to the server!")
                 } else {
                     axios.get("https://falconites.com/dashboard")
-                        .then(function(resp) {
+                        .then(function (resp) {
                             hideOffline();
                             var bytes = CryptoJS.AES.decrypt(data.toString(), pass);
                             var res = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
@@ -300,7 +304,7 @@ $(document).ready(function() {
                             for (const job of keys) {
                                 log(`Attempting to submit job #${x += 1}`)
                                 axios.post(`https://falconites.com/dashboard/api/v1/jobs?key=9xsyr1pr1miyp45&data=${encodeURIComponent(res[job].join(","))}`)
-                                    .then(function(response) {
+                                    .then(function (response) {
                                         var data = response.data;
                                         if (data.status != "202") {
                                             if (data.status == "400") {
@@ -311,14 +315,14 @@ $(document).ready(function() {
                                             }
                                         } else {
                                             log("Job has been successfully submitted!", "green-text")
-                                            fs.unlink(fpath, function(err) {
+                                            fs.unlink(fpath, function (err) {
                                                 if (err) {
                                                     logger.error(err);
                                                     console.log(err);
                                                 }
                                             })
                                         }
-                                    }).catch(function(err) {
+                                    }).catch(function (err) {
                                         if (err.errno == "ENOTFOUND" || err.code == "ENOTFOUND" || err.code == "ECONNREFUSED" || err.errno == "ECONNREFUSED" || err.errno == "EAI_AGAIN") {
                                             serverisoffline = true;
                                             log("Unable to submit job. Server might still be offline. Try again later.", "red-text");
@@ -328,7 +332,7 @@ $(document).ready(function() {
                                         }
                                     })
                             }
-                        }).catch(function(err) {
+                        }).catch(function (err) {
                             if (err.errno == "ENOTFOUND" || err.code == "ENOTFOUND" || err.code == "ECONNREFUSED" || err.errno == "ECONNREFUSED" || err.response.status == 404) {
                                 serverisoffline = true;
                                 return log("The server is down. Try again later.", "red-text")
@@ -353,14 +357,14 @@ $(document).ready(function() {
         try {
             if (!fs.existsSync(path)) {
                 fs.mkdirSync(path);
-                fs.writeFile(`${path}\\localjobs.dat`, "", function(err) {
+                fs.writeFile(`${path}\\localjobs.dat`, "", function (err) {
                     if (err) {
                         logger.error(err);
                         console.log(err);
                     }
                 })
             } else if (!fs.existsSync(path + "\\localjobs.dat")) {
-                fs.writeFile(`${path}\\localjobs.dat`, "", function(err) {
+                fs.writeFile(`${path}\\localjobs.dat`, "", function (err) {
                     if (err) {
                         logger.error(err);
                         console.log(err);
@@ -368,8 +372,8 @@ $(document).ready(function() {
                 })
             }
             let fpath = path + "\\localjobs.dat";
-            fs.readFile(fpath, function(err, data) {
-                if (typeof(data.toString()) == "undefined" || data.toString() == null || !data.toString()) {
+            fs.readFile(fpath, function (err, data) {
+                if (typeof (data.toString()) == "undefined" || data.toString() == null || !data.toString()) {
                     var res = {
                         1: jobdata
                     };
@@ -380,7 +384,7 @@ $(document).ready(function() {
                     res[len + 1] = jobdata;
                 }
                 var encrypted = CryptoJS.AES.encrypt(JSON.stringify(res), pass);
-                fs.writeFile(fpath, encrypted, function(err) {
+                fs.writeFile(fpath, encrypted, function (err) {
                     if (err) {
                         logger.error(err);
                         console.log(err);
