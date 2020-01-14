@@ -37,17 +37,17 @@
     "author": "Falcon_Trucking",
     "license": "ISC",
     "dependencies": {
-        "axios": "^0.19.0",
+        "axios": "^0.19.1",
         "crypto-js": "^3.1.9-1",
         "discord-rpc": "^3.1.0",
-        "electron-log": "^4.0.1",
+        "electron-log": "^4.0.3",
         "electron-updater": "^4.2.0",
         "is-online": "^8.2.1",
         "node-fetch": "^2.6.0"
     },
     "devDependencies": {
         "discord-rpc": "^3.1.0",
-        "electron": "^7.1.7",
+        "electron": "^7.1.9",
         "electron-builder": "^22.2.0",
         "electron-prebuilt": "^1.4.13",
         "electron-updater": "^4.2.0",
