@@ -30,9 +30,9 @@ class RichPresenceManager {
 
         // putting apart last data received
         instance.lastData = data;
-        if (typeof(data.telemetry) != 'undefined' && data.telemetry) {
+        if (typeof(data.jobData) != 'undefined' && data.jobData) {
 
-            // telemetry exists
+            // jobData exists
 
             // begin to initialize Discord RPC
             // checking if is in valid state
@@ -96,28 +96,28 @@ class RichPresenceManager {
     buildActivity(data) {
         var activity = null;
 
-        if (typeof data.telemetry != 'undefined' && data.telemetry) {
+        if (typeof data.jobData != 'undefined' && data.jobData) {
             activity = {};
 
-            activity.smallImageText = `${data.telemetry.truck.make} ${data.telemetry.truck.model} - ${this.calculateDistance(data.telemetry.truck.odometer, this.isAts(data))} ${this.getDistanceUnit(this.isAts(data))}`;
+            activity.smallImageText = `${data.jobData.truckMake} ${data.jobData.truckModel} - ${this.calculateDistance(data.jobData.odometer, this.isAts(data))} ${this.getDistanceUnit(this.isAts(data))}`;
 
-            if (config.supportedBrands.includes(data.telemetry.truck.makeID.toLowerCase())) {
-                activity.smallImageKey = `${data.telemetry.truck.makeID}`;
+            if (config.supportedBrands.includes(data.jobData.truckMakeID.toLowerCase())) {
+                activity.smallImageKey = `${data.jobData.truckMakeID}`;
             }
 
             activity.details = '';
             activity.state = '';
             activity.startTimestamp = this.timestamp;
 
-            if (typeof data.telemetry.job != 'undefined' && data.telemetry.job && data.telemetry.job.onJob === true) {
-                if (data.telemetry.job.sourceCity != null) {
-                    activity.details += `🚚 ${data.telemetry.job.sourceCity} > ${data.telemetry.job.destinationCity} | ${data.telemetry.job.cargo}`;
+            if (data.jobData.onJob === true) {
+                if (data.jobData.sourceCity != null) {
+                    activity.details += `🚚 ${data.jobData.sourceCity} > ${data.jobData.destinationCity} | ${data.jobData.cargo}`;
                 } else {
-                    activity.details += `🚧 Special Transport | ${data.telemetry.job.cargo}`
+                    activity.details += `🚧 Special Transport | ${data.jobData.cargo}`
                 }
                 activity.largeImageText = `www.falconites.com`;
             } else {
-                if (data.telemetry.truck.make == false) {
+                if (data.jobData.truckMake == false) {
                     activity.details += `🕗 Loading game...`
                 } else {
                     activity.details += `🚛 Freeroaming | ${this.isAts(data) ? "ATS" : "ETS2"}`;
@@ -138,11 +138,10 @@ class RichPresenceManager {
             if (this.mpInfo != null && this.mpStatsInfo != null && this.mpInfo.online != null && this.mpInfo.server != null) {
                 activity.state += util.format('🌐 %s', this.mpInfo.server.shortname);
                 activity.state += util.format(' | %s/%s', this.mpStatsInfo.serverUS, this.mpStatsInfo.serverMAX);
-                activity.largeImageText += util.format(' | ID: %s%s', this.mpPrefix, this.mpInfo.playerid)
                 if (this.mpInfo.mod == "promods") {
                     activity.state += ' | ProMods';
                 }
-            } else if (data.telemetry.game.isMultiplayer == true) {
+            } else if (data.jobData.isMultiplayer == true) {
                 activity.state = `🌐 TruckersMP`;
             } else {
                 activity.state = ('🌐 Singleplayer');
@@ -167,7 +166,7 @@ class RichPresenceManager {
     }
 
     isAts(data) {
-        return data.telemetry.game.gameID == "ats";
+        return data.jobData.gameID == "ats";
     }
 
     getDistanceUnit(isAts) {
@@ -273,7 +272,7 @@ class RichPresenceManager {
     }
 
     checkIfMultiplayer(data) {
-        return data.telemetry && data.telemetry.game && data.telemetry.game.isMultiplayer && data.telemetry.user;
+        return data.jobData && data.jobData.isMultiplayer;
     }
 
     checkMpInfo() {
@@ -283,7 +282,7 @@ class RichPresenceManager {
         if (this.lastData != null && this.checkIfMultiplayer(this.lastData)) {
 
 
-            var url = util.format('https://api.truckyapp.com/v1/richpresence/playerInfo?query=%s', this.lastData.telemetry.user.steamID);
+            var url = util.format('https://api.truckyapp.com/v1/richpresence/playerInfo?query=%s', this.lastData.steamID);
 
             //console.log(url);
             fetch(url).then((body) => {
@@ -364,14 +363,14 @@ class RichPresenceManager {
     checkLocationInfo() {
         var instance = this;
         if (this.lastData.status == "TELEMETRY") {
-            if (this.lastData.telemetry.truck.worldPlacement.x == "0") {
+            if (this.lastData.worldPlacement.x == "0") {
                 instance.locationInfo = {
                     location: false,
                     inCity: null,
                 };
             } else {
 
-                var url = util.format('https://api.truckyapp.com/v2/map/%s/resolve?x=%s&y=%s', this.lastData.telemetry.game.gameID, this.lastData.telemetry.truck.worldPlacement.x, this.lastData.telemetry.truck.worldPlacement.z);
+                var url = util.format('https://api.truckyapp.com/v2/map/%s/resolve?x=%s&y=%s', this.lastData.jobData.gameID, this.lastData.worldPlacement.x, this.lastData.worldPlacement.z);
 
                 //console.log(url);
                 fetch(url).then((body) => {

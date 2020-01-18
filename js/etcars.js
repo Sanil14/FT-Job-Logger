@@ -206,12 +206,12 @@ class ETCarsClient extends EventEmitter {
 
             if (this.buffer.indexOf("SPEEDING") > -1 && this.buffer.indexOf("COLLISION") > -1 && this.buffer.indexOf("POSSIBLE COLLISION") > -1 && this.buffer.indexOf("LATE") > -1) return;
 
-            let start = this.buffer.indexOf(":", (this.buffer.indexOf("status")));
-            let end = this.buffer.indexOf(",", (this.buffer.indexOf("status")));
-            let status = this.buffer.substring(start+2,end);
+            let status = this.selectData(this.buffer, "status");
             let jobData = this.selectGroup(this.buffer, "jobData");
+            let steamID = this.selectData(this.buffer, "steamID");
+            let worldplac = this.selectGroup(this.buffer, "worldPlacement");
 
-            var simplified = `{"data":{"status":${status},"jobData":{${jobData}}}}`;
+            var simplified = `{"data":{"status":${status},"steamID":${steamID},"jobData":{${jobData}},"worldPlacement":{${worldplac}}}}`;
             var json;
             try {
                 json = JSON.parse(simplified);
@@ -248,6 +248,12 @@ class ETCarsClient extends EventEmitter {
         let start = data.indexOf("{", (data.indexOf(group)));
         let end = data.indexOf("}", (data.indexOf(group)));
         return data.slice(start+1,end);
+    }
+
+    selectData(data, group) {
+        let start = data.indexOf(":", (this.buffer.indexOf(group)));
+        let end = data.indexOf(",", (this.buffer.indexOf(group)));
+        return data.substring(start+2,end);
     }
 }
 

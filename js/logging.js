@@ -18,6 +18,7 @@ var userdata,
     errorcounter = 0,
     unexerrorc = 0,
     connec = 0,
+    error = false,
     isoffline = false,
     serverisoffline = false,
     comparejob;
@@ -153,9 +154,12 @@ $(document).ready(function () {
                     }
                 }
             }
+            error = false;
         } catch (err) {
-            log("Encountered an error: Contact Dev.")
+            if (error) return; 
+            log("Encountered an error: Contact Dev.", "red-text")
             logger.error(JSON.stringify(err));
+            error = true;
         }
     })
 
