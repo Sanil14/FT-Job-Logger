@@ -124,7 +124,7 @@ $timezone = $pref->Timezone;
                   <div class="col-xl-3 col-md-6">
                      <div class="card-box widget-user">
                         <div class="text-center">
-                           <h2 class="text-custom" data-plugin="counterup"><?php echo $Ets2KM ?></h2>
+                           <h2 class="text-custom" data-plugin="counterup"><?php echo number_format($Ets2KM) ?></h2>
                            <h5><span>KM</span>&nbsp;Travelled</h5>
                         </div>
                      </div>
@@ -133,7 +133,7 @@ $timezone = $pref->Timezone;
                   <div class="col-xl-3 col-md-6">
                      <div class="card-box widget-user">
                         <div class="text-center">
-                           <h2 class="text-pink" data-plugin="counterup"><?php echo $Ets2Jobs ?></h2>
+                           <h2 class="text-pink" data-plugin="counterup"><?php echo number_format($Ets2Jobs) ?></h2>
                            <h5>Total Jobs</h5>
                         </div>
                      </div>
@@ -142,7 +142,7 @@ $timezone = $pref->Timezone;
                   <div class="col-xl-3 col-md-6">
                      <div class="card-box widget-user">
                         <div class="text-center">
-                           <h2 class="text-warning" data-plugin="counterup"><?php echo $Ets2Income ?></h2>
+                           <h2 class="text-warning" data-plugin="counterup"><?php echo number_format($Ets2Income) ?></h2>
                            <h5>Income&nbsp;<span>(Euros)</span></h5>
                         </div>
                      </div>
@@ -151,7 +151,7 @@ $timezone = $pref->Timezone;
                   <div class="col-xl-3 col-md-6">
                      <div class="card-box widget-user">
                         <div class="text-center">
-                           <h2 class="text-info" data-plugin="counterup"><?php echo $Ets2Fuel ?></h2>
+                           <h2 class="text-info" data-plugin="counterup"><?php echo number_format($Ets2Fuel) ?></h2>
                            <h5>Fuel Consumed&nbsp;<span>(Ltrs)</span></h5>
                         </div>
                      </div>
@@ -174,7 +174,7 @@ $timezone = $pref->Timezone;
                   <div class="col-xl-3 col-md-6">
                      <div class="card-box widget-user">
                         <div class="text-center">
-                           <h2 class="text-custom" data-plugin="counterup"><?php echo $AtsKM ?></h2>
+                           <h2 class="text-custom" data-plugin="counterup"><?php echo number_format($AtsKM) ?></h2>
                            <h5><span>KM</span>&nbsp;Travelled</h5>
                         </div>
                      </div>
@@ -183,7 +183,7 @@ $timezone = $pref->Timezone;
                   <div class="col-xl-3 col-md-6">
                      <div class="card-box widget-user">
                         <div class="text-center">
-                           <h2 class="text-custom" data-plugin="counterup"><?php echo $AtsJobs ?></h2>
+                           <h2 class="text-custom" data-plugin="counterup"><?php echo number_format($AtsJobs) ?></h2>
                            <h5>Total Jobs</h5>
                         </div>
                      </div>
@@ -192,7 +192,7 @@ $timezone = $pref->Timezone;
                   <div class="col-xl-3 col-md-6">
                      <div class="card-box widget-user">
                         <div class="text-center">
-                           <h2 class="text-custom" data-plugin="counterup"><?php echo $AtsIncome ?></h2>
+                           <h2 class="text-custom" data-plugin="counterup"><?php echo number_format($AtsIncome) ?></h2>
                            <h5>Income&nbsp;<span>(Euros)</span></h5>
                         </div>
                      </div>
@@ -201,7 +201,7 @@ $timezone = $pref->Timezone;
                   <div class="col-xl-3 col-md-6">
                      <div class="card-box widget-user">
                         <div class="text-center">
-                           <h2 class="text-custom" data-plugin="counterup"><?php echo $AtsFuel ?></h2>
+                           <h2 class="text-custom" data-plugin="counterup"><?php echo number_format($AtsFuel) ?></h2>
                            <h5>Fuel Consumed&nbsp;<span>(Ltrs)</span></h5>
                         </div>
                      </div>

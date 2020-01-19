@@ -220,7 +220,7 @@ if ($full == 0) {
                 <tr role='row' class='even'>
                     <td><i class='fas fa-weight-hanging fa-2x'></i></td>
                     <td>Cargo Weight</td>
-                    <td>$weight.$munits</td>
+                    <td>$weight$munits</td>
                 </tr>
                 <tr role='row' class='odd'>
                     <td><i class='fa fa-exclamation-triangle fa-2x'></i></td>
@@ -235,12 +235,12 @@ if ($full == 0) {
                 <tr role='row' class='odd'>
                     <td><i class='fa fa-road fa-2x'></i></td>
                     <td>Distance Driven</td>
-                    <td>$length.$dunits</td>
+                    <td>$length$dunits</td>
                 </tr>
                 <tr role='row' class='even'>
                     <td><i class='fa fa-fire fa-2x'></i></td>
                     <td>Fuel Consumed</td>
-                    <td>$petrol.$funits</td>
+                    <td>$petrol$funits</td>
                 </tr>
                 <tr role='row' class='odd'>
                     <td><i class='fa fa-clock-o fa-2x'></i></td>
@@ -255,7 +255,7 @@ if ($full == 0) {
                 <tr role='row' class='odd'>
                     <td><i class='fa  fa-angle-double-right fa-2x'></i></td>
                     <td>Top Speed</td>
-                    <td>$speed.$sunits</td>
+                    <td>$speed$sunits</td>
                 </tr>
                 <tr role='row' class='even'>
                     <td><i class='fas fa-hourglass-half fa-2x'></i></td>

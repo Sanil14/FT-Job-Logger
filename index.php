@@ -144,7 +144,7 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                         <div class="col-xl-3 col-md-6">
                             <div class="card-box widget-user">
                                 <div class="text-center">
-                                    <h2 class="text-custom" data-plugin="counterup"><?php echo $totalKM ?></h2>
+                                    <h2 class="text-custom" data-plugin="counterup"><?php echo number_format($totalKM) ?></h2>
                                     <h5><span>KM</span>&nbsp;Travelled</h5>
                                 </div>
                             </div>
@@ -153,7 +153,7 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                         <div class="col-xl-3 col-md-6">
                             <div class="card-box widget-user">
                                 <div class="text-center">
-                                    <h2 class="text-pink" data-plugin="counterup"><?php echo $totalJobs ?></h2>
+                                    <h2 class="text-pink" data-plugin="counterup"><?php echo number_format($totalJobs) ?></h2>
                                     <h5>Total Jobs</h5>
                                 </div>
                             </div>
@@ -162,7 +162,7 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                         <div class="col-xl-3 col-md-6">
                             <div class="card-box widget-user">
                                 <div class="text-center">
-                                    <h2 class="text-warning" data-plugin="counterup"><?php echo $totalIncome ?></h2>
+                                    <h2 class="text-warning" data-plugin="counterup"><?php echo number_format($totalIncome) ?></h2>
                                     <h5>Income&nbsp;<span>(Euros)</span></h5>
                                 </div>
                             </div>
@@ -171,7 +171,7 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                         <div class="col-xl-3 col-md-6">
                             <div class="card-box widget-user">
                                 <div class="text-center">
-                                    <h2 class="text-info" data-plugin="counterup"><?php echo $totalFuel ?></h2>
+                                    <h2 class="text-info" data-plugin="counterup"><?php echo number_format($totalFuel) ?></h2>
                                     <h5>Fuel Consumed&nbsp;<span>(Ltrs)</span></h5>
                                 </div>
                             </div>
@@ -195,7 +195,7 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                         <div class="col-xl-3 col-md-6">
                             <div class="card-box widget-user">
                                 <div class="text-center">
-                                    <h2 class="text-custom" data-plugin="counterup"><?php echo $vtotalKM ?></h2>
+                                    <h2 class="text-custom" data-plugin="counterup"><?php echo number_format($vtotalKM) ?></h2>
                                     <h5><span>KM</span>&nbsp;Travelled</h5>
                                 </div>
                             </div>
@@ -204,7 +204,7 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                         <div class="col-xl-3 col-md-6">
                             <div class="card-box widget-user">
                                 <div class="text-center">
-                                    <h2 class="text-custom" data-plugin="counterup"><?php echo $vtotalJobs ?></h2>
+                                    <h2 class="text-custom" data-plugin="counterup"><?php echo number_format($vtotalJobs) ?></h2>
                                     <h5>Total Jobs</h5>
                                 </div>
                             </div>
@@ -213,7 +213,7 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                         <div class="col-xl-3 col-md-6">
                             <div class="card-box widget-user">
                                 <div class="text-center">
-                                    <h2 class="text-custom" data-plugin="counterup"><?php echo $vtotalIncome ?></h2>
+                                    <h2 class="text-custom" data-plugin="counterup"><?php echo number_format($vtotalIncome) ?></h2>
                                     <h5>Income&nbsp;<span>(Euros)</span></h5>
                                 </div>
                             </div>
@@ -222,7 +222,7 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                         <div class="col-xl-3 col-md-6">
                             <div class="card-box widget-user">
                                 <div class="text-center">
-                                    <h2 class="text-custom" data-plugin="counterup"><?php echo $vtotalFuel ?></h2>
+                                    <h2 class="text-custom" data-plugin="counterup"><?php echo number_format($vtotalFuel) ?></h2>
                                     <h5>Fuel Consumed&nbsp;<span>(Ltrs)</span></h5>
                                 </div>
                             </div>

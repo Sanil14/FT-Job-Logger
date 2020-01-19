@@ -213,7 +213,7 @@ $timezone = $pref->Timezone;
                                     <td><span class="positionNum">0</span></td>
                                     <td><?php echo $dom["Username"] ?></td>
                                     <td><?php echo $dom["Jobs"] ?></td>
-                                    <td><?php echo round($dom["Odometer"]) ?></td>
+                                    <td><?php echo number_format($dom["Odometer"]) ?></td>
                                  </tr>
                               <?php
                               }
