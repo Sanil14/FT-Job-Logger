@@ -67,8 +67,6 @@
 
 	//iterate on results row and create new index array of data
 	while( $row = mysqli_fetch_row($queryRecords) ) {
-    $row[1] = utf8_encode($row[1]);
-    $row[2] = utf8_encode($row[2]);
     moveElement($row,5,1);
     if ($params["timezone"] == "GMT") {
       $g = gmdate('r',$row[4]);
