@@ -30,7 +30,7 @@ class RichPresenceManager {
 
         // putting apart last data received
         instance.lastData = data;
-        if (typeof(data.jobData) != 'undefined' && data.jobData) {
+        if (typeof (data.jobData) != 'undefined' && data.jobData) {
 
             // jobData exists
 
@@ -117,11 +117,8 @@ class RichPresenceManager {
                 }
                 activity.largeImageText = `www.falconites.com`;
             } else {
-                if (data.jobData.truckMake == false) {
-                    activity.details += `🕗 Loading game...`
-                } else {
-                    activity.details += `🚛 Freeroaming | ${this.isAts(data) ? "ATS" : "ETS2"}`;
-                }
+                activity.details += `🚛 Freeroaming | ${this.isAts(data) ? "ATS" : "ETS2"}`;
+
                 activity.largeImageText = `www.falconites.com`;
             }
 

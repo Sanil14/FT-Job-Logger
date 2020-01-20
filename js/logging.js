@@ -49,7 +49,8 @@ $(document).ready(function () {
 
         log(`FT Job Logger Version: ${version}`, "yellow-text text-accent-2")
         log(`Welcome to your logger ${userdata.username}! Keep this window open/minimized to tray`, "yellow-text text-accent-2")
-        log(`If you close this window, you will lose connection to game and server and your jobs will not be logged.`, "yellow-text text-accent-2")
+        log(`If you close this window, you will lose connection to game and server and your jobs will not be logged`, "yellow-text text-accent-2")
+        log(`If your job is below 10 KM, it will be ignored by logger`, "red-text")
 
     }).catch((error) => {
         console.log("Error retrieving cookies: " + error);
@@ -74,6 +75,11 @@ $(document).ready(function () {
             }
             if (data.status == "JOB FINISHED") {
                 if (typeof data.jobData != 'undefined' && data.jobData) {
+
+                    if (data.jobData.distanceDriven < 10) {
+                        log("Job recorded was below 10 KM and so it has been ignored", "red-text")
+                        return;
+                    }
                     var info = [];
                     /*info.push(2)
                     if(data.jobData.status == 3) { // FOR OUTLINING IF JOB WAS FINISHED OR CANCELLED
@@ -241,7 +247,7 @@ $(document).ready(function () {
 
     function log(msg, color) {
         var d = new Date();
-        var time = `${d.getDate()}/${d.getMonth()}/${d.getFullYear()} ${(d.getHours() < 10 ? '0' : '') + d.getHours()}:${(d.getMinutes() < 10 ? '0' : '') + d.getMinutes()}:${(d.getSeconds() < 10 ? '0' : '') + d.getSeconds()}`;
+        var time = `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()} ${(d.getHours() < 10 ? '0' : '') + d.getHours()}:${(d.getMinutes() < 10 ? '0' : '') + d.getMinutes()}:${(d.getSeconds() < 10 ? '0' : '') + d.getSeconds()}`;
         $(".consolediv").append(`<p class="left-align ${color ? color : ""}">[${time}] ${msg}</p>`)
         var d = $('.consolediv');
         d.scrollTop(d.prop("scrollHeight"));
