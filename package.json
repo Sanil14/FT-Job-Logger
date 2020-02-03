@@ -40,7 +40,7 @@
         "axios": "^0.19.2",
         "crypto-js": "^3.1.9-1",
         "discord-rpc": "^3.1.0",
-        "electron-log": "^4.0.4",
+        "electron-log": "^4.0.5",
         "electron-updater": "^4.2.0",
         "is-online": "^8.2.1",
         "node-fetch": "^2.6.0"
