@@ -1,4 +1,5 @@
 const DiscordRPC = require('discord-rpc');
+const version = require("../package.json").version;
 var ETCarsClient = require('./etcars.js');
 var fetch = require('node-fetch');
 var util = require('util');
@@ -12,14 +13,12 @@ class RichPresenceManager {
         this.rpc = null;
         this.mpCheckerIntervalTime = config.mpCheckerIntervalMilliseconds;
         this.locationCheckerIntervalTime = config.locationCheckerIntervalMilliseconds;
-        this.mpStatsCheckerIntervalTime = config.mpStatsCheckerIntervalMilliseconds;
 
         this.mpInfo = null;
         this.lastData = null;
         this.rpcReady = false;
         this.rpcOnChangingState = false;
         this.mpCheckerInterval = null;
-        this.mpStatsCheckerInterval = null;
         this.locationCheckerInterval = null;
         this.locationInfo = null;
     }
@@ -69,11 +68,10 @@ class RichPresenceManager {
             if (instance.rpcReady) {
 
                 // checking if playing in multiplayer and loading online state, server and position
-                if (instance.checkIfMultiplayer(data) && instance.mpInfo == null) {
+                if (instance.checkIfMultiplayer(data) && instance.mpInfo == null && !instance.TRUCKYERROR) {
                     console.log('Multiplayer detected');
                     instance.checkMpInfo();
                     instance.startMPChecker();
-                    instance.startMPStatsChecker();
                 }
 
                 var activity = instance.buildActivity(data);
@@ -89,7 +87,6 @@ class RichPresenceManager {
         this.resetETCarsData();
         this.destroyRPCClient();
         this.resetMPChecker();
-        this.resetMPStatsChecker();
         this.resetLocationChecker();
     }
 
@@ -124,17 +121,9 @@ class RichPresenceManager {
 
             activity.largeImageKey = "ets2";
 
-            if (this.mpStatsInfo != null) {
-                if (this.mpStatsInfo.prefix != null) {
-                    this.mpPrefix = this.mpStatsInfo.prefix;
-                } else {
-                    this.mpPrefix = '';
-                }
-            }
-
-            if (this.mpInfo != null && this.mpStatsInfo != null && this.mpInfo.online != null && this.mpInfo.server != null) {
+            if (this.mpInfo != null && this.mpInfo.online != null && this.mpInfo.server != null) {
                 activity.state += util.format('🌐 %s', this.mpInfo.server.shortname);
-                activity.state += util.format(' | %s/%s', this.mpStatsInfo.serverUS, this.mpStatsInfo.serverMAX);
+                activity.state += util.format(' | %s', this.mpInfo.playerid);
                 if (this.mpInfo.mod == "promods") {
                     activity.state += ' | ProMods';
                 }
@@ -190,21 +179,13 @@ class RichPresenceManager {
             }, this.mpCheckerIntervalTime);
         }
     }
+    
     startLocationChecker() {
         if (this.locationCheckerInterval == null) {
             var instance = this;
             this.locationCheckerInterval = setInterval(() => {
                 instance.checkLocationInfo()
             }, this.locationCheckerIntervalTime);
-        }
-    }
-
-    startMPStatsChecker() {
-        if (this.mpStatsCheckerInterval == null) {
-            var instance = this;
-            this.mpStatsCheckerInterval = setInterval(() => {
-                instance.checkMpStatsInfo()
-            }, this.mpStatsCheckerIntervalTime);
         }
     }
 
@@ -220,7 +201,6 @@ class RichPresenceManager {
     resetETCarsData() {
         this.lastData = null;
         this.mpInfo = null;
-        this.mpStatsInfo = null;
         this.locationInfo = null;
     }
 
@@ -232,19 +212,12 @@ class RichPresenceManager {
             this.locationInfo = null;
         }
     }
+
     resetLocationChecker() {
         if (this.locationCheckerInterval != null) {
             clearInterval(this.locationCheckerInterval);
             this.locationCheckerInterval = null;
             this.locationInfo = null;
-        }
-    }
-
-    resetMPStatsChecker() {
-        if (this.mpStatsCheckerInterval != null) {
-            clearInterval(this.mpStatsCheckerInterval);
-            this.mpStatsCheckerInterval = null;
-            this.mpStatsInfo = null;
         }
     }
 
@@ -282,76 +255,41 @@ class RichPresenceManager {
             var url = util.format('https://api.truckyapp.com/v1/richpresence/playerInfo?query=%s', this.lastData.steamID);
 
             //console.log(url);
-            fetch(url).then((body) => {
+            fetch(url, { headers: { 'User-Agent': `FT JOB LOGGER v${version}` } }).then((body) => {
                 return body.json()
             }).then((json) => {
 
                 if (!json.error) {
-                    try {
-                        var response = json.response;
-                        if (response.onlineState.online) {
-                            instance.mpInfo = {
-                                online: true,
-                                server: response.onlineState.serverDetails,
-                                apiserverid: response.onlineState.serverDetails.apiserverid,
-                                playerid: response.onlineState.p_id,
-                                mod: response.onlineState.serverDetails.mod
-                            };
-                            instance.locationInfo = {
-                                location: response.onlineState.location.poi.realName,
-                                inCity: response.onlineState.location.area
-                            }
-                        } else {
-                            instance.mpInfo = {
-                                online: false,
-                                server: false,
-                                apiserverid: false,
-                                playerid: false,
-                                mod: false
-                            }
-                            instance.locationInfo = {
-                                location: false,
-                                inCity: false
-                            };
+                    var response = json.response;
+                    if (response.onlineState.online) {
+                        instance.mpInfo = {
+                            online: true,
+                            server: response.onlineState.serverDetails,
+                            apiserverid: response.onlineState.serverDetails.apiserverid,
+                            playerid: response.onlineState.p_id,
+                            mod: response.onlineState.serverDetails.mod
                         };
-                    } catch (error) {
-                        instance.logger.error(error);
-                    }
+                        instance.locationInfo = {
+                            location: response.onlineState.location.poi.realName,
+                            inCity: response.onlineState.location.area
+                        }
+                    } else {
+                        instance.mpInfo = {
+                            online: false,
+                            server: false,
+                            apiserverid: false,
+                            playerid: false,
+                            mod: false
+                        }
+                        instance.locationInfo = {
+                            location: false,
+                            inCity: false
+                        };
+                        instance.TRUCKYERROR = false;
+                    };
                 } else {
                     instance.mpInfo = null;
-                }
-            });
-        }
-    }
-
-    checkMpStatsInfo() {
-
-        var instance = this;
-
-        if (this.lastData != null && this.checkIfMultiplayer(this.lastData) && this.mpInfo.apiserverid != null) {
-
-
-            var url = util.format('https://api.truckyapp.com/v2/truckersmp/servers');
-
-            //console.log(url);
-            fetch(url).then((body) => {
-                return body.json()
-            }).then((json) => {
-
-                if (!json.error) {
-                    try {
-                        var server = json.response.servers.find(s => s.id == this.mpInfo.apiserverid);
-
-                        instance.mpStatsInfo = {
-                            serverUS: server.players,
-                            serverMAX: server.maxplayers,
-                            prefix: server.idprefix,
-                        };
-                    } catch (error) {
-                        instance.logger.error(error);
-                    }
-                } else {
-                    instance.mpStatsInfo = null;
+                    instance.TRUCKYERROR = true;
                 }
             });
         }
@@ -370,7 +308,7 @@ class RichPresenceManager {
                 var url = util.format('https://api.truckyapp.com/v2/map/%s/resolve?x=%s&y=%s', this.lastData.jobData.gameID, this.lastData.worldPlacement.x, this.lastData.worldPlacement.z);
 
                 //console.log(url);
-                fetch(url).then((body) => {
+                fetch(url, { headers: { 'User-Agent': `FT JOB LOGGER v${version}` } }).then((body) => {
                     return body.json()
                 }).then((json) => {
 
