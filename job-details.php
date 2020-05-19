@@ -6,7 +6,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] == false) {
 }
 $id = $_SESSION['userid'];
 $invalid_err = "";
-$s = "SELECT Username,Email,DOB,Country,About,Preferences,Permission FROM `user_profile` WHERE UserID='$id'";
+$s = "SELECT Username,Email,DOB,Country,About,Preferences,Permission FROM `user_profile` WHERE SteamID='$id'";
 $q = mysqli_query($conn, $s);
 $userstats = mysqli_fetch_array($q);
 
@@ -159,8 +159,8 @@ if ($index < 1) {
                               $p = "SELECT * FROM `user_jobs` WHERE JobID='$id'";
                               $g = mysqli_query($conn, $p);
                               $jobdetails = mysqli_fetch_array($g);
-                              $uid = $jobdetails["UserID"];
-                              $s = "SELECT Username FROM `user_profile` WHERE UserID='$uid'";
+                              $uid = $jobdetails["SteamID"];
+                              $s = "SELECT Username FROM `user_profile` WHERE SteamID='$uid'";
                               $q = mysqli_query($conn, $s);
                               $userdetails = mysqli_fetch_array($q);
 

@@ -7,7 +7,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] == false) {
 }
 $id = $_SESSION['userid'];
 
-$s = "SELECT Username,Permission FROM `user_profile` WHERE UserID='$id'";
+$s = "SELECT Username,Permission FROM `user_profile` WHERE SteamID='$id'";
 $q = mysqli_query($conn, $s);
 $userstats = mysqli_fetch_array($q);
 
@@ -190,14 +190,14 @@ $staff = array("Public Relations","HR", "HR Manager", "Admin", "Manager", "Suppo
                </div>
                <div class="row staff">
                   <?php
-                  $s = "SELECT UserID,Username,About,DOB,Roles,JoinDate,Country,Permission FROM `user_profile`";
+                  $s = "SELECT SteamID,Username,About,DOB,Roles,JoinDate,Country,Permission FROM `user_profile`";
                   $q = mysqli_query($conn, $s);
                   while ($userstats = mysqli_fetch_array($q)) {
                      $arrayed = explode(",", $userstats["Roles"]);
                      if (empty(array_intersect($arrayed, $staff))) {
                         continue; // SKIP TO NEXT
                      }
-                     $pfp = "avatars/" . $userstats["UserID"] . ".png";
+                     $pfp = "avatars/" . $userstats["SteamID"] . ".png";
                      if (!file_exists($pfp)) {
                         $pfp = "avatars/default.png";
                      }
@@ -242,14 +242,14 @@ $staff = array("Public Relations","HR", "HR Manager", "Admin", "Manager", "Suppo
                </div>
                <div class="row drivers">
                   <?php
-                  $s = "SELECT UserID,Username,About,DOB,Roles,JoinDate,Country,Permission FROM `user_profile`";
+                  $s = "SELECT SteamID,Username,About,DOB,Roles,JoinDate,Country,Permission FROM `user_profile`";
                   $q = mysqli_query($conn, $s);
                   while ($userstats = mysqli_fetch_array($q)) {
                      $arrayed = explode(",", $userstats["Roles"]);
                      if (!empty(array_intersect($arrayed, $staff))) {
                         continue; // SKIP TO NEXT
                      }
-                     $pfp = "avatars/" . $userstats["UserID"] . ".png";
+                     $pfp = "avatars/" . $userstats["SteamID"] . ".png";
                      if (!file_exists($pfp)) {
                         $pfp = "avatars/default.png";
                      }

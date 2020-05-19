@@ -6,7 +6,7 @@ $id = $_GET['userid'];
 
 $encrypted = openssl_encrypt($password,$cipher,$key,0,$iv);
 
-$sql = "UPDATE `user_profile` SET Password='$encrypted' WHERE UserID='$id'";
+$sql = "UPDATE `user_profile` SET Password='$encrypted' WHERE SteamID='$id'";
 $newquery = mysqli_query($conn, $sql);
 if (mysqli_query($conn,$sql)) {
     echo 1;

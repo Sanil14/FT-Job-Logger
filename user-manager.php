@@ -7,7 +7,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] == false) {
 }
 $id = $_SESSION['userid'];
 
-$s = "SELECT Username,Permission FROM `user_profile` WHERE UserID='$id'";
+$s = "SELECT Username,Permission FROM `user_profile` WHERE SteamID='$id'";
 $q = mysqli_query($conn, $s);
 $userstats = mysqli_fetch_array($q);
 

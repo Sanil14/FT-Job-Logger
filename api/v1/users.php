@@ -14,7 +14,7 @@
 
   $key = $_GET["login"];
 
-  $s = "SELECT Username,loginKey,UserID FROM `user_profile` WHERE loginKey='$key'";
+  $s = "SELECT Username,loginKey,SteamID FROM `user_profile` WHERE loginKey='$key'";
   $q = mysqli_query($conn,$s);
   $rows = mysqli_num_rows($q);
   if ($rows == 0) {
@@ -29,7 +29,7 @@
 
   $username = $info["Username"];
   $loginKey = $info["loginKey"];
-  $uid = $info["UserID"];
+  $uid = $info["SteamID"];
 
   $data = array(
     "status" => "202",

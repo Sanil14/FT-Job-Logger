@@ -9,7 +9,7 @@ $fuel = $_GET["fuel"];
 $mass = $_GET["mass"];
 
 if ($full == 0) {
-    $s = "SELECT user_jobs.JobID,user_jobs.SourceCity,user_jobs.DestinationCity,user_jobs.Dated,user_jobs.GameType,user_profile.Username,user_profile.UserID FROM `user_jobs` INNER JOIN `user_profile` ON user_jobs.UserID = user_profile.UserID WHERE user_jobs.JobID='$jobid'";
+    $s = "SELECT user_jobs.JobID,user_jobs.SourceCity,user_jobs.DestinationCity,user_jobs.Dated,user_jobs.GameType,user_profile.Username,user_profile.SteamID FROM `user_jobs` INNER JOIN `user_profile` ON user_jobs.SteamID = user_profile.SteamID WHERE user_jobs.JobID='$jobid'";
     $q = mysqli_query($conn, $s);
     $rows = mysqli_num_rows($q);
     $job = mysqli_fetch_array($q);
@@ -21,7 +21,7 @@ if ($full == 0) {
         echo 2;
         return;
     }
-    $uid = $job["UserID"];
+    $uid = $job["SteamID"];
     $source = $job["SourceCity"];
     $dest = $job["DestinationCity"];
     $username = $job["Username"];
@@ -80,8 +80,8 @@ if ($full == 0) {
     $p = "SELECT * FROM `user_jobs` WHERE JobID='$jobid'";
     $g = mysqli_query($conn, $p);
     $jobdetails = mysqli_fetch_array($g);
-    $uid = $jobdetails["UserID"];
-    $s = "SELECT Username FROM `user_profile` WHERE UserID='$uid'";
+    $uid = $jobdetails["SteamID"];
+    $s = "SELECT Username FROM `user_profile` WHERE SteamID='$uid'";
     $q = mysqli_query($conn, $s);
     $userdetails = mysqli_fetch_array($q);
 

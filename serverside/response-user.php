@@ -42,16 +42,16 @@ $uid = $params['userid'];
 
 // getting total number records without any search
 $sql = "SELECT user_jobs.JobID,user_jobs.SourceCity,user_jobs.DestinationCity,user_jobs.CargoName,user_jobs.Dated,user_jobs.GameType
-  FROM `user_jobs` INNER JOIN `user_profile` ON user_jobs.UserID = user_profile.UserID";
+  FROM `user_jobs` INNER JOIN `user_profile` ON user_jobs.SteamID = user_profile.SteamID";
 $sqlTot .= $sql;
 $sqlRec .= $sql;
 //concatenate search sql if value exist
 if (isset($where) && $where != '') {
-    $where .= " AND user_jobs.UserID='$uid'";
+    $where .= " AND user_jobs.SteamID='$uid'";
     $sqlTot .= $where;
     $sqlRec .= $where;
 } else {
-    $where .= " AND user_jobs.UserID='$uid'";
+    $where .= " AND user_jobs.SteamID='$uid'";
     $sqlTot .= $where;
     $sqlRec .= $where;
 }

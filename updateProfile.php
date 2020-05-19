@@ -39,8 +39,8 @@ if (isset($_POST["id"])) {
   session_start();
   $id = $_SESSION["userid"];
 }
-$query .= " WHERE UserID='$id'";
-//$q = "UPDATE `user_profile` SET DOB='$date', Country='$trimmedC', About='$trimmedA' WHERE UserID='$id'";
+$query .= " WHERE SteamID='$id'";
+//$q = "UPDATE `user_profile` SET DOB='$date', Country='$trimmedC', About='$trimmedA' WHERE SteamID='$id'";
 if ($conn->query($query) == TRUE) {
   echo 1;
 } else {

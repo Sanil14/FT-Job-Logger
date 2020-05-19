@@ -3,7 +3,7 @@
    session_start();
    $id = $_SESSION["userid"];
    $settings = $_POST["settings"];
-   $q = "UPDATE `user_profile` SET Preferences='$settings' WHERE UserID='$id'";
+   $q = "UPDATE `user_profile` SET Preferences='$settings' WHERE SteamID='$id'";
    if($conn->query($q) == TRUE) {
      echo 1;
    } else {

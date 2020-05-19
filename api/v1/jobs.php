@@ -1,6 +1,5 @@
 <?php
 header('Content-type: application/json');
-include("tokencheck.php");
 include("database.php");
 include("./DiscordWebhooks/Client.php");
 include("./DiscordWebhooks/Embed.php");
@@ -8,144 +7,129 @@ include("./DiscordWebhooks/Embed.php");
 use \DiscordWebhooks\Client;
 use \DiscordWebhooks\Embed;
 
-if (!isset($_GET["data"])) {
-  $error = array(
-    "status" => "400",
-    "error" => "data not found"
-  );
-  echo json_encode($error);
-  exit();
-}
+$truckler_payload = $_POST["data"];
 
-$dataset = urldecode($_GET["data"]);
-$arrayed = explode(",", $dataset);
-if (!$arrayed[1] || !is_numeric($arrayed[1])) {
-  $error = array(
-    "status" => "400",
-    "error" => "User is invalid"
-  );
-  echo json_encode($error);
-  exit();
-}
-//echo json_encode($arrayed);
-if (sizeof($arrayed) != 21) {
-  $error = array(
-    "status" => "400",
-    "error" => "Values missing"
-  );
-  echo json_encode($error);
-  exit();
-}
-$mp = $arrayed[0];
-$UID = UIDisValid($conn, $arrayed[1]) ? $arrayed[1] : outputError();
-$gameid = ($arrayed[2] == "ets2" || $arrayed[2] == "ats") ? $arrayed[2] : $arrayed[2];
-$sourcecity = gettype($arrayed[3]) == "string" ? $arrayed[3] : outputError();
-$sourcecom = gettype($arrayed[4]) == "string" ? $arrayed[4] : outputError();
-$destcity = gettype($arrayed[5]) == "string" ? $arrayed[5] : outputError();
-$destcom = gettype($arrayed[6]) == "string" ? $arrayed[6] : outputError();
-$odometer = is_numeric($arrayed[7]) ? $arrayed[7] : outputError();
-$fueld =  is_numeric($arrayed[8]) ? $arrayed[8] : outputError();
-$money =  is_numeric($arrayed[9]) ? $arrayed[9] : outputError();
-$cargoname = gettype($arrayed[10]) == "string" ? $arrayed[10] : outputError();
-$cargomass =  is_numeric($arrayed[11]) ? $arrayed[11] : outputError();
-$fee = $arrayed[12];
-$timestarted = is_numeric($arrayed[13]) ? ($arrayed[13] / 1000) : outputError();
-$timeended = is_numeric($arrayed[14]) ? ($arrayed[14] / 1000) : outputError();
-$topspeedms = is_numeric($arrayed[15]) ? $arrayed[15] : outputError();
-$speedingcount = is_numeric($arrayed[16]) ? $arrayed[16] : outputError();
-$collisioncount = is_numeric($arrayed[17]) ? $arrayed[17] : outputError();
-$damage = is_numeric($arrayed[18]) ? $arrayed[18] : outputError();
-$truckmake = gettype($arrayed[19]) == "string" ? $arrayed[19] : outputError();
-$truckmodel = gettype($arrayed[20]) == "string" ? $arrayed[20] : outputError();
-$date = time();
+// Send response plugin
+ignore_user_abort(true);
+set_time_limit(0);
+ob_start();
+echo 200;
+header('Connection: close');
+header('Content-Length: '.ob_get_length());
+ob_end_flush();
+ob_flush();
+flush();
+// Continue as normal with script execution
 
-$topspeedkmh = round($topspeedms * 3.6);
-$fuel = ceil($fueld);
+file_put_contents("encoded.txt", $truckler_payload);
 
-if ($gameid == "ats") {
-  $income = $money * 0.89;
-  $distance = $odometer * 1.609;
-} else {
-  $income = $money;
-  $distance = $odometer;
-}
+$ch = curl_init();
 
-$q = "INSERT INTO `user_jobs` VALUES ('0', '$UID', '$sourcecity','$sourcecom','$destcity','$destcom','$distance','$fuel','$income','$cargomass','$cargoname','$fee','$mp','$timestarted','$timeended','$topspeedkmh','$speedingcount','$collisioncount','$damage','$gameid','$truckmake','$truckmodel','$date')";
-//echo "$jobID, $UID, $sourcecity,$sourcecom,$destcity,$destcom,$distance,$fuel,$income,$cargomass,$cargoname,$fee,$timestarted,$timeended,$topspeedkmh,$speedingcount,$collisioncount,$damage,$gameid,$truckmake,$truckmodel,$date";
-if (mysqli_query($conn, $q)) {
-  $statsrow = checkStatsRow($conn, $UID);
-  $stats = "";
-  if ($statsrow) {
-    if ($gameid == "ats") {
-      $stats = "UPDATE `user_stats` SET TotalKM=TotalKM+$distance, TotalJobs=TotalJobs+1, TotalIncome=TotalIncome+$income, TotalFuel=TotalFuel+$fuel, AtsKM=AtsKM+$distance, AtsJobs=AtsJobs+1, AtsIncome=AtsIncome+$income, AtsFuel=AtsFuel+$fuel, LastJobDate=$date WHERE UserID='$UID'";
-    } else {
-      $stats = "UPDATE `user_stats` SET TotalKM=TotalKM+$distance, TotalJobs=TotalJobs+1, TotalIncome=TotalIncome+$income, TotalFuel=TotalFuel+$fuel, Ets2KM=Ets2KM+$distance, Ets2Jobs=Ets2Jobs+1, Ets2Income=Ets2Income+$income, Ets2Fuel=Ets2Fuel+$fuel, LastJobDate=$date WHERE UserID='$UID'";
+curl_setopt($ch, CURLOPT_URL, "https://trucklerprocessor.jammerxd.dev/api/v1/process_delivery/88/3/");
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, "data=" . $truckler_payload);
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$server_output = curl_exec($ch);
+$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+if ($httpcode === 200) {
+  $json = json_decode($server_output, true);
+  file_put_contents("decoded.txt", $server_output);
+  if (json_last_error() === JSON_ERROR_NONE) {
+    if (!empty($json["steamID"])) {
+      sendData($json);
     }
   }
-  if (!$statsrow) {
-    if ($gameid == "ats") {
-      $stats = "INSERT INTO `user_stats` VALUES ($UID, $distance, 1, $income, $fuel, $distance, $income, 1, $fuel, 0, 0, 0, 0, $date)";
-    } else {
-      $stats = "INSERT INTO `user_stats` VALUES ($UID, $distance, 1, $income, $fuel,0,0,0,0, $distance, $income, 1, $fuel,$date)";
-    }
-  }
-  if (mysqli_query($conn, $stats)) {
-    $vtc = "UPDATE `vtc_stats` SET TotalKM=TotalKM+$distance, TotalJobs=TotalJobs+1,TotalIncome=TotalIncome+$income, TotalFuel=TotalFuel+$fuel";
+}
 
-    if (mysqli_query($conn, $vtc)) {
-      discordWebhook($conn, $UID, $gameid, $sourcecity, $destcity, $sourcecom, $destcom, $odometer, $cargoname, $fuel);
-      $output = array(
-        "status" => "202",
-        "error" => "job is logged"
-      );
-      echo json_encode($output);
-      exit();
+function sendData($data)
+{
+  global $conn;
+  $mp = $data["gameIsMultiplayer"];
+  $UID = UIDisValid($conn, $data["steamID"]) ? $data["steamID"] : outputError();
+  $gameid = ($data["gameId"] == "ets2" || $data["gameId"] == "ats") ? $data["gameId"] : `UNKNOWN`;
+  $sourcecity = gettype($data["jobSourceCity"]) == "string" ? $data["jobSourceCity"] : outputError();
+  $sourcecom = gettype($data["jobSourceCompany"]) == "string" ? $data["jobSourceCompany"] : outputError();
+  $destcity = gettype($data["jobDestinationCity"]) == "string" ? $data["jobDestinationCity"] : outputError();
+  $destcom = gettype($data["jobDestinationCompany"]) == "string" ? $data["jobDestinationCompany"] : outputError();
+  $odometer = is_numeric($data["jobDistanceDriven"]) ? $data["jobDistanceDriven"] : outputError();
+  $fueld =  is_numeric($data["fuelBurned"]) ? $data["fuelBurned"] : outputError();
+  $money =  is_numeric($data["jobIncome"]) ? $data["jobIncome"] : outputError();
+  $cargoname = gettype($data["jobCargo"]) == "string" ? $data["jobCargo"] : outputError();
+  $cargomass =  is_numeric($data["jobCargoMass"]) ? $data["jobCargoMass"] : outputError();
+  $fee = $data["jobIsLate"];
+  $timestarted = is_numeric($data["jobStartedEpoch"]) ? ($data["jobStartedEpoch"] / 1000) : outputError();
+  $timeended = is_numeric($data["jobEndedEpoch"]) ? ($data["jobEndedEpoch"] / 1000) : outputError();
+  $topspeedms = is_numeric(0) ? 0 : outputError();
+  $speedingcount = is_numeric(0) ? 0 : outputError(); // Find out speeding count by looping through events
+  $collisioncount = is_numeric(0) ? 0 : outputError(); // Find out collision count by looping through events
+  $damage = is_numeric($data["engineDamage"] + $data["transmissionDamage"] + $data["cabinDamage"] + $data["chassisDamage"] + $data["wheelDamage"]) ? $data["engineDamage"] + $data["transmissionDamage"] + $data["cabinDamage"] + $data["chassisDamage"] + $data["wheelDamage"] : outputError();
+  $truckmake = gettype($data["truckMake"]) == "string" ? $data["truckMake"] : outputError();
+  $truckmodel = gettype($data["truckModel"]) == "string" ? $data["truckModel"] : outputError();
+  $date = time();
+
+  $topspeedkmh = round($topspeedms * 3.6);
+  $fuel = ceil($fueld);
+
+  if ($gameid == "ats") {
+    $income = $money * 0.89;
+    $distance = $odometer * 1.609;
+  } else {
+    $income = $money;
+    $distance = $odometer;
+  }
+
+  $q = "INSERT INTO `user_jobs` VALUES ('0', '$UID', '$sourcecity','$sourcecom','$destcity','$destcom','$distance','$fuel','$income','$cargomass','$cargoname','$fee','$mp','$timestarted','$timeended','$topspeedkmh','$speedingcount','$collisioncount','$damage','$gameid','$truckmake','$truckmodel','$date')";
+  //echo "$jobID, $UID, $sourcecity,$sourcecom,$destcity,$destcom,$distance,$fuel,$income,$cargomass,$cargoname,$fee,$timestarted,$timeended,$topspeedkmh,$speedingcount,$collisioncount,$damage,$gameid,$truckmake,$truckmodel,$date";
+  if (mysqli_query($conn, $q)) {
+    $statsrow = checkStatsRow($conn, $UID);
+    $stats = "";
+    if ($statsrow) {
+      if ($gameid == "ats") {
+        $stats = "UPDATE `user_stats` SET TotalKM=TotalKM+$distance, TotalJobs=TotalJobs+1, TotalIncome=TotalIncome+$income, TotalFuel=TotalFuel+$fuel, AtsKM=AtsKM+$distance, AtsJobs=AtsJobs+1, AtsIncome=AtsIncome+$income, AtsFuel=AtsFuel+$fuel, LastJobDate=$date WHERE SteamID='$UID'";
+      } else {
+        $stats = "UPDATE `user_stats` SET TotalKM=TotalKM+$distance, TotalJobs=TotalJobs+1, TotalIncome=TotalIncome+$income, TotalFuel=TotalFuel+$fuel, Ets2KM=Ets2KM+$distance, Ets2Jobs=Ets2Jobs+1, Ets2Income=Ets2Income+$income, Ets2Fuel=Ets2Fuel+$fuel, LastJobDate=$date WHERE SteamID='$UID'";
+      }
+    }
+    if (!$statsrow) {
+      if ($gameid == "ats") {
+        $stats = "INSERT INTO `user_stats` VALUES ($UID, $distance, 1, $income, $fuel, $distance, $income, 1, $fuel, 0, 0, 0, 0, $date)";
+      } else {
+        $stats = "INSERT INTO `user_stats` VALUES ($UID, $distance, 1, $income, $fuel,0,0,0,0, $distance, $income, 1, $fuel,$date)";
+      }
+    }
+    if (mysqli_query($conn, $stats)) {
+      $vtc = "UPDATE `vtc_stats` SET TotalKM=TotalKM+$distance, TotalJobs=TotalJobs+1,TotalIncome=TotalIncome+$income, TotalFuel=TotalFuel+$fuel";
+
+      if (mysqli_query($conn, $vtc)) {
+        discordWebhook($conn, $UID, $gameid, $sourcecity, $destcity, $sourcecom, $destcom, $odometer, $cargoname, $fuel);
+        exit();
+      } else {
+        exit();
+      }
     } else {
-      $error = array(
-        "status" => "400",
-        "error" => mysqli_error($conn)
-      );
-      echo json_encode($error);
       exit();
     }
   } else {
-    $error = array(
-      "status" => "400",
-      "error" => mysqli_error($conn)
-    );
-    echo json_encode($error);
     exit();
   }
-} else {
-  $error = array(
-    "status" => "400",
-    "error" => mysqli_error($conn)
-  );
-  echo json_encode($error);
-  exit();
 }
 
 function outputError()
 {
-  $error = array(
-    "status" => "400",
-    "error" => "Bad Request"
-  );
-  echo json_encode($error);
   exit();
 }
 
-function UIDisValid($conn, $uid)
+function UIDisValid($conn, $sid)
 {
-  $s = "SELECT Username FROM `user_profile` WHERE UserID='$uid'";
+  $s = "SELECT Username FROM `user_profile` WHERE SteamID='$sid'";
   $q = mysqli_query($conn, $s);
   $rows = mysqli_num_rows($q);
   if ($rows == 0) {
-    $error = array(
-      "status" => "404",
-      "error" => "User not found"
-    );
-    echo json_encode($error);
     return false;
     exit();
   } else {
@@ -155,7 +139,7 @@ function UIDisValid($conn, $uid)
 
 function checkStatsRow($conn, $uid)
 {
-  $s = "SELECT * FROM `user_stats` WHERE UserID='$uid'";
+  $s = "SELECT * FROM `user_stats` WHERE SteamID='$uid'";
   $q = mysqli_query($conn, $s);
   $rows = mysqli_num_rows($q);
   return ($rows != 0);
@@ -164,20 +148,13 @@ function checkStatsRow($conn, $uid)
 function discordWebhook($conn, $UID, $gameid, $fromcity, $tocity, $fromcom, $tocom, $distance, $cargo, $fuel)
 {
 
-  //$s = "SELECT user_profile.Username,user_jobs.JobID FROM `user_profile` INNER JOIN `user_jobs` ON user_profile.UserID = user_jobs.UserID WHERE user_profile.UserID='$UID' ORDER BY user_jobs.JobID DESC LIMIT 1";
-  $s = "SELECT user_profile.Username,MAX(user_jobs.JobID) AS JobID FROM user_jobs LEFT JOIN user_profile ON user_profile.UserID = user_jobs.UserID WHERE user_profile.UserID = '$UID'";
+  //$s = "SELECT user_profile.Username,user_jobs.JobID FROM `user_profile` INNER JOIN `user_jobs` ON user_profile.SteamID = user_jobs.SteamID WHERE user_profile.SteamID='$UID' ORDER BY user_jobs.JobID DESC LIMIT 1";
+  $s = "SELECT user_profile.Username,MAX(user_jobs.JobID) AS JobID FROM user_jobs LEFT JOIN user_profile ON user_profile.SteamID = user_jobs.SteamID WHERE user_profile.SteamID = '$UID'";
   $q = mysqli_query($conn, $s);
   $info = mysqli_fetch_array($q);
   //echo implode(", ", $info);
   $jobid = $info["JobID"];
 
-  /*$profilepic = "https://www.dashboard.falconites.com/avatars/".$UID.".png";
-
-    if(!does_url_exists($profilepic)) {
-      $profilepic = "https://www.dashboard.falconites.com/avatars/default.png";
-    }
-
-    echo $profilepic;*/
   $webhook = new Client("https://discordapp.com/api/webhooks/571415166797873234/8WURUoDjp64oJEpDLgW0YBoQCsgJbrJKopOE9W7YKGtPFfGHi1OL69TLkyUnt0SzUi1X");
   $embed = new Embed();
 
@@ -213,4 +190,4 @@ function does_url_exists($url)
   return $status;
 }
 
-  #UserID, Game Name, SourceCity, Source Company, DestinationCity, Destination Company, distanceDriven, fuelBurned, Income, Cargo Name, Cargo Mass, fee, realTimeStarted, realTimeEnded, topSpeed, speedingCount, CollisionCount, Damage, truckMake, truckModel, Date
+  #SteamID, Game Name, SourceCity, Source Company, DestinationCity, Destination Company, distanceDriven, fuelBurned, Income, Cargo Name, Cargo Mass, fee, realTimeStarted, realTimeEnded, topSpeed, speedingCount, CollisionCount, Damage, truckMake, truckModel, Date

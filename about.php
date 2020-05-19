@@ -6,7 +6,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] == false) {
 }
 $id = $_SESSION['userid'];
 
-$s = "SELECT user_profile.Username,user_profile.Permission,user_stats.TotalKM,user_stats.TotalJobs,user_stats.TotalIncome,user_stats.TotalFuel FROM `user_profile` INNER JOIN `user_stats` ON user_profile.UserID = user_stats.UserID WHERE user_profile.UserID='$id'";
+$s = "SELECT user_profile.Username,user_profile.Permission,user_stats.TotalKM,user_stats.TotalJobs,user_stats.TotalIncome,user_stats.TotalFuel FROM `user_profile` INNER JOIN `user_stats` ON user_profile.SteamID = user_stats.SteamID WHERE user_profile.SteamID='$id'";
 $v = "SELECT * FROM `vtc_stats`";
 $q = mysqli_query($conn, $s);
 $userstats = mysqli_fetch_array($q);

@@ -6,7 +6,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] == false) {
 }
 $id = $_SESSION['userid'];
 $invalid_err = "";
-$s = "SELECT Username,Email,DOB,Country,About,Preferences,Permission FROM `user_profile` WHERE UserID='$id'";
+$s = "SELECT Username,Email,DOB,Country,About,Preferences,Permission FROM `user_profile` WHERE SteamID='$id'";
 $q = mysqli_query($conn, $s);
 $userstats = mysqli_fetch_array($q);
 
@@ -142,7 +142,7 @@ $timezone = $pref->Timezone;
                            <tbody id="filterJobs">
                               <!--
                                  <?php
-                                 $s = "SELECT user_jobs.JobID,user_jobs.SourceCity,user_jobs.DestinationCity,user_jobs.Dated,user_jobs.GameType,user_profile.Username FROM `user_jobs` INNER JOIN `user_profile` ON user_jobs.UserID = user_profile.UserID";
+                                 $s = "SELECT user_jobs.JobID,user_jobs.SourceCity,user_jobs.DestinationCity,user_jobs.Dated,user_jobs.GameType,user_profile.Username FROM `user_jobs` INNER JOIN `user_profile` ON user_jobs.SteamID = user_profile.SteamID";
                                  $q = mysqli_query($conn, $s);
                                  while ($jobdata = mysqli_fetch_array($q)) {
                                     $time = $jobdata["Dated"];
@@ -202,7 +202,7 @@ $timezone = $pref->Timezone;
                               $lastday = date("m/t/Y");
                               $epochfirst = strtotime($firstday);
                               $epochlast = strtotime($lastday);
-                              $s = "SELECT user_profile.Username,user_jobs.UserID, SUM(user_jobs.Odometer) AS Odometer, COUNT(user_jobs.JobID) AS Jobs FROM `user_jobs` LEFT JOIN user_profile ON user_profile.UserID=user_jobs.UserID WHERE Dated BETWEEN '$epochfirst' AND '$epochlast' GROUP BY user_jobs.UserID ORDER BY Odometer DESC";
+                              $s = "SELECT user_profile.Username,user_jobs.SteamID, SUM(user_jobs.Odometer) AS Odometer, COUNT(user_jobs.JobID) AS Jobs FROM `user_jobs` LEFT JOIN user_profile ON user_profile.SteamID=user_jobs.SteamID WHERE Dated BETWEEN '$epochfirst' AND '$epochlast' GROUP BY user_jobs.SteamID ORDER BY Odometer DESC";
                               $q = mysqli_query($conn, $s);
                               while ($dom = mysqli_fetch_array($q)) {
                                  if ($dom["Jobs"] < 1) {

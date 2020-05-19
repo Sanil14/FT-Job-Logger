@@ -1,7 +1,7 @@
 <?php
 include("./api/v1/database.php");
 $name = $_GET["name"];
-$s = "SELECT UserID,Username,About,DOB,Roles,JoinDate,Country,Permission FROM `user_profile` WHERE Username LIKE '$name%'";
+$s = "SELECT SteamID,Username,About,DOB,Roles,JoinDate,Country,Permission FROM `user_profile` WHERE Username LIKE '$name%'";
 $q = mysqli_query($conn, $s);
 while ($userstats = mysqli_fetch_array($q)) {
    //print_r( $userstats);
@@ -9,14 +9,14 @@ while ($userstats = mysqli_fetch_array($q)) {
    if ($userstats["Permission"] == "Admin") {
       continue;
    }
-   $pfp = "avatars/" . $userstats["UserID"] . ".png";
+   $pfp = "avatars/" . $userstats["SteamID"] . ".png";
    if (!file_exists($pfp)) {
       $pfp = "avatars/default.png";
    }
    $date = $userstats["DOB"] != "0000-00-00" ? date('d/m/Y', strtotime($userstats["DOB"])) : "Not Provided";
    $joined = date('d/m/Y', strtotime($userstats["JoinDate"]));
    $about = ($userstats["About"] != null) ? $userstats["About"] : "I am too lazy to add my bio";
-   $page = $userstats["UserID"];
+   $page = $userstats["SteamID"];
    $roles = explode(", ", $userstats["Roles"]);
    $default = $userstats["Roles"] == null ? "Driver" : $userstats["Roles"];
    $primary = $roles[0] == null ? "Driver" : $roles[0];

@@ -214,7 +214,7 @@ class SSP {
 		// Main query to actually get the data
 		$data = self::sql_exec( $db, $bindings,
 			"SELECT user_jobs.JobID,user_jobs.SourceCity,user_jobs.DestinationCity,user_jobs.Dated,user_jobs.GameType,user_profile.Username
-			 FROM `user_jobs` INNER JOIN `user_profile` ON user_jobs.UserID = user_profile.UserID
+			 FROM `user_jobs` INNER JOIN `user_profile` ON user_jobs.SteamID = user_profile.SteamID
 			 $where
 			 $order
 			 $limit"

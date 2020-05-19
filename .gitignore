@@ -1,3 +1,5 @@
 assets/plugins
 .vscode
 .htaccess
+api/v1/decoded.txt
+api/v1/encoded.txt

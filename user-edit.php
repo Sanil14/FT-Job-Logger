@@ -6,7 +6,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] == false) {
 }
 
 $userid = $_SESSION['userid'];
-$p = "SELECT Username,Permission FROM `user_profile` WHERE UserID='$userid'";
+$p = "SELECT Username,Permission FROM `user_profile` WHERE SteamID='$userid'";
 $r = mysqli_query($conn, $p);
 $userstats = mysqli_fetch_array($r);
 
@@ -22,7 +22,7 @@ if ($userstats["Permission"] != "Admin") {
 
 $id = $_GET['id'];
 $invalid_err = "";
-$s = "SELECT Username,Email,DOB,Country,About,Permission,JoinDate,Roles FROM `user_profile` WHERE UserID='$id'";
+$s = "SELECT Username,Email,DOB,Country,About,Permission,JoinDate,Roles FROM `user_profile` WHERE SteamID='$id'";
 $q = mysqli_query($conn, $s);
 $stats = mysqli_fetch_array($q);
 
