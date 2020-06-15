@@ -52,7 +52,7 @@
         "electron-prebuilt": "^1.4.13",
         "electron-updater": "^4.2.4",
         "nexe": "^3.3.2",
-        "npm-check-updates": "^4.0.4",
+        "npm-check-updates": "^7.0.1",
         "node-fetch": "^2.6.0"
     }
 }
