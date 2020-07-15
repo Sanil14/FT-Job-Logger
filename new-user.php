@@ -140,14 +140,9 @@ if ($userstats["Permission"] != "Admin") {
                                        </div>
                                     </div>
                                     <div class="form-group row">
-                                       <label class="col-2 col-form-label">Key</label>
-                                       <div class="col-8">
-                                          <input type="text" disabled class="form-control key" placeholder="Insert Key (one time usable)">
-                                       </div>
-                                       <div class="col-2">
-                                          <div class="user-img">
-                                             <button type="button" id="getKey" class="form-control btn btn-primary mb-2">Insert</button>
-                                          </div>
+                                       <label class="col-2 col-form-label">SteamID</label>
+                                       <div class="col-10">
+                                          <input type="text" class="form-control steamid" placeholder="Insert SteamID of user">
                                        </div>
                                     </div>
                                     <div class="form-group row">
@@ -227,18 +222,10 @@ if ($userstats["Permission"] != "Admin") {
             }, 5000)
          }
 
-         $("#getKey").click(function() {
-            let strkey = randomString();
-
-            let key = chunk(strkey, 4).join("-");
-
-            $(".key").val(key);
-         })
-
          $("#addUserButt").click(function() {
             let email = $(".email").val(),
                uname = $(".uname").val(),
-               key = $(".key").val(),
+               steamid = $(".steamid").val(),
                date = $(".joindate").val();
 
             if (!email) {
@@ -251,9 +238,9 @@ if ($userstats["Permission"] != "Admin") {
                $("#notifyDiv").html(`<strong>Oh snap!</strong> Username is not added`);
                return removeDiv();
             }
-            if (!key) {
+            if (!steamid) {
                $("#notifyDiv").attr("class", "alert alert-danger")
-               $("#notifyDiv").html(`<strong>Oh snap!</strong> Key is not created`);
+               $("#notifyDiv").html(`<strong>Oh snap!</strong> SteamID is not added`);
                return removeDiv();
             }
             if (!date) {
@@ -262,18 +249,21 @@ if ($userstats["Permission"] != "Admin") {
                return removeDiv();
             }
 
-            let tosend = "email=" + email + "&uname=" + uname + "&key=" + key + "&date=" + date;
+            let tosend = "email=" + email + "&username=" + uname + "&steamid=" + steamid + "&date=" + date;
             console.log(tosend);
 
             $.ajax({
                url: 'addUser.php',
-               type: "POST",
+               type: "GET",
                data: tosend,
                async: true,
                success: function(res) {
                   if (res == "200") {
                      $("#notifyDiv").attr("class", "alert alert-success")
                      $("#notifyDiv").html(`New User added!`);
+                     setTimeout(function() {
+                        window.location.reload();
+                     }, 3000)
                      return removeDiv();
                   } else if (res == "400") {
                      $("#notifyDiv").attr("class", "alert alert-danger")
@@ -288,26 +278,6 @@ if ($userstats["Permission"] != "Admin") {
             })
          })
 
-         function chunk(str, n) {
-            var ret = [];
-            var i;
-            var len;
-            for (i = 0, len = str.length; i < len; i += n) {
-               ret.push(str.substr(i, n))
-            }
-            return ret
-         };
-
-         function randomString() {
-            var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-            var string_length = 16;
-            var randomstring = '';
-            for (var i = 0; i < string_length; i++) {
-               var rnum = Math.floor(Math.random() * chars.length);
-               randomstring += chars.substring(rnum, rnum + 1);
-            }
-            return randomstring;
-         }
          // Date Picker
          jQuery('#datepicker-autoclose').datepicker({
             format: "dd/mm/yyyy",

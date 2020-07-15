@@ -1,5 +1,5 @@
 <?php
-  header('Content-Type: application/json');
+  /*header('Content-Type: application/json');
   include("tokencheck.php");
   include("database.php");
 
@@ -14,7 +14,7 @@
 
   $key = $_GET["login"];
 
-  $s = "SELECT Username,loginKey,SteamID FROM `user_profile` WHERE loginKey='$key'";
+  $s = "SELECT Username,SteamID FROM `user_profile` WHERE loginKey='$key'";
   $q = mysqli_query($conn,$s);
   $rows = mysqli_num_rows($q);
   if ($rows == 0) {
@@ -40,5 +40,5 @@
 
   echo json_encode($data);
   exit();
-
+*/
 ?>

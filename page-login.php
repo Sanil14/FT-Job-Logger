@@ -183,7 +183,7 @@ if (isset($_SESSION['logged_in'])) {
                             removeDiv("#notifyDiv");
                         } else if (resp == 1) {
                             window.location.replace("<?php echo $url ?>");
-                        } else if (resp > 0 && resp < 200) {
+                        } else if (resp > 1) {
                             uid = resp;
                             $(".pwd-change").show();
                             $(".login").hide();

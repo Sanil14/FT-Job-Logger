@@ -21,7 +21,7 @@ ob_flush();
 flush();
 // Continue as normal with script execution
 
-file_put_contents("encoded.txt", $truckler_payload);
+file_put_contents("encoded.txt", $truckler_payload); // DEBUG
 
 $ch = curl_init();
 
@@ -38,7 +38,7 @@ curl_close($ch);
 
 if ($httpcode === 200) {
   $json = json_decode($server_output, true);
-  file_put_contents("decoded.txt", $server_output);
+  file_put_contents("decoded.txt", $server_output); // DEBUG
   if (json_last_error() === JSON_ERROR_NONE) {
     if (!empty($json["steamID"])) {
       sendData($json);
@@ -71,6 +71,7 @@ function sendData($data)
   $truckmake = gettype($data["truckMake"]) == "string" ? $data["truckMake"] : outputError();
   $truckmodel = gettype($data["truckModel"]) == "string" ? $data["truckModel"] : outputError();
   $date = time();
+  $trailerdamage = is_numeric($data["trailers"][0]["wheelDamage"] + $data["trailers"][0]["chassisDamage"] +$data["trailers"][0]["cargoDamage"]) ? $data["trailers"][0]["wheelDamage"] + $data["trailers"][0]["chassisDamage"] +$data["trailers"][0]["cargoDamage"] : outputError();
 
   $topspeedkmh = round($topspeedms * 3.6);
   $fuel = ceil($fueld);
@@ -83,7 +84,7 @@ function sendData($data)
     $distance = $odometer;
   }
 
-  $q = "INSERT INTO `user_jobs` VALUES ('0', '$UID', '$sourcecity','$sourcecom','$destcity','$destcom','$distance','$fuel','$income','$cargomass','$cargoname','$fee','$mp','$timestarted','$timeended','$topspeedkmh','$speedingcount','$collisioncount','$damage','$gameid','$truckmake','$truckmodel','$date')";
+  $q = "INSERT INTO `user_jobs` VALUES ('0', '$UID', '$sourcecity','$sourcecom','$destcity','$destcom','$distance','$fuel','$income','$cargomass','$cargoname','$fee','$mp','$timestarted','$timeended','$topspeedkmh','$speedingcount','$collisioncount','$damage', '$trailerdamage', '$gameid','$truckmake','$truckmodel','$date')";
   //echo "$jobID, $UID, $sourcecity,$sourcecom,$destcity,$destcom,$distance,$fuel,$income,$cargomass,$cargoname,$fee,$timestarted,$timeended,$topspeedkmh,$speedingcount,$collisioncount,$damage,$gameid,$truckmake,$truckmodel,$date";
   if (mysqli_query($conn, $q)) {
     $statsrow = checkStatsRow($conn, $UID);
@@ -106,7 +107,7 @@ function sendData($data)
       $vtc = "UPDATE `vtc_stats` SET TotalKM=TotalKM+$distance, TotalJobs=TotalJobs+1,TotalIncome=TotalIncome+$income, TotalFuel=TotalFuel+$fuel";
 
       if (mysqli_query($conn, $vtc)) {
-        discordWebhook($conn, $UID, $gameid, $sourcecity, $destcity, $sourcecom, $destcom, $odometer, $cargoname, $fuel);
+        discordWebhook($conn, $UID, $gameid, $sourcecity, $destcity, $sourcecom, $destcom, $odometer, $cargoname, $fuel, $money, $damage, $trailerdamage, $truckmake . " " . $truckmodel);
         exit();
       } else {
         exit();
@@ -145,7 +146,7 @@ function checkStatsRow($conn, $uid)
   return ($rows != 0);
 }
 
-function discordWebhook($conn, $UID, $gameid, $fromcity, $tocity, $fromcom, $tocom, $distance, $cargo, $fuel)
+function discordWebhook($conn, $UID, $gameid, $fromcity, $tocity, $fromcom, $tocom, $distance, $cargo, $fuel, $money, $truckdamage, $trailerdamage, $truck)
 {
 
   //$s = "SELECT user_profile.Username,user_jobs.JobID FROM `user_profile` INNER JOIN `user_jobs` ON user_profile.SteamID = user_jobs.SteamID WHERE user_profile.SteamID='$UID' ORDER BY user_jobs.JobID DESC LIMIT 1";
@@ -162,12 +163,16 @@ function discordWebhook($conn, $UID, $gameid, $fromcity, $tocity, $fromcom, $toc
   $embed->title($info["Username"] . " completed a job!", "https://www.dashboard.falconites.com/vtc-members");
   $embed->description("Links: [Job Page](https://www.dashboard.falconites.com/job-details?id=" . $jobid . ") | [VTC Jobs](https://www.dashboard.falconites.com/vtc-jobs)");
   $embed->thumbnail("https://cdn.discordapp.com/attachments/571411450636009604/630804996287365130/falcon_logo.jpg");
-  $embed->field("Game", $gameid == "ats" ? "American Truck Simulator" : "Euro Truck Simulator 2", true);
-  $embed->field("Cargo", $cargo, true);
+  $embed->field("Game", $gameid == "ats" ? "ATS" : "ETS2", true);
   $embed->field("From City", $fromcity, true);
   $embed->field("To City", $tocity, true);
+  $embed->field("Cargo", $cargo, true);
   $embed->field("From Company", $fromcom, true);
   $embed->field("To Company", $tocom, true);
+  $embed->field("Truck Used", $truck, true);
+  $embed->field("Truck Damage", round($truckdamage, 2) . "%", true);
+  $embed->field("Trailer Damage", round($trailerdamage, 2) . "%", true);
+  $embed->field("Income", "€ " . $money, true);
   $embed->field("Odometer", $distance . ($gameid == "ats" ? " Miles" : " KM"), true);
   $embed->field("Fuel", $fuel . " Litres", true);
 

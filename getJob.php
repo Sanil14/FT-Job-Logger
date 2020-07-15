@@ -87,6 +87,7 @@ if ($full == 0) {
 
     $startTime = $jobdetails["realTimeStarted"];
     $endTime = $jobdetails["realTimeEnded"];
+    $money = $jobdetails["Income"];
     if ($jobdetails["LateFine"] == true) {
         $late = "Late";
     } else {
@@ -140,7 +141,7 @@ if ($full == 0) {
         $end = date_create($f, new DateTimeZone($from))
             ->setTimezone(new DateTimeZone($to))->format("d/m/Y H:i:s");
     }
-    $mp = $jobdetails["isMultiplayer"] == true ? "Multiplayer" : "Singleplayer"; 
+    $mp = $jobdetails["isMultiplayer"] == true ? "Multiplayer" : "Singleplayer";
     $username = $userdetails["Username"];
     $type = strtoupper($jobdetails["GameType"]);
     $sourcecity = $jobdetails["SourceCity"];
@@ -148,13 +149,14 @@ if ($full == 0) {
     $destcity = $jobdetails["DestinationCity"];
     $destcom = $jobdetails["DestinationCompany"];
     $cargo = $jobdetails["CargoName"];
-    $damage = round($jobdetails["OverallDamage"]*100,2)."%";
+    $damage = round($jobdetails["OverallDamage"] * 100, 2) . "%";
+    $trailerdamage = round($jobdetails["trailerDamage"] * 100, 2) . "%";
     $truck = $jobdetails["TruckBrand"] . " " . $jobdetails["TruckModel"];
     $starttime = $start . " " . $timezone;
     $endtime = $end . " " . $timezone;
-    $speeding = $jobdetails["SpeedingCount"]." Time".($jobdetails["SpeedingCount"] == 1 ? "" : "s");
-    $collision = $jobdetails["CollisionCount"]." Time".($jobdetails["CollisionCount"] == 1 ? "" : "s");
-    
+    $speeding = $jobdetails["SpeedingCount"] . " Time" . ($jobdetails["SpeedingCount"] == 1 ? "" : "s");
+    $collision = $jobdetails["CollisionCount"] . " Time" . ($jobdetails["CollisionCount"] == 1 ? "" : "s");
+
     echo "<div class='col-12'>
 
     <div class='card-box table-responsive' data-jobid='$jobid' data-userid='$uid'>
@@ -224,8 +226,13 @@ if ($full == 0) {
                 </tr>
                 <tr role='row' class='odd'>
                     <td><i class='fa fa-exclamation-triangle fa-2x'></i></td>
-                    <td>Cargo Damage</td>
+                    <td>Truck Damage</td>
                     <td>$damage</td>
+                </tr>
+                <tr role='row' class='odd'>
+                    <td><i class='fa fa-square fa-2x'></i></td>
+                    <td>Trailer Damage</td>
+                    <td>$trailerdamage</td>
                 </tr>
                 <tr role='row' class='even'>
                     <td><i class='fa fa-truck fa-2x'></i></td>
@@ -243,19 +250,19 @@ if ($full == 0) {
                     <td>$petrol$funits</td>
                 </tr>
                 <tr role='row' class='odd'>
+                    <td><i class='fas fa-coins fa-2x'></i></td>
+                    <td>Job Income</td>
+                    <td>€ $money</td>
+                </tr>
+                <tr role='row' class='even'>
                     <td><i class='fa fa-clock-o fa-2x'></i></td>
                     <td>Time Started</td>
                     <td>$starttime</td>
                 </tr>
-                <tr role='row' class='even'>
+                <tr role='row' class='odd'>
                     <td><i class='fa fa-history fa-2x'></i></td>
                     <td>Time Ended</td>
                     <td>$endtime</td>
-                </tr>
-                <tr role='row' class='odd'>
-                    <td><i class='fa  fa-angle-double-right fa-2x'></i></td>
-                    <td>Top Speed</td>
-                    <td>$speed$sunits</td>
                 </tr>
                 <tr role='row' class='even'>
                     <td><i class='fas fa-hourglass-half fa-2x'></i></td>

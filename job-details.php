@@ -135,8 +135,8 @@ if ($index < 1) {
                            <h4 class="m-t-0 col-md-3 header-title float-left">Full Job details</h4>
                            <div class="btn-group m-b-10 col-md-3 float-right">
                               <button type="button" class="btn btn-info waves-effect" onclick="window.location='<?php echo $previousurl ?>';" <?php if ($prevdisable) {
-                                                                                                                                                echo "disabled";
-                                                                                                                                             } ?>>Previous Job</button>
+                                                                                                                                                   echo "disabled";
+                                                                                                                                                } ?>>Previous Job</button>
                               <button type="button" class="btn btn-info waves-effect" onclick="window.location='<?php echo $nexturl ?>';" <?php if ($nextdisable) {
                                                                                                                                              echo "disabled";
                                                                                                                                           } ?>>Next Job</button>
@@ -172,6 +172,7 @@ if ($index < 1) {
                                  $late = "On Time";
                               }
 
+                              $money = $jobdetails["Income"];
                               $timezone = $pref->Timezone;
                               $fuel = $pref->Fuel;
                               $distance = $pref->Distance;
@@ -277,8 +278,13 @@ if ($index < 1) {
                               </tr>
                               <tr>
                                  <td><i class="fas fa-exclamation-triangle fa-2x"></i></td>
-                                 <td>Cargo Damage</td>
+                                 <td>Truck Damage</td>
                                  <td><?php echo round($jobdetails["OverallDamage"] * 100, 2) . "%" ?></td>
+                              </tr>
+                              <tr>
+                                 <td><i class="fas fa-square fa-2x"></i></td>
+                                 <td>Trailer Damage</td>
+                                 <td><?php echo round($jobdetails["trailerDamage"] * 100, 2) . "%" ?></td>
                               </tr>
                               <tr>
                                  <td><i class="fas fa-truck fa-2x"></i></td>
@@ -296,6 +302,11 @@ if ($index < 1) {
                                  <td><?php echo $petrol . $funits ?></td>
                               </tr>
                               <tr>
+                                 <td><i class="fas fa-coins fa-2x"></i></td>
+                                 <td>Job Income</td>
+                                 <td>€ <?php echo $money; ?></td>
+                              </tr>
+                              <tr>
                                  <td><i class="fa fa-clock-o fa-2x"></i></td>
                                  <td>Time Started</td>
                                  <td><?php echo $start . " " . $timezone; ?></td>
@@ -304,11 +315,6 @@ if ($index < 1) {
                                  <td><i class="fa fa-history fa-2x"></i></td>
                                  <td>Time Ended</td>
                                  <td><?php echo $end . " " . $timezone; ?></td>
-                              </tr>
-                              <tr>
-                                 <td><i class="fa  fa-angle-double-right fa-2x"></i></td>
-                                 <td>Top Speed</td>
-                                 <td><?php echo $speed . $sunits; ?></td>
                               </tr>
                               <tr>
                                  <td><i class="fas fa-hourglass-half fa-2x"></i></td>

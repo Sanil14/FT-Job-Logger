@@ -223,10 +223,11 @@ $joindate = date('d/m/Y', strtotime($stats["JoinDate"]));
                                                 <option value="Trainee Events">Trainee Events</option>
                                              </optgroup>
                                              <optgroup label="Driver Roles">
-                                                <option value="Trainee">Trainee</option>
                                                 <option value="Legendary Driver">Legendary Driver</option>
                                                 <option value="Professional Driver">Professional Driver</option>
                                                 <option value="Skilled Driver">Skilled Driver</option>
+                                                <option value="Driver">Driver</option>
+                                                <option value="Trainee">Trainee</option>
                                              </optgroup>
                                              <optgroup label="Additional Roles">
                                                 <option value="Mouse Magician">Mouse Magician</option>
@@ -299,7 +300,7 @@ $joindate = date('d/m/Y', strtotime($stats["JoinDate"]));
       $(document).ready(function() {
 
          presetroles = <?php echo json_encode($roles); ?>
-         console.log(presetroles);
+         //console.log(JSON.stringify(presetroles));
 
          $(".select2").val(presetroles);
          $(".select2").trigger('change');
