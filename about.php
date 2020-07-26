@@ -122,6 +122,7 @@ $vtotalFuel = $vtcstats["TotalFuel"];
         <!-- Top Bar End -->
         <?php include("left-sidebar.php") ?>
 
+        
         <!-- ============================================================== -->
         <!-- Start right Content here -->
         <!-- ============================================================== -->
@@ -188,7 +189,7 @@ $vtotalFuel = $vtcstats["TotalFuel"];
 
 
                     <div class="alert alert-info text-center">
-                        <strong>VTC</strong> Timeline.
+                        <strong>VTC</strong> Timeline. We never stopped working and we never will do.
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
@@ -196,7 +197,7 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                                 <article class="timeline-item alt">
                                     <div class="text-right">
                                         <div class="time-show first">
-                                            <a href="#" class="btn btn-custom w-lg">Today</a>
+                                            <a href="#" class="btn btn-custom w-lg">2020</a>
                                         </div>
                                     </div>
                                 </article>
@@ -206,9 +207,9 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                                             <div class="panel-body">
                                                 <span class="arrow-alt"></span>
                                                 <span class="timeline-icon bg-danger"><i class="mdi mdi-circle"></i></span>
-                                                <h4 class="text-danger">1 hour ago</h4>
-                                                <p class="timeline-date text-muted"><small>08:25 am</small></p>
-                                                <p>Dolorum provident rerum aut hic quasi placeat iure tempora laudantium ipsa ad debitis unde? </p>
+                                                <h4 class="text-danger">June 23rd</h4>
+                                                <p class="timeline-date text-muted"><small>Redesign of New Website</small></p>
+                                                <p>We made new website with latest content, cross device compatible and Lovely theme. With this new thechnology, we can guarentee that we can provide better playtime and more frequent updates</p>
                                             </div>
                                         </div>
                                     </div>
@@ -219,9 +220,9 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                                             <div class="panel-body">
                                                 <span class="arrow"></span>
                                                 <span class="timeline-icon bg-success"><i class="mdi mdi-circle"></i></span>
-                                                <h4 class="text-success">2 hours ago</h4>
-                                                <p class="timeline-date text-muted"><small>08:25 am</small></p>
-                                                <p>consectetur adipisicing elit. Iusto, optio, dolorum <a href="#">John deon</a> provident rerum aut hic quasi placeat iure tempora laudantium </p>
+                                                <h4 class="text-success">March 14th</h4>
+                                                <p class="timeline-date text-muted"><small>Falcon Trucking's 2nd Anniversary</small></p>
+                                                <p>Falcon Trucking Celebrated its 2nd Anniversary with more than 300+ Truckers of 20+ VTCs and Public.</p>
 
                                             </div>
                                         </div>
@@ -233,10 +234,10 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                                             <div class="panel-body">
                                                 <span class="arrow-alt"></span>
                                                 <span class="timeline-icon bg-primary"><i class="mdi mdi-circle"></i></span>
-                                                <h4 class="text-primary">10 hours ago</h4>
-                                                <p class="timeline-date text-muted"><small>08:25 am</small></p>
-                                                <p>3 new photo Uploaded on facebook fan page</p>
-                                                <div class="album">
+                                                <h4 class="text-primary">Jan 13th</h4>
+                                                <p class="timeline-date text-muted"><small>Testing of New Logger</small></p>
+                                                <p>After lot of testing locally, we have intregated new logger to dashboard and starting testing realtime with some driver those are called alpha testers.</p>
+                                                <!--<div class="album">
                                                     <a href="#">
                                                         <img alt="" src="assets/images/small/img1.jpg">
                                                     </a>
@@ -246,9 +247,16 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                                                     <a href="#">
                                                         <img alt="" src="assets/images/small/img3.jpg">
                                                     </a>
-                                                </div>
+                                                </div>-->
                                                 <div class="clearfix"></div>
                                             </div>
+                                        </div>
+                                    </div>
+                                </article>
+								<article class="timeline-item alt">
+                                    <div class="text-right">
+                                        <div class="time-show first">
+                                            <a href="#" class="btn btn-custom w-lg">2019</a>
                                         </div>
                                     </div>
                                 </article>
@@ -258,10 +266,9 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                                             <div class="panel-body">
                                                 <span class="arrow"></span>
                                                 <span class="timeline-icon bg-purple"><i class="mdi mdi-circle"></i></span>
-                                                <h4 class="text-purple">14 hours ago</h4>
-                                                <p class="timeline-date text-muted"><small>08:25 am</small></p>
-                                                <p>Outdoor visit at California State Route 85 with John Boltana &
-                                                    Harry Piterson regarding to setup a new show room.</p>
+                                                <h4 class="text-purple">Nov 9</h4>
+                                                <p class="timeline-date text-muted"><small>Introduction to Promods Convoys</small></p>
+                                                <p>With the Support of Promods with multiplayer, we started doing promods Convoys every 2nd week of month.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -271,11 +278,37 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                                         <div class="panel">
                                             <div class="panel-body">
                                                 <span class="arrow-alt"></span>
-                                                <span class="timeline-icon"><i class="mdi mdi-circle"></i></span>
-                                                <h4 class="text-muted">19 hours ago</h4>
-                                                <p class="timeline-date text-muted"><small>08:25 am</small></p>
-                                                <p>Jonatha Smith added new milestone <span><a href="#">Pathek</a></span>
-                                                    Lorem ipsum dolor sit amet consiquest dio</p>
+                                                <span class="timeline-icon bg-success"><i class="mdi mdi-circle"></i></span>
+                                                <h4 class="text-success">Aug 23</h4>
+                                                <p class="timeline-date text-muted"><small>Premade official Mods for MP</small></p>
+                                                <p>To avoid the hassle of Making official Truck and Trailer by watching videos, we made mods where players can just buy them and use it. That simple.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+								
+								<article class="timeline-item">
+                                    <div class="timeline-desk">
+                                        <div class="panel">
+                                            <div class="panel-body">
+                                                <span class="arrow"></span>
+                                                <span class="timeline-icon bg-danger"><i class="mdi mdi-circle"> </i></span>
+                                                <h4 class="text-danger">May 21</h4>
+                                                <p class="timeline-date text-muted"><small>Moved website to Better Hosting</small></p>
+                                                <p>We have reached certain limit where our bots, website and dashboard demanded the upgrade of our Hosting. We added extra funds and moved finally.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+								<article class="timeline-item alt">
+                                    <div class="timeline-desk">
+                                        <div class="panel">
+                                            <div class="panel-body">
+                                                <span class="arrow-alt"></span>
+                                                <span class="timeline-icon bg-primary"><i class="mdi mdi-circle"></i></span>
+                                                <h4 class="text-primary">March 9th</h4>
+                                                <p class="timeline-date text-muted"><small>Our 1st Anniversary</small></p>
+                                                <p>We faced lot ups and downs during our first years, We overcame all of that and successfully celebrated 1st anniversary. It was very proud moment for us.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -284,7 +317,7 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                                 <article class="timeline-item alt">
                                     <div class="text-right">
                                         <div class="time-show">
-                                            <a href="#" class="btn btn-custom w-lg">Yesterday</a>
+                                            <a href="#" class="btn btn-custom w-lg">2018</a>
                                         </div>
                                     </div>
                                 </article>
@@ -294,11 +327,9 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                                             <div class="panel-body">
                                                 <span class="arrow"></span>
                                                 <span class="timeline-icon bg-warning"><i class="mdi mdi-circle"></i></span>
-                                                <h4 class="text-warning">07 January 2016</h4>
-                                                <p class="timeline-date text-muted"><small>08:25 am</small></p>
-                                                <p>Montly Regular Medical check up at Greenland Hospital by the
-                                                    doctor <span><a href="#"> Johm meon </a></span>
-                                                </p>
+                                                <h4 class="text-warning">OCT 21</h4>
+                                                <p class="timeline-date text-muted"><small>New Domain falconites.com</small></p>
+                                                <p>We were using a free domain called falcontrucking.ml. We were not happy with it and falcontrucking domain was not available for purchase. Here at falcon Trucking we call every driver as a falconite. So we thought introducing that to our domain which we called it falconites.com</p>
 
                                             </div>
                                         </div>
@@ -310,9 +341,9 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                                             <div class="panel-body">
                                                 <span class="arrow-alt"></span>
                                                 <span class="timeline-icon bg-primary"><i class="mdi mdi-circle"></i></span>
-                                                <h4 class="text-primary">07 January 2016</h4>
-                                                <p class="timeline-date text-muted"><small>08:25 am</small></p>
-                                                <p>Download the new updates of Ubold admin dashboard</p>
+                                                <h4 class="text-primary">Sep 16</h4>
+                                                <p class="timeline-date text-muted"><small>Redesigned our logo</small></p>
+                                                <p>We always wanted our logo to be conceptual and beautiful. After many sleepless nights of work, we finally introduced our current logo. It justifies both our name and purpose of the logo.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -324,31 +355,22 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                                             <div class="panel-body">
                                                 <span class="arrow"></span>
                                                 <span class="timeline-icon bg-success"><i class="mdi mdi-circle"></i></span>
-                                                <h4 class="text-success">07 January 2016</h4>
-                                                <p class="timeline-date text-muted"><small>08:25 am</small></p>
-                                                <p>Jonatha Smith added new milestone <span><a class="blue" href="#">crishtian</a></span>
-                                                    Lorem ipsum dolor sit amet consiquest dio</p>
+                                                <h4 class="text-success">Aug 20</h4>
+                                                <p class="timeline-date text-muted"><small>Introduction to ATS Convoys</small></p>
+                                                <p>When we started Falcon Trucking, we were only concentrating on ETS2, however, on 20th August 2018, we took our first steps into ATS Division.</p>
                                             </div>
                                         </div>
                                     </div>
                                 </article>
                                 <article class="timeline-item alt">
-                                    <div class="text-right">
-                                        <div class="time-show">
-                                            <a href="#" class="btn btn-custom w-lg">Last Month</a>
-                                        </div>
-                                    </div>
-                                </article>
-
-                                <article class="timeline-item alt">
                                     <div class="timeline-desk">
                                         <div class="panel">
                                             <div class="panel-body">
                                                 <span class="arrow-alt"></span>
-                                                <span class="timeline-icon"><i class="mdi mdi-circle"></i></span>
-                                                <h4 class="text-muted">31 December 2015</h4>
-                                                <p class="timeline-date text-muted"><small>08:25 am</small></p>
-                                                <p>Download the new updates of Ubold admin dashboard</p>
+                                                <span class="timeline-icon bg-warning"><i class="mdi mdi-circle"></i></span>
+                                                <h4 class="text-warning">March - August</h4>
+                                                <p class="timeline-date text-muted"><small>Hard phase for us</small></p>
+                                                <p>We launched this VTC, We created discord but we do need drivers too. This is the phase where we introduced lot of things like website. ETS2 and ATS paintjobs, Convoy system, Application form etc. We did advertise a lot, ingame, TMP Servers and all possible platforms. We did regular convoys, designed a beautiful website. finally people started noticing us and started joining us.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -360,10 +382,9 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                                             <div class="panel-body">
                                                 <span class="arrow"></span>
                                                 <span class="timeline-icon bg-danger"><i class="mdi mdi-circle"> </i></span>
-                                                <h4 class="text-danger">16 Decembar 2015</h4>
-                                                <p class="timeline-date text-muted"><small>08:25 am</small></p>
-                                                <p>Jonatha Smith added new milestone <span><a href="#">prank</a></span>
-                                                    Lorem ipsum dolor sit amet consiquest dio</p>
+                                                <h4 class="text-danger">March 10</h4>
+                                                <p class="timeline-date text-muted"><small>Launch of Falcon Trucking</small></p>
+                                                <p>With the passion of Virtual Trucking, We wanted to gather people just like us, We wanted to make a place where all drivers can meet up and driver together. With all the resorces we had that day, we proudly lauched Falcon Trucking</p>
                                             </div>
                                         </div>
                                     </div>
