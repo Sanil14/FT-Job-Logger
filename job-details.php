@@ -87,24 +87,19 @@ if ($index < 1) {
                      <h4 class="page-title">Full Job Details</h4>
                   </li>
                </ul>
-               <nav class="navbar-custom">
+               <!--<nav class="navbar-custom">
                   <ul class="list-unstyled topbar-right-menu float-right mb-0">
                      <li>
-                        <!-- Notification -->
+                        <!-- Notification
                         <div class="notification-box">
                            <ul class="list-inline mb-0">
                               <li>
-                                 <a href="javascript:void(0);" class="right-bar-toggle">
-                                    <i class="mdi mdi-bell-outline noti-icon"></i>
-                                 </a>
-                                 <div class="noti-dot">
-                                    <span class="dot"></span>
-                                    <span class="pulse"></span>
-                                 </div>
+                                 <a href="javascript:void(0);" class="right-bar-toggle"> <i class="mdi mdi-bell-outline noti-icon"></i> </a>
+                                 <div class="noti-dot"> <span class="dot"></span> <span class="pulse"></span> </div>
                               </li>
                            </ul>
                         </div>
-                        <!-- End Notification bar -->
+                        <!-- End Notification bar
                      </li>
                      <li class="hide-phone">
                         <form class="app-search">
@@ -113,7 +108,7 @@ if ($index < 1) {
                         </form>
                      </li>
                   </ul>
-               </nav>
+               </nav>-->
             </div>
             <!-- end container -->
          </div>

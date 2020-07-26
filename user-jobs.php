@@ -73,10 +73,10 @@ $timezone = $pref->Timezone;
                      <h4 class="page-title">Your Jobs</h4>
                   </li>
                </ul>
-               <nav class="navbar-custom">
+               <!--<nav class="navbar-custom">
                   <ul class="list-unstyled topbar-right-menu float-right mb-0">
                      <li>
-                        <!-- Notification -->
+                        <!-- Notification
                         <div class="notification-box">
                            <ul class="list-inline mb-0">
                               <li>
@@ -85,7 +85,7 @@ $timezone = $pref->Timezone;
                               </li>
                            </ul>
                         </div>
-                        <!-- End Notification bar -->
+                        <!-- End Notification bar
                      </li>
                      <li class="hide-phone">
                         <form class="app-search">
@@ -94,7 +94,7 @@ $timezone = $pref->Timezone;
                         </form>
                      </li>
                   </ul>
-               </nav>
+               </nav>-->
             </div>
             <!-- end container -->
          </div>

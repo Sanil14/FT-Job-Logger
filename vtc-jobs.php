@@ -66,10 +66,10 @@ $timezone = $pref->Timezone;
                      <h4 class="page-title">VTC Jobs</h4>
                   </li>
                </ul>
-               <nav class="navbar-custom">
+               <!--<nav class="navbar-custom">
                   <ul class="list-unstyled topbar-right-menu float-right mb-0">
                      <li>
-                        <!-- Notification -->
+                        <!-- Notification
                         <div class="notification-box">
                            <ul class="list-inline mb-0">
                               <li>
@@ -78,7 +78,7 @@ $timezone = $pref->Timezone;
                               </li>
                            </ul>
                         </div>
-                        <!-- End Notification bar -->
+                        <!-- End Notification bar
                      </li>
                      <li class="hide-phone">
                         <form class="app-search">
@@ -87,7 +87,7 @@ $timezone = $pref->Timezone;
                         </form>
                      </li>
                   </ul>
-               </nav>
+               </nav>-->
             </div>
             <!-- end container -->
          </div>
@@ -205,7 +205,7 @@ $timezone = $pref->Timezone;
                               $s = "SELECT user_profile.Username,user_jobs.SteamID, SUM(user_jobs.Odometer) AS Odometer, COUNT(user_jobs.JobID) AS Jobs FROM `user_jobs` LEFT JOIN user_profile ON user_profile.SteamID=user_jobs.SteamID WHERE Dated BETWEEN '$epochfirst' AND '$epochlast' GROUP BY user_jobs.SteamID ORDER BY Odometer DESC";
                               $q = mysqli_query($conn, $s);
                               while ($dom = mysqli_fetch_array($q)) {
-                                 if ($dom["Jobs"] < 1) {
+                                 if ($dom["Jobs"] < 1 || is_null($dom["Username"])) {
                                     continue;
                                  }
                                  ?>

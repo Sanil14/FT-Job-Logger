@@ -82,10 +82,10 @@ $maxjobid = mysqli_fetch_array(mysqli_query($conn, $r));
                             <h4 class="page-title">Jobs Manager</h4>
                         </li>
                     </ul>
-                    <nav class="navbar-custom">
+                    <!--<nav class="navbar-custom">
                         <ul class="list-unstyled topbar-right-menu float-right mb-0">
                             <li>
-                                <!-- Notification -->
+                                <!-- Notification
                                 <div class="notification-box">
                                     <ul class="list-inline mb-0">
                                         <li>
@@ -99,7 +99,7 @@ $maxjobid = mysqli_fetch_array(mysqli_query($conn, $r));
                                         </li>
                                     </ul>
                                 </div>
-                                <!-- End Notification bar -->
+                                <!-- End Notification bar
                             </li>
                             <li class="hide-phone">
                                 <form class="app-search">
@@ -108,7 +108,7 @@ $maxjobid = mysqli_fetch_array(mysqli_query($conn, $r));
                                 </form>
                             </li>
                         </ul>
-                    </nav>
+                    </nav>-->
                 </div>
                 <!-- end container -->
             </div>

@@ -85,12 +85,12 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                         </li>
                     </ul>
 
-                    <nav class="navbar-custom">
+                    <!--<nav class="navbar-custom">
 
                         <ul class="list-unstyled topbar-right-menu float-right mb-0">
 
                             <li>
-                                <!-- Notification -->
+                                <!-- Notification
                                 <div class="notification-box">
                                     <ul class="list-inline mb-0">
                                         <li>
@@ -104,7 +104,7 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                                         </li>
                                     </ul>
                                 </div>
-                                <!-- End Notification bar -->
+                                <!-- End Notification bar
                             </li>
 
                             <li class="hide-phone">
@@ -115,7 +115,7 @@ $vtotalFuel = $vtcstats["TotalFuel"];
                             </li>
 
                         </ul>
-                    </nav>
+                    </nav> -->
                 </div><!-- end container -->
             </div><!-- end navbar -->
         </div>

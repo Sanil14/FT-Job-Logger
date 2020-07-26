@@ -8,43 +8,48 @@ use \DiscordWebhooks\Client;
 use \DiscordWebhooks\Embed;
 
 $truckler_payload = $_POST["data"];
+$trucklerurl = "https://trucklerprocessor.jammerxd.dev/api/v1/process_delivery/88/3/";
 
-// Send response plugin
-ignore_user_abort(true);
-set_time_limit(0);
-ob_start();
-echo 200;
-header('Connection: close');
-header('Content-Length: '.ob_get_length());
-ob_end_flush();
-ob_flush();
-flush();
-// Continue as normal with script execution
+  /*
+  ignore_user_abort(true);
+  set_time_limit(0);
+  ob_start();
+  echo 200;
+  header('Connection: close');
+  header('Content-Length: ' . ob_get_length());
+  ob_end_flush();
+  ob_flush();
+  flush();
+  Continue as normal with script execution*/
 
-file_put_contents("encoded.txt", $truckler_payload); // DEBUG
+  file_put_contents("encoded.txt", $truckler_payload); // DEBUG
 
-$ch = curl_init();
+  $ch = curl_init();
 
-curl_setopt($ch, CURLOPT_URL, "https://trucklerprocessor.jammerxd.dev/api/v1/process_delivery/88/3/");
-curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS, "data=" . $truckler_payload);
-curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+  curl_setopt($ch, CURLOPT_URL, $trucklerurl);
+  curl_setopt($ch, CURLOPT_POST, 1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, "data=" . $truckler_payload);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
 
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-$server_output = curl_exec($ch);
-$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-curl_close($ch);
+  $server_output = curl_exec($ch);
+  $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+  curl_close($ch);
 
-if ($httpcode === 200) {
-  $json = json_decode($server_output, true);
-  file_put_contents("decoded.txt", $server_output); // DEBUG
-  if (json_last_error() === JSON_ERROR_NONE) {
-    if (!empty($json["steamID"])) {
-      sendData($json);
+  if ($httpcode === 200) {
+    $json = json_decode($server_output, true);
+    file_put_contents("decoded.txt", $server_output); // DEBUG
+    if (json_last_error() === JSON_ERROR_NONE) {
+      if (!empty($json["steamID"])) {
+        sendData($json);
+      }
     }
+  } else {
+    header($_SERVER["SERVER_PROTOCOL"] . ' 500 Internal Server Error', true, 500);
+    echo '<h1>Truckler is down!</h1>'; // If truckler website is not up
+    exit();
   }
-}
 
 function sendData($data)
 {
@@ -71,7 +76,7 @@ function sendData($data)
   $truckmake = gettype($data["truckMake"]) == "string" ? $data["truckMake"] : outputError();
   $truckmodel = gettype($data["truckModel"]) == "string" ? $data["truckModel"] : outputError();
   $date = time();
-  $trailerdamage = is_numeric($data["trailers"][0]["wheelDamage"] + $data["trailers"][0]["chassisDamage"] +$data["trailers"][0]["cargoDamage"]) ? $data["trailers"][0]["wheelDamage"] + $data["trailers"][0]["chassisDamage"] +$data["trailers"][0]["cargoDamage"] : outputError();
+  $trailerdamage = is_numeric($data["trailers"][0]["wheelDamage"] + $data["trailers"][0]["chassisDamage"] + $data["trailers"][0]["cargoDamage"]) ? $data["trailers"][0]["wheelDamage"] + $data["trailers"][0]["chassisDamage"] + $data["trailers"][0]["cargoDamage"] : outputError();
 
   $topspeedkmh = round($topspeedms * 3.6);
   $fuel = ceil($fueld);
@@ -122,6 +127,8 @@ function sendData($data)
 
 function outputError()
 {
+  header($_SERVER["SERVER_PROTOCOL"] . ' 500 Internal Server Error', true, 500);
+  echo '<h1>Job Structure was wrong!</h1>'; // If truckler website is not up
   exit();
 }
 
